@@ -14,7 +14,3 @@ db.define_table('quests',
 #                 Field('hit points', 'int'),
 #                 Field('attack', 'int'),
 #                 format = '%(name)s')
-
-from gluon.tools import Auth
-auth = Auth(db)
-auth.define_tables(username=True)

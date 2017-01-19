@@ -1,0 +1,4 @@
+{{extend 'layout.html'}}
+<h1>{{=quest.title}}</h1>
+<h2>Reward: {{=quest.reward}}</h2>
+<body>{{=quest.details}}</body>

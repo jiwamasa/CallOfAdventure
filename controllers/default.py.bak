@@ -10,7 +10,6 @@ def showQuest():
     quest = db.quests(request.args(0, cast=int)) or redirect(URL('index'))
     return dict(quest=quest)
 
-@auth.requires_login()
 def addQuest():
     grid = SQLFORM.smartgrid(db.quests)
     return dict(grid=grid)

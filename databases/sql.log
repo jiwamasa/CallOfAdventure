@@ -53,3 +53,15 @@ CREATE TABLE auth_cas(
     renew CHAR(1)
 );
 success!
+timestamp: 2017-01-19T14:51:25.314000
+CREATE TABLE quests(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title CHAR(512) UNIQUE,
+    quest_giver CHAR(512),
+    reward CHAR(512),
+    details TEXT
+);
+success!
+timestamp: 2017-01-19T14:54:51.291000
+ALTER TABLE auth_user ADD username CHAR(128);
+success!
