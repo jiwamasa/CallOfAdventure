@@ -1,0 +1,7 @@
+{{extend 'layout.html'}}
+<h1>Available Quests</h1>
+<ul>
+{{for quest in questList:}}
+{{=LI(A(quest.title, _href=URL("showQuest", args=quest.id)))}}
+{{pass}}
+</ul>

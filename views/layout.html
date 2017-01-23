@@ -13,7 +13,7 @@
           initial-scale = 1.0 retains dimensions instead of zooming out if page height > device height
           user-scalable = yes allows the user to zoom in -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{=response.title or request.application}}</title>
+    <title>Call Of Adventure</title>
     <!-- http://dev.w3.org/html5/markup/meta.name.html -->
     <meta name="application-name" content="{{=request.application}}">
     <!-- Speaking of Google, don't forget to set your site up:
@@ -56,16 +56,31 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-          </button>
-          {{=response.logo or ''}}
+          </button> {{=''}} <!-- icon button link goes here -->
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
           <ul class="nav navbar-nav navbar-right">
             {{='auth' in globals() and auth.navbar('Welcome',mode='dropdown') or ''}}
           </ul>
-          {{if response.menu:}}
-          {{=MENU(response.menu, _class='nav navbar-nav',li_class='dropdown',ul_class='dropdown-menu')}}
-          {{pass}}
+	  <ul class="nav navbar-nav">
+	    <li class="web2py-menu-first">
+	      <a href="/callofadventure/default/index">Home</a>
+	    </li>
+	    <li>
+	      <a href="/callofadventure/default/questsPage">Quests</a>
+	    </li>
+	    <li class="dropdown"><a href="#">Dropdown test</a>
+	      <ul class="dropdown-menu">
+		<li>
+		  <a href="/callofadventure/default/index">test1</a>
+		</li>
+		<li>
+		  <a href="/callofadventure/default/index">test2</a>
+		</li>
+	      </ul>
+	    </li>
+	    
+	  </ul>
         </div>
       </div>
     </nav>
