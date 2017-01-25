@@ -33,7 +33,11 @@ def hirePage():
 @auth.requires_login()
 def showHire():
     hire = db.auth_user(request.args(0, cast=int)) or redirect(URL('index'))
-    return dict(hire=hire)
+    form = FORM('', INPUT(_name='hire', _type='submit', _value='Hire'))
+    if form.process().accepted:
+        session.flash = 'successfully hired adventurer'
+        redirect(URL('hirePage'))
+    return dict(hire=hire, form=form)
     
 def user():
     return dict(form=auth())

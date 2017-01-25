@@ -1,6 +1,5 @@
 {{extend 'layout.html'}}
 <h1>People for Hire</h1>
-<div class="flash">{{=response.flash or ''}}</div>
 <ul>
 {{for hire in hireList:}}
 {{=LI(A(hire.first_name, _href=URL("showHire", args=hire.id)))}}

@@ -1,7 +1,5 @@
 {{extend 'layout.html'}}
-<h1>{{=hire.first_name}}</h1>
+<h1>The brave adventurer "{{=hire.first_name}}"</h1>
 <h2>Cost to hire: ~not implemented~</h2>
 
-<form action="/callofadventure/default/hirePage" method="get">
-  <input type="submit" value="Hire"/>
-</form>
+{{=form}}
