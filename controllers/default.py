@@ -23,5 +23,17 @@ def addQuest():
     grid = SQLFORM.smartgrid(db.quests)
     return dict(grid=grid)
 
+#all hires page
+@auth.requires_login()
+def hirePage():
+    hireList = db().select(db.auth_user.ALL, orderby=db.auth_user.first_name)
+    return dict(hireList=hireList)
+
+#details about a certain person to hire them
+@auth.requires_login()
+def showHire():
+    hire = db.auth_user(request.args(0, cast=int)) or redirect(URL('index'))
+    return dict(hire=hire)
+    
 def user():
     return dict(form=auth())
