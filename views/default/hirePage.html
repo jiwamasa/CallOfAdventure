@@ -1,0 +1,18 @@
+{{extend 'layout.html'}}
+<h1>People for Hire</h1>
+<ul>
+{{for hire in hireList:}}
+{{=LI(A(hire.first_name, _href=URL("showHire", args=hire.id)))}}
+{{pass}}
+</ul>
+<h2>Current party</h2>
+<ul>
+  {{if session.party:}}
+  {{for party_member in session.party:}}
+  {{=LI(A(db.auth_user(party_member).first_name,
+          _href=URL("showHire", args=party_member)))}}
+  {{pass}}
+  {{else:}}
+  {{=BODY('No one hired yet')}}
+  {{pass}}
+</ul>
