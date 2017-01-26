@@ -1,0 +1,6 @@
+./databases/*
+.\databases\*
+./sessions/*
+.\sessions\*
+./errors/*
+.\errors\*
