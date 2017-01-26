@@ -1,6 +1,3 @@
-./databases/*
-.\databases\*
-./sessions/*
-.\sessions\*
-./errors/*
-.\errors\*
+/databases/*
+/sessions/*
+/errors/*
