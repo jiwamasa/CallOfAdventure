@@ -34,8 +34,17 @@ def hirePage():
 def showHire():
     hire = db.auth_user(request.args(0, cast=int)) or redirect(URL('index'))
     form = FORM('', INPUT(_name='hire', _type='submit', _value='Hire'))
-    if form.process().accepted:
-        session.flash = 'successfully hired adventurer'
+    if form.process().accepted: #when hire button is clicked
+        #ADD CODE TO CHECK IF ENOUGH GOLD, THEN SUBTRACT
+        if session.party: #if party already started...
+            if hire.id in session.party: #but already hired, alert user
+                session.flash = 'already hired ' + hire.first_name
+                redirect(URL('hirePage'))
+            else: #otherwise, add to party
+                session.party.append(hire.id)
+        else: #if party hasn't been started, create a new one
+            session.party = [hire.id]
+        session.flash = 'successfully hired adventurer ' + hire.first_name
         redirect(URL('hirePage'))
     return dict(hire=hire, form=form)
     
