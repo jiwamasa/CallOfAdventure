@@ -11,5 +11,15 @@
 Location: {{=quest.location}} <br>
 <body>
     {{=quest.details}} <br>
+    Party Members: <br>
+    <ul>
+        {{if session.party:}}
+        {{for hero in session.party:}}
+        {{=LI(db.auth_user(hero.id))}}
+        {{pass}}
+        {{else:}}
+        {{=LI('None')}}
+        {{pass}}
+    </ul>
     {{=A('Accept Quest?', _href=URL("questResult", args=quest.id))}}
 </body>

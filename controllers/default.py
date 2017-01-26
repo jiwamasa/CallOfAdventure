@@ -21,7 +21,15 @@ def showQuest():
 @auth.requires_login()
 def questResult():
     quest = db.quests(request.args(0, cast=int)) or redirect(URL('index'))
-    return dict(quest=quest)
+    if session.party:
+        party_strength=len(session.party)+1
+    else:
+        party_strength=1
+    if float(party_strength)>=float(quest.difficulty):
+        result_msg='was a success!'
+    else:
+        result_msg='was a failure...'
+    return dict(quest=quest, result_msg=result_msg)
 
 #quest adding page (shouldn't be public in final build)
 @auth.requires_login()
