@@ -1,9 +1,11 @@
 {{extend 'layout.html'}}
 <h1>People for Hire</h1>
 <ul>
-{{for hire in hireList:}}
-{{=LI(A(hire.first_name, _href=URL("showHire", args=hire.id)))}}
-{{pass}}
+  {{for hire in hireList:}}
+  {{if hire.id != auth.user.id:}}
+  {{=LI(A(hire.first_name, _href=URL("showHire", args=hire.id)))}}
+  {{pass}}
+  {{pass}}
 </ul>
 <h2>Current party</h2>
 <ul>
@@ -16,3 +18,8 @@
   {{=BODY('No one hired yet')}}
   {{pass}}
 </ul>
+<div>
+  {{if session.party:}}
+  {{=disband}}
+  {{pass}}
+</div>

@@ -33,7 +33,12 @@ def addQuest():
 @auth.requires_login()
 def hirePage():
     hireList = db().select(db.auth_user.ALL, orderby=db.auth_user.first_name)
-    return dict(hireList=hireList)
+    disband = FORM('', INPUT(_name='disband', _type='submit',
+                             _value='Disband Party'))
+    if disband.process().accepted: #if disband button is clicked
+        session.party = [] #empty party
+        response.flash = 'Party disbanded'
+    return dict(hireList=hireList, disband=disband)
 
 #details about a certain person to hire them
 @auth.requires_login()
@@ -44,13 +49,13 @@ def showHire():
         #ADD CODE TO CHECK IF ENOUGH GOLD, THEN SUBTRACT
         if session.party: #if party already started...
             if hire.id in session.party: #but already hired, alert user
-                session.flash = 'already hired ' + hire.first_name
+                session.flash = 'Already hired ' + hire.first_name
                 redirect(URL('hirePage'))
             else: #otherwise, add to party
                 session.party.append(hire.id)
         else: #if party hasn't been started, create a new one
             session.party = [hire.id]
-        session.flash = 'successfully hired adventurer ' + hire.first_name
+        session.flash = 'Successfully hired adventurer ' + hire.first_name
         redirect(URL('hirePage'))
     return dict(hire=hire, form=form)
     
