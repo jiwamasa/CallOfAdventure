@@ -65,3 +65,12 @@ success!
 timestamp: 2017-01-19T14:54:51.291000
 ALTER TABLE auth_user ADD username CHAR(128);
 success!
+timestamp: 2017-01-25T22:10:31.509000
+ALTER TABLE quests ADD prestige CHAR(512);
+timestamp: 2017-01-25T22:10:31.527000
+ALTER TABLE quests ADD gold CHAR(512);
+timestamp: 2017-01-25T22:10:31.548000
+ALTER TABLE quests ADD difficulty CHAR(512);
+timestamp: 2017-01-25T22:10:31.571000
+ALTER TABLE quests ADD location CHAR(512);
+success!

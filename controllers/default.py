@@ -17,6 +17,10 @@ def showQuest():
     quest = db.quests(request.args(0, cast=int)) or redirect(URL('index'))
     return dict(quest=quest)
 
+def questResult():
+    quest = db.quests(request.args(0, cast=int)) or redirect(URL('index'))
+    return dict(quest=quest)
+
 #quest adding page (shouldn't be public in final build)
 @auth.requires_login()
 def addQuest():

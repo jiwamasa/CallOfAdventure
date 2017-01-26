@@ -1,5 +1,15 @@
 {{extend 'layout.html'}}
 <h1>{{=quest.title}}</h1>
 <h2>By: {{=quest.quest_giver}}</h2>
-<h3>Reward: {{=quest.reward}}</h3>
-<body>{{=quest.details}}</body>
+<h3>Rewards:</h3>
+<ul>
+    <li>Gold: {{=quest.gold}}</li>
+    <li>Prestige: {{=quest.prestige}}</li>
+    <li>{{=quest.reward}}</li>
+</ul>
+<h3>Difficulty: {{=quest.difficulty}}</h3>
+Location: {{=quest.location}} <br>
+<body>
+    {{=quest.details}} <br>
+    {{=A('Accept Quest?', _href=URL("questResult", args=quest.id))}}
+</body>
