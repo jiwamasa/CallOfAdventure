@@ -17,6 +17,8 @@ def showQuest():
     quest = db.quests(request.args(0, cast=int)) or redirect(URL('index'))
     return dict(quest=quest)
 
+#result of quest
+@auth.requires_login()
 def questResult():
     quest = db.quests(request.args(0, cast=int)) or redirect(URL('index'))
     return dict(quest=quest)
