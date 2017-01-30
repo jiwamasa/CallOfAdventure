@@ -66,6 +66,12 @@ def showHire():
         session.flash = 'Successfully hired adventurer ' + hire.first_name
         redirect(URL('hirePage'))
     return dict(hire=hire, form=form)
-    
+
+#adding item page (shouldn't be public in final build)
+@auth.requires_login()
+def addItem():
+    grid = SQLFORM.smartgrid(db.equip_items)
+    return dict(grid=grid)
+
 def user():
     return dict(form=auth())
