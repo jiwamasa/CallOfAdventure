@@ -1,3 +1,6 @@
 {{extend 'layout.html'}}
 <h1>Quest {{=quest.title}} {{=result_msg}}</h1>
+<body>
+    You earned {{=quest.gold}} Gold! <br>
+</body>
 {{=A('Continue', _href=URL("index", args=quest.id))}}

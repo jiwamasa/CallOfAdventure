@@ -5,9 +5,9 @@ db = DAL("sqlite://storage.sqlite")
 db.define_table('quests',
                 Field('title', unique=True),
                 Field('quest_giver'),
-                Field('gold'),
-                Field('prestige'),
-                Field('difficulty'),
+                Field('gold', 'integer'),
+                Field('prestige', 'integer'),
+                Field('difficulty', 'integer'),
                 Field('location'),
                 Field('reward'),
                 Field('details', 'text'))
