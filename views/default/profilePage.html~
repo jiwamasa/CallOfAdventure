@@ -1,0 +1,3 @@
+{{extend 'layout.html'}}
+<h1>"{{=auth.user.first_name}} {{=auth.user.last_name}}"</h1>
+<h2>Gold: {{=auth.user.gold}}</h2>

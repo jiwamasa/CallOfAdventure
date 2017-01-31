@@ -85,3 +85,12 @@ CREATE TABLE equip_items(
     details TEXT
 );
 success!
+success!
+timestamp: 2017-01-30T20:24:25.243000
+ALTER TABLE auth_user ADD gold CHAR(512);
+success!
+success!
+timestamp: 2017-01-30T20:32:42.920000
+ALTER TABLE auth_user ADD cost_to_hire INTEGER;
+success!
+success!

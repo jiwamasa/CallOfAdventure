@@ -15,12 +15,16 @@ db.define_table('quests',
 # Table containing all items
 db.define_table('equip_items',
                 Field('name', unique=True),
-                Field('attack'),
-                Field('defense'),
-                Field('speed'),
-                Field('cost'),
+                Field('attack', 'integer'),
+                Field('defense', 'integer'),
+                Field('speed', 'integer'),
+                Field('cost', 'integer'),
                 Field('details', 'text'))
 
 from gluon.tools import Auth
 auth = Auth(db)
+auth.settings.extra_fields['auth_user']= [
+    Field('gold', 'integer', readable=True, writable=True),
+    Field('cost_to_hire', 'integer', readable=True, writable=True)
+]
 auth.define_tables(username=True)
