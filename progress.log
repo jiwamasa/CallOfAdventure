@@ -71,3 +71,13 @@
 [2017-01-26 13:57:41] EDIT CallOfAdventure/controllers/default.py: 3
 [2017-01-26 13:58:17] EDIT CallOfAdventure/controllers/default.py: 0
 [2017-01-26 14:00:17] EDIT CallOfAdventure/views/default/showQuest.html: 0
+[2017-01-31 12:51:18] EDIT CallOfAdventure/controllers/default.py: 1
+[2017-01-31 12:51:33] EDIT CallOfAdventure/views/default/profilePage.html: 0
+[2017-01-31 12:52:15] EDIT CallOfAdventure/views/layout.html: 0
+[2017-01-31 12:52:17] EDIT CallOfAdventure/views/default/profilePage.html: 0
+[2017-01-31 12:54:07] EDIT CallOfAdventure/controllers/default.py: -1
+[2017-01-31 12:54:08] EDIT CallOfAdventure/models/db.py: 0
+[2017-01-31 12:54:37] EDIT CallOfAdventure/controllers/default.py: 1
+[2017-01-31 12:55:18] EDIT CallOfAdventure/controllers/default.py: -1
+[2017-01-31 12:55:49] EDIT CallOfAdventure/controllers/default.py: 0
+[2017-01-31 12:56:52] EDIT CallOfAdventure/controllers/default.py: 0

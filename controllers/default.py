@@ -53,7 +53,7 @@ def hirePage():
 def showHire():
     hire = db.auth_user(request.args(0, cast=int)) or redirect(URL('index'))
     cost = hire.cost_to_hire or 0
-    current_gold = auth.user.gold or 0
+    current_gold = db.auth_user(auth.user.id).gold or 0
     form = FORM('', INPUT(_name='hire', _type='submit', _value='Hire'))
     if form.process().accepted: #when hire button is clicked...
         if session.party: #if party already started...
@@ -69,7 +69,7 @@ def showHire():
             session.flash = 'Not enough gold to hire'
             redirect(URL('hirePage'))
         new_gold = current_gold - cost
-        auth.user.update(gold=new_gold) #deduct hiring cost
+        db.auth_user(auth.user.id).update_record(gold=new_gold) #deduct hiring cost
         session.flash = 'Successfully hired adventurer ' + hire.first_name
         redirect(URL('hirePage'))
     return dict(hire=hire, cost=cost, form=form)
@@ -85,8 +85,9 @@ def profilePage():
     #free money button (debug)
     form = FORM('', INPUT(_name='free', _type='submit', _value='FREE GOLD'))
     if form.process().accepted:
-        new_gold = auth.user.gold + 1000
-        auth.user.update(gold=new_gold)
+        new_gold = db.auth_user(auth.user.id).gold + 1000
+        db.auth_user(auth.user.id).update_record(gold=new_gold)
+       
     return dict(form=form)
 
 def user():
