@@ -97,3 +97,6 @@ success!
 success!
 success!
 success!
+timestamp: 2017-01-31T22:26:13.338000
+ALTER TABLE quests ADD loot_items TEXT;
+success!

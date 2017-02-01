@@ -10,6 +10,7 @@ db.define_table('quests',
                 Field('difficulty', 'integer'),
                 Field('location'),
                 Field('reward'),
+                Field('loot_items', 'list:integer', default=[]),
                 Field('details', 'text'))
 
 # Table containing all items

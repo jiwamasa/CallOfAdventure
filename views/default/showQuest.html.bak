@@ -5,7 +5,11 @@
 <ul>
     <li>Gold: {{=quest.gold}}</li>
     <li>Prestige: {{=quest.prestige}}</li>
-    <li>{{=quest.reward}}</li>
+    {{if quest.loot_items:}}
+    {{for loot in quest.loot_items:}}
+    {{=LI(db.equip_items(loot).name)}}
+    {{pass}}
+    {{pass}}
 </ul>
 <h3>Difficulty: {{=quest.difficulty}}</h3>
 Location: {{=quest.location}} <br>
@@ -15,7 +19,7 @@ Location: {{=quest.location}} <br>
     <ul>
         {{if session.party:}}
         {{for hero in session.party:}}
-        {{=LI(db.auth_user(hero.id))}}
+        {{=LI(db.auth_user(hero).first_name)}}
         {{pass}}
         {{else:}}
         {{=LI('None')}}

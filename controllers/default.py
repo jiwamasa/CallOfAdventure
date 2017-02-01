@@ -27,11 +27,13 @@ def questResult():
         party_strength=1
     if float(party_strength)>=float(quest.difficulty):
         result_msg='was a success!'
+        success = 1
         new_gold = quest.gold + db.auth_user(auth.user.id).gold
         db.auth_user(auth.user.id).update_record(gold=new_gold)
     else:
         result_msg='was a failure...'
-    return dict(quest=quest, result_msg=result_msg)
+        success = 0
+    return dict(quest=quest, result_msg=result_msg, success=success)
 
 #quest adding page (shouldn't be public in final build)
 @auth.requires_login()
