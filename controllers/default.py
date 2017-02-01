@@ -70,8 +70,10 @@ def showHire():
             session.party.remove(hire.id) #remove hire
             session.flash = 'Not enough gold to hire'
             redirect(URL('hirePage'))
-        new_gold = current_gold - cost
-        db.auth_user(auth.user.id).update_record(gold=new_gold) #deduct hiring cost
+        new_gold = current_gold - cost #deduct hiring cost 
+        db.auth_user(auth.user.id).update_record(gold=new_gold) 
+        new_gold = hire.gold + cost #add payment
+        hire.update_record(gold=new_gold)
         session.flash = 'Successfully hired adventurer ' + hire.first_name
         redirect(URL('hirePage'))
     return dict(hire=hire, cost=cost, form=form)
