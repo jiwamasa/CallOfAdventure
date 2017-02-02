@@ -20,12 +20,28 @@ db.define_table('equip_items',
                 Field('defense', 'integer'),
                 Field('speed', 'integer'),
                 Field('cost', 'integer', readable=True),
+                Field('type'),
                 Field('details', 'text'))
+
+db.equip_items.type.requires=IS_IN_SET('hand', 'head', 'chest', 'legs');
+
+# Table containing equipment loadout sets (created by users)
+db.define_table('loadouts',
+                Field('name'),
+                Field('creator', 'integer'), # User id
+                Field('lhand_equip', 'integer'), # equip_item id
+                Field('rhand_equip', 'integer'),
+                Field('head_equip', 'integer'),
+                Field('chest_equip', 'integer'),
+                Field('legs_equip', 'integer'))
 
 from gluon.tools import Auth
 auth = Auth(db)
 auth.settings.extra_fields['auth_user']= [
     Field('gold', 'integer', readable=True, writable=True),
     Field('cost_to_hire', 'integer', readable=True, writable=True),
-    Field('inventory', 'list:integer', default=[])]
+    Field('inventory', 'list:integer', default=[]),
+    Field('curr_loadout', 'integer'), # Currently equipped loadout
+    Field('saved_loadouts', 'list:integer') # All saved loadouts
+]
 auth.define_tables(username=True)

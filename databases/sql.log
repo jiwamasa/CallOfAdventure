@@ -103,3 +103,23 @@ success!
 timestamp: 2017-02-01T15:20:20.528000
 ALTER TABLE auth_user ADD inventory TEXT;
 success!
+timestamp: 2017-02-02T15:16:33.842000
+CREATE TABLE loadouts(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name CHAR(512),
+    creator INTEGER,
+    lhand_equip INTEGER,
+    rhand_equip INTEGER,
+    head_equip INTEGER,
+    chest_equip INTEGER,
+    legs_equip INTEGER
+);
+success!
+timestamp: 2017-02-02T15:16:34.123000
+ALTER TABLE auth_user ADD saved_loadouts TEXT;
+timestamp: 2017-02-02T15:16:34.265000
+ALTER TABLE auth_user ADD curr_loadout INTEGER;
+success!
+timestamp: 2017-02-02T15:20:27.885000
+ALTER TABLE equip_items ADD type CHAR(512);
+success!

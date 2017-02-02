@@ -2,6 +2,7 @@
 <h1>"{{=current_user.first_name}} {{=current_user.last_name}}"</h1>
 <h2>Gold: {{=current_user.gold}}</h2>
 {{=form}}
+<b>Inventory</b>
 {{
 for item_id in current_user.inventory:
 item = db.equip_items(item_id)
