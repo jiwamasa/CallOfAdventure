@@ -124,13 +124,13 @@ def showBuyItem():
 
 #profile page
 def profilePage():
+    current_user = db.auth_user(auth.user.id)
     #free money button (debug)
     form = FORM('', INPUT(_name='free', _type='submit', _value='FREE GOLD'))
     if form.process().accepted:
-        new_gold = db.auth_user(auth.user.id).gold + 1000
-        db.auth_user(auth.user.id).update_record(gold=new_gold)
-       
-    return dict(form=form)
+        new_gold = current_user.gold + 1000
+        current_user.update_record(gold=new_gold)
+    return dict(form=form, current_user=current_user)
 
 def user():
     if request.args(0) == 'profile':
