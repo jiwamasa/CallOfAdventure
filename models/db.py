@@ -19,7 +19,7 @@ db.define_table('equip_items',
                 Field('attack', 'integer'),
                 Field('defense', 'integer'),
                 Field('speed', 'integer'),
-                Field('cost', 'integer'),
+                Field('cost', 'integer', readable=True),
                 Field('details', 'text'))
 
 from gluon.tools import Auth

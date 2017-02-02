@@ -34,6 +34,7 @@ def questResult():
         for item in quest.loot_items:
             user_items.append(item)
         db.auth_user(auth.user.id).update_record(inventory=user_items)
+        response.flash = 'Success!'
     else:
         result_msg='was a failure...'
         success = 0
@@ -89,6 +90,35 @@ def showHire():
 def addItem():
     grid = SQLFORM.smartgrid(db.equip_items)
     return dict(grid=grid)
+
+
+
+#adding shop page
+@auth.requires_login()
+def shop():
+    #grid = SQLFORM.smartgrid(db.equip_items)
+    #return dict(grid=grid)
+    itemList = db().select(db.equip_items.ALL, orderby=db.equip_items.cost)
+    return dict(itemList=itemList)
+
+#adding preview item to buy page
+@auth.requires_login()
+def showBuyItem():
+    buyItem = db.equip_items(request.args(0, cast=int)) or redirect(URL('index'))
+    cost = buyItem.cost or 0
+    current_gold = db.auth_user(auth.user.id).gold or 0
+    buy = FORM('', INPUT(_name='buyItem', _type='submit', _value='Buy'))
+    if form.process().accepted:
+        if current_gold < cost:
+            session.flash = 'Not enough gold to buy the item'
+            redirect(URL('shop'))
+        else:
+            new_gold = current_gold - cost
+            db.auth_user(auth.user.id).update_record(gold=new_gold)
+            session.flash = buyItem.name + " has been purchased!"
+            redirect(URL('shop'))
+    return dict(buyItem=buyItem, cost=cost, form=form)
+
 
 #profile page
 def profilePage():

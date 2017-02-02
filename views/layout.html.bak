@@ -61,9 +61,21 @@
         <div class="collapse navbar-collapse navbar-ex1-collapse">
           <ul class="nav navbar-nav navbar-right">
             <li>
-              <a href=''>Gold: {{=db.auth_user(auth.user.id).gold}}</a>
+              <a>Gold: {{=db.auth_user(auth.user.id).gold}}</a>
             </li>
-
+            <li class="dropdown"><a href=''>Current Party</a>
+              <ul class="dropdown-menu">
+                {{
+                if session.party:
+                for member_id in session.party:
+                =LI(A(db.auth_user(member_id).first_name, _href=URL("showHire", args=member_id)))
+                pass
+                else:
+                =LI(None)
+                pass
+                }}
+              </ul>
+            </li>
             {{='auth' in globals() and auth.navbar('Welcome',mode='dropdown') or ''}}
           </ul>
 	  <ul class="nav navbar-nav">
@@ -77,9 +89,6 @@
               <ul class="dropdown-menu">
                 <li>
                   <a href="/callofadventure/default/questsPage">Available Quests</a>
-                </li>
-                <li>
-                  <a href="/callofadventure/default/questsPage">Current Quest NOTDONE</a>
                 </li>
                 <li>
                   <a href="/callofadventure/default/addQuest">Add Quest DEV!</a>

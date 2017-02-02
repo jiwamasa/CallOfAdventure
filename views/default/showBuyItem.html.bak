@@ -1,0 +1,22 @@
+{{extend 'layout.html'}}
+
+<h1>Shop</h1>
+
+<h2>
+    {{=buyItem.name}} [{{=buyItem.cost}}gold]
+</h2>
+
+<h3>
+    <br>
+    Attack: {{=buyItem.attack}}<br>
+    Defense: {{=buyItem.defense}}<br>
+    Speed: {{=buyItem.speed}}<br>
+    <br>
+</h3>
+
+<body>
+    <i>{{=buyItem.details}}</i>
+</body>
+<br>
+<br>
+{{=buy}}
