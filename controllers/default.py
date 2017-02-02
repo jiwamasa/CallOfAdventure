@@ -96,8 +96,6 @@ def addItem():
 #adding shop page
 @auth.requires_login()
 def shop():
-    #grid = SQLFORM.smartgrid(db.equip_items)
-    #return dict(grid=grid)
     itemList = db().select(db.equip_items.ALL, orderby=db.equip_items.cost)
     return dict(itemList=itemList)
 
@@ -107,9 +105,11 @@ def showBuyItem():
     buyItem = db.equip_items(request.args(0, cast=int)) or redirect(URL('index'))
     cost = buyItem.cost or 0
     current_gold = db.auth_user(auth.user.id).gold or 0
-    form = FORM('', INPUT(_name='buyItem', _type='submit', _value='Buy'))
-    if form.process().accepted:
-        if current_gold < cost:
+
+    buyNow = FORM('', INPUT(_name='buyNow', _type='submit', _value='Buy'))
+    goPrevious = FORM('', INPUT(_name='goPrevious', _type='submit', _value='Cancel'))
+    if buyNow.process(formname='buy_now').accepted: #if buy button pressed
+        if current_gold < cost: #transact
             session.flash = 'Not enough gold to buy the item'
             redirect(URL('shop'))
         else:
@@ -117,8 +117,10 @@ def showBuyItem():
             db.auth_user(auth.user.id).update_record(gold=new_gold)
             session.flash = buyItem.name + " has been purchased!"
             redirect(URL('shop'))
-    return dict(buyItem=buyItem, cost=cost, form=form)
+    if goPrevious.process(formname='go_previous').accepted:
+        redirect(URL('shop'))
 
+    return dict(buyItem=buyItem, cost=cost, buyNow=buyNow, goPrevious=goPrevious)
 
 #profile page
 def profilePage():

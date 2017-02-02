@@ -19,4 +19,4 @@
 </body>
 <br>
 <br>
-{{=buy}}
+{{=buyNow}} {{=goPrevious}}
