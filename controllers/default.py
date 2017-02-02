@@ -8,8 +8,15 @@ def index():
 #all quests page
 @auth.requires_login()
 def questsPage():
-    questList = db().select(db.quests.ALL, orderby=db.quests.title)
-    return dict(questList=questList)
+    if not session.quest_list:
+        session.quest_list=[]
+    if len(session.quest_list) <= 0:
+        quests = db().select(db.quests.ALL, orderby=db.quests.title)
+        itr = 0
+        while itr < len(quests):
+            session.quest_list.append(quests[itr])
+            itr=itr+1
+    return dict(questList=session.quest_list)
 
 #details about a certain quest
 @auth.requires_login()
@@ -34,6 +41,8 @@ def questResult():
         for item in quest.loot_items:
             user_items.append(item)
         db.auth_user(auth.user.id).update_record(inventory=user_items)
+        if session.quest_list:
+            session.quest_list.remove(quest)
         response.flash = 'Success!'
     else:
         result_msg='was a failure...'
