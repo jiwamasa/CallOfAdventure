@@ -30,6 +30,11 @@ def questResult():
         success = 1
         new_gold = quest.gold + db.auth_user(auth.user.id).gold
         db.auth_user(auth.user.id).update_record(gold=new_gold)
+        user_items=db.auth_user(auth.user.id).inventory
+        for item in quest.loot_items:
+            user_items.append(item)
+        db.auth_user(auth.user.id).update_record(inventory=user_items)
+        response.flash = 'Success!'
     else:
         result_msg='was a failure...'
         success = 0

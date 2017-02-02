@@ -26,6 +26,6 @@ from gluon.tools import Auth
 auth = Auth(db)
 auth.settings.extra_fields['auth_user']= [
     Field('gold', 'integer', readable=True, writable=True),
-    Field('cost_to_hire', 'integer', readable=True, writable=True)
-]
+    Field('cost_to_hire', 'integer', readable=True, writable=True),
+    Field('inventory', 'list:integer', default=[])]
 auth.define_tables(username=True)

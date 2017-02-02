@@ -1,6 +1,6 @@
 {{extend 'layout.html'}}
 <h1>Quest {{=quest.title}} {{=result_msg}}</h1>
-<body>  
+<body>
     {{if success:}}
     You earned {{=quest.gold}} Gold! <br>
     {{if quest.loot_items:}}
