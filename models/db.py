@@ -9,7 +9,6 @@ db.define_table('quests',
                 Field('prestige', 'integer'),
                 Field('difficulty', 'integer'),
                 Field('location'),
-                Field('reward'),
                 Field('loot_items', 'list:integer', default=[]),
                 Field('details', 'text'))
 

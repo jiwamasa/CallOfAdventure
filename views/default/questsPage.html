@@ -1,7 +1,12 @@
 {{extend 'layout.html'}}
 <h1>Available Quests</h1>
 <ul>
-{{for quest in questList:}}
-{{=LI(A(quest.title, _href=URL("showQuest", args=quest.id)))}}
-{{pass}}
+{{if questList == []:
+    ='No Quests :\'('
+    else:
+        for quest in questList:
+        =LI(A(quest.title+' Difficulty '+str(quest.difficulty), _href=URL("showQuest", args=quest.id)))
+        pass
+     pass
+ }}
 </ul>

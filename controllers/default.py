@@ -11,7 +11,7 @@ def questsPage():
     if not session.quest_list:
         session.quest_list=[]
     if len(session.quest_list) <= 0:
-        quests = db().select(db.quests.ALL, orderby=db.quests.title)
+        quests = db().select(db.quests.ALL, orderby=db.quests.difficulty)
         itr = 0
         while itr < len(quests):
             session.quest_list.append(quests[itr])

@@ -1,105 +1,55 @@
-timestamp: 2017-01-11T15:44:14.239000
-CREATE TABLE auth_user(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    first_name CHAR(128),
-    last_name CHAR(128),
-    email CHAR(512),
-    password CHAR(512),
-    registration_key CHAR(512),
-    reset_password_key CHAR(512),
-    registration_id CHAR(512)
-);
-success!
-timestamp: 2017-01-11T15:44:14.655000
-CREATE TABLE auth_group(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    role CHAR(512),
-    description TEXT
-);
-success!
-timestamp: 2017-01-11T15:44:14.804000
-CREATE TABLE auth_membership(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
-    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE  
-);
-success!
-timestamp: 2017-01-11T15:44:14.988000
-CREATE TABLE auth_permission(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE  ,
-    name CHAR(512),
-    table_name CHAR(512),
-    record_id INTEGER
-);
-success!
-timestamp: 2017-01-11T15:44:15.100000
-CREATE TABLE auth_event(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    time_stamp TIMESTAMP,
-    client_ip CHAR(512),
-    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
-    origin CHAR(512),
-    description TEXT
-);
-success!
-timestamp: 2017-01-11T15:44:15.276000
-CREATE TABLE auth_cas(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
-    created_on TIMESTAMP,
-    service CHAR(512),
-    ticket CHAR(512),
-    renew CHAR(1)
-);
-success!
-timestamp: 2017-01-19T14:51:25.314000
-CREATE TABLE quests(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title CHAR(512) UNIQUE,
-    quest_giver CHAR(512),
-    reward CHAR(512),
-    details TEXT
-);
-success!
-timestamp: 2017-01-19T14:54:51.291000
-ALTER TABLE auth_user ADD username CHAR(128);
-success!
-timestamp: 2017-01-25T22:10:31.509000
-ALTER TABLE quests ADD prestige CHAR(512);
-timestamp: 2017-01-25T22:10:31.527000
-ALTER TABLE quests ADD gold CHAR(512);
-timestamp: 2017-01-25T22:10:31.548000
-ALTER TABLE quests ADD difficulty CHAR(512);
-timestamp: 2017-01-25T22:10:31.571000
-ALTER TABLE quests ADD location CHAR(512);
-success!
-timestamp: 2017-01-30T13:30:20.142000
-CREATE TABLE equip_items(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name CHAR(512) UNIQUE,
-    attack CHAR(512),
-    defense CHAR(512),
-    speed CHAR(512),
-    cost CHAR(512),
-    details TEXT
-);
-success!
-success!
-timestamp: 2017-01-30T20:24:25.243000
-ALTER TABLE auth_user ADD gold CHAR(512);
-success!
-success!
-timestamp: 2017-01-30T20:32:42.920000
-ALTER TABLE auth_user ADD cost_to_hire INTEGER;
 success!
 success!
 success!
 success!
 success!
-timestamp: 2017-01-31T22:26:13.338000
-ALTER TABLE quests ADD loot_items TEXT;
 success!
-timestamp: 2017-02-01T15:20:20.528000
-ALTER TABLE auth_user ADD inventory TEXT;
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
 success!
