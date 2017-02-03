@@ -17,7 +17,7 @@ def questsPage():
             session.quest_list.append(quests[itr])
             itr=itr+1
     return dict(questList=session.quest_list)
-
+    
 #details about a certain quest
 @auth.requires_login()
 def showQuest():
@@ -28,25 +28,28 @@ def showQuest():
 @auth.requires_login()
 def questResult():
     quest = db.quests(request.args(0, cast=int)) or redirect(URL('index'))
+    current_user = db.auth_user(auth.user.id)
+    #calculate user power
+    party_strength=1
+    #calculate party power
     if session.party:
-        party_strength=len(session.party)+1
-    else:
-        party_strength=1
+        party_strength+=len(session.party)
+        
     if float(party_strength)>=float(quest.difficulty):
-        result_msg='was a success!'
         success = 1
-        new_gold = quest.gold + db.auth_user(auth.user.id).gold
-        db.auth_user(auth.user.id).update_record(gold=new_gold)
-        user_items=db.auth_user(auth.user.id).inventory
+        result_msg = 'was a success!'
+        response.flash = 'Success!'
+        new_gold = quest.gold + current_user.gold
+        current_user.update_record(gold=new_gold)
+        user_items=current_user.inventory
         for item in quest.loot_items:
             user_items.append(item)
-        db.auth_user(auth.user.id).update_record(inventory=user_items)
+        current_user.update_record(inventory=user_items)
         if session.quest_list:
             session.quest_list.remove(quest)
-        response.flash = 'Success!'
     else:
-        result_msg='was a failure...'
         success = 0
+        result_msg = 'was a failure...'      
     return dict(quest=quest, result_msg=result_msg, success=success)
 
 #quest adding page (shouldn't be public in final build)
