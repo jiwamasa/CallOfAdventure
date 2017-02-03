@@ -135,6 +135,7 @@ def showBuyItem():
     return dict(buyItem=buyItem, cost=cost, buyNow=buyNow, goPrevious=goPrevious)
 
 #profile page
+@auth.requires_login()
 def profilePage():
     current_user = db.auth_user(auth.user.id)
     #free money button (debug)
@@ -142,6 +143,15 @@ def profilePage():
     if form.process().accepted:
         new_gold = current_user.gold + 1000
         current_user.update_record(gold=new_gold)
+        
+    if request.args(0): #equipping items to current loadout
+        equipped = db.equip_items(request.args(0))
+        if not current_user.curr_loadout: #if first loadout, make new loadout
+            new_loadout = db.loadouts.insert(creator=current_user.id)
+            current_user.update_record(curr_loadout=new_loadout)
+        db.loadouts(current_user.curr_loadout).update_record(lhand_equip=equipped.id)
+        session.flash = 'Equipped ' + equipped.name
+        redirect(URL("profilePage"))
     return dict(form=form, current_user=current_user)
 
 def user():
