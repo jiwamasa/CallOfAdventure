@@ -7,5 +7,10 @@
 for item_id in current_user.inventory:
 item = db.equip_items(item_id)
 =LI(item.name, B(" ATK: ", item.attack),B(" DEF: ", item.defense),B(" SPD: ", item.speed))
+=FORM('', INPUT(_name='equip', _type='submit', _value='Equip'), _action=URL("profilePage", args=item.id))
 pass
+}}
+<b>Current Loadout</b>
+{{
+=LI("Left hand: ", db.equip_items(db.loadouts(current_user.curr_loadout).lhand_equip).name)
 }}
