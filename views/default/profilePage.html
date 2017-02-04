@@ -2,6 +2,7 @@
 <h1>"{{=current_user.first_name}} {{=current_user.last_name}}"</h1>
 <h2>Gold: {{=current_user.gold}}</h2>
 {{=form}}
+<br>
 <b>Inventory</b>
 {{
 for item_id in current_user.inventory:
@@ -10,13 +11,19 @@ item = db.equip_items(item_id)
 =FORM('', INPUT(_name='equip', _type='submit', _value='Equip'), _action=URL("profilePage", args=item_id))
 pass
 }}
+<br>
 <b>Current Loadout</b>
 {{
+if current_user.curr_loadout:
 loadout_list = db.loadouts(current_user.curr_loadout).equip_list
 for equip_id in loadout_list[1:]:
 if equip_id:
 equip_item = db.equip_items(equip_id)
 =LI(db.equip_types(equip_item.category).name, ": ", equip_item.name)
 pass
+pass
+else:
+=BR()
+=I("Nothing Equipped")
 pass
 }}
