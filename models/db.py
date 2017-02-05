@@ -3,7 +3,7 @@ db = DAL("sqlite://storage.sqlite")
 
 # Table containing quests to take
 db.define_table('quests',
-                Field('title', unique=True),
+                Field('title'),
                 Field('quest_giver'),
                 Field('gold', 'integer'),
                 Field('prestige', 'integer'),

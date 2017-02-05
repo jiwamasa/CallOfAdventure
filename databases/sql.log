@@ -1,84 +1,29 @@
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-timestamp: 2017-02-02T15:16:33.842000
+timestamp: 2017-02-03T15:10:07.273000
+CREATE TABLE quests(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title CHAR(512) UNIQUE,
+    quest_giver CHAR(512),
+    gold INTEGER,
+    prestige INTEGER,
+    difficulty INTEGER,
+    location CHAR(512),
+    loot_items TEXT,
+    details TEXT
+);
+success!
+timestamp: 2017-02-03T15:10:07.311000
+CREATE TABLE equip_items(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name CHAR(512) UNIQUE,
+    attack INTEGER,
+    defense INTEGER,
+    speed INTEGER,
+    cost INTEGER,
+    type CHAR(512),
+    details TEXT
+);
+success!
+timestamp: 2017-02-03T15:10:07.345000
 CREATE TABLE loadouts(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name CHAR(512),
@@ -90,11 +35,65 @@ CREATE TABLE loadouts(
     legs_equip INTEGER
 );
 success!
-timestamp: 2017-02-02T15:16:34.123000
-ALTER TABLE auth_user ADD saved_loadouts TEXT;
-timestamp: 2017-02-02T15:16:34.265000
-ALTER TABLE auth_user ADD curr_loadout INTEGER;
+timestamp: 2017-02-03T15:10:07.390000
+CREATE TABLE auth_user(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    first_name CHAR(128),
+    last_name CHAR(128),
+    email CHAR(512),
+    username CHAR(128),
+    password CHAR(512),
+    registration_key CHAR(512),
+    reset_password_key CHAR(512),
+    registration_id CHAR(512),
+    gold INTEGER,
+    cost_to_hire INTEGER,
+    inventory TEXT,
+    curr_loadout INTEGER,
+    saved_loadouts TEXT
+);
 success!
-timestamp: 2017-02-02T15:20:27.885000
-ALTER TABLE equip_items ADD type CHAR(512);
+timestamp: 2017-02-03T15:10:07.418000
+CREATE TABLE auth_group(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    role CHAR(512),
+    description TEXT
+);
+success!
+timestamp: 2017-02-03T15:10:07.454000
+CREATE TABLE auth_membership(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
+    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE  
+);
+success!
+timestamp: 2017-02-03T15:10:07.483000
+CREATE TABLE auth_permission(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE  ,
+    name CHAR(512),
+    table_name CHAR(512),
+    record_id INTEGER
+);
+success!
+timestamp: 2017-02-03T15:10:07.521000
+CREATE TABLE auth_event(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    time_stamp TIMESTAMP,
+    client_ip CHAR(512),
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
+    origin CHAR(512),
+    description TEXT
+);
+success!
+timestamp: 2017-02-03T15:10:07.556000
+CREATE TABLE auth_cas(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
+    created_on TIMESTAMP,
+    service CHAR(512),
+    ticket CHAR(512),
+    renew CHAR(1)
+);
+success!
 success!
