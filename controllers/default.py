@@ -144,6 +144,9 @@ def profilePage():
         redirect(URL("profilePage"))
     return dict(form=form, current_user=current_user)
 
+def unityTest():
+    return dict()
+
 def user():
     if request.args(0) == 'profile':
         redirect(URL('profilePage'))
