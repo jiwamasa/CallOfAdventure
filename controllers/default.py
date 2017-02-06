@@ -30,7 +30,7 @@ def questResult():
         success = 1
         new_gold = quest.gold + db.auth_user(auth.user.id).gold
         db.auth_user(auth.user.id).update_record(gold=new_gold)
-        user_items=db.auth_user(auth.user.id).inventory
+        user_items=db.auth_user(auth.user.id).inventory or []
         for item in quest.loot_items:
             user_items.append(item)
         db.auth_user(auth.user.id).update_record(inventory=user_items)
@@ -123,14 +123,26 @@ def showBuyItem():
     return dict(buyItem=buyItem, cost=cost, buyNow=buyNow, goPrevious=goPrevious)
 
 #profile page
+@auth.requires_login()
 def profilePage():
+    current_user = db.auth_user(auth.user.id)
     #free money button (debug)
     form = FORM('', INPUT(_name='free', _type='submit', _value='FREE GOLD'))
     if form.process().accepted:
-        new_gold = db.auth_user(auth.user.id).gold + 1000
-        db.auth_user(auth.user.id).update_record(gold=new_gold)
-       
-    return dict(form=form)
+        new_gold = current_user.gold + 1000
+        current_user.update_record(gold=new_gold)
+        
+    if request.args(0): #equipping items to current loadout
+        equipped = db.equip_items(request.args(0))
+        if not current_user.curr_loadout: #if first loadout, make new loadout
+            new_loadout = db.loadouts.insert(creator=current_user.id)
+            current_user.update_record(curr_loadout=new_loadout)
+        new_equip_list = db.loadouts(current_user.curr_loadout).equip_list or [0]*10
+        new_equip_list[equipped.category] = equipped
+        db.loadouts(current_user.curr_loadout).update_record(equip_list=new_equip_list)
+        session.flash = 'Equipped ' + equipped.name
+        redirect(URL("profilePage"))
+    return dict(form=form, current_user=current_user)
 
 def user():
     if request.args(0) == 'profile':
