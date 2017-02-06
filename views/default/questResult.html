@@ -5,12 +5,19 @@
     You earned {{=quest.gold}} Gold! <br>
     {{if quest.loot_items:}}
     <ul>
-        {{for loot in quest.loot_items:}}
+        {{if found_items:}}
+        {{for loot in found_items:}}
         {{=LI('Found: ' + db.equip_items(loot).name)}}
+        {{pass}}
         {{pass}}
     </ul>
     {{pass}}
-</body>
 {{pass}}
 <br>
-{{=A('Continue', _href=URL("index", args=quest.id))}}
+<h1>Stats</h1>
+HP Left: {{=party_strength[0]}}
+DEF: {{=party_strength[1]}}
+ATK: {{=party_strength[2]}}
+</body>
+<br>
+{{=A('Continue', _href=URL("index"))}}

@@ -5,12 +5,34 @@
 def index():
     return dict()
 
+
+#---Necessary for Quest Generation---#
+import random
+QUEST_MIN = 5
+QUEST_MAX = 9
+QUEST_ADD_MAX = 5
+QUEST_ADD_MIN = 2
+
 #all quests page
 @auth.requires_login()
 def questsPage():
-    questList = db().select(db.quests.ALL, orderby=db.quests.title)
-    return dict(questList=questList)
-
+    if not session.quest_list:
+        session.quest_list=[]
+    quest_count = len(session.quest_list)
+    # over the limit?
+    if quest_count>=QUEST_MAX:
+        rand_remove=random.randint(0,len(session.quest_list)-1)
+        session.quest_list.pop(rand_remove)
+    # low on quests, add more
+    elif quest_count <= QUEST_MIN:
+        quests = db().select(db.quests.ALL, orderby=db.quests.difficulty)
+        rand_amount = random.randint(QUEST_ADD_MIN,QUEST_ADD_MAX)
+        while rand_amount>0:
+            rand_id = random.randint(0,len(quests)-1)
+            session.quest_list.append(quests[rand_id])
+            rand_amount=rand_amount-1
+    return dict(questList=session.quest_list)
+    
 #details about a certain quest
 @auth.requires_login()
 def showQuest():
@@ -21,24 +43,45 @@ def showQuest():
 @auth.requires_login()
 def questResult():
     quest = db.quests(request.args(0, cast=int)) or redirect(URL('index'))
+    current_user = db.auth_user(auth.user.id)
+    #calculate user power
+    #hp, atk, def
+    party_strength=[5.0,5.0,5.0]
+    #calculate party power
     if session.party:
-        party_strength=len(session.party)+1
-    else:
-        party_strength=1
-    if float(party_strength)>=float(quest.difficulty):
-        result_msg='was a success!'
+        for i in range(0,len(session.party)):
+            #add up stats for each member, dummy for now
+            party_strength=[sum(x) for x in zip(party_strength, [5.0,5.0,5.0])]
+            
+    monster_strength=[3.0*quest.difficulty,3.0*quest.difficulty,3.0*quest.difficulty]
+     
+     #main 'battle logic' take turns killing each other
+     #loser is who reaches 0 health first
+    while party_strength[0]>0.0 and monster_strength[0]>0.0:
+        monster_strength[0]-=party_strength[1]
+        party_strength[0]-=monster_strength[1]
+
+    found_items=[]
+    if party_strength[0]>=0.0:
         success = 1
-        new_gold = quest.gold + db.auth_user(auth.user.id).gold
-        db.auth_user(auth.user.id).update_record(gold=new_gold)
-        user_items=db.auth_user(auth.user.id).inventory or []
-        for item in quest.loot_items:
-            user_items.append(item)
-        db.auth_user(auth.user.id).update_record(inventory=user_items)
+        result_msg = 'was a success!'
         response.flash = 'Success!'
+        new_gold = quest.gold + current_user.gold
+        current_user.update_record(gold=new_gold)
+        user_items=current_user.inventory
+        
+        # 50% chance to drop any one item, hardcoded right now
+        for item in quest.loot_items:
+            if random.random()>0.5:
+                user_items.append(item)
+                found_items.append(item)
+        current_user.update_record(inventory=user_items)
+        if session.quest_list:
+            session.quest_list.remove(quest)
     else:
-        result_msg='was a failure...'
         success = 0
-    return dict(quest=quest, result_msg=result_msg, success=success)
+        result_msg = 'was a failure...'      
+    return dict(quest=quest, result_msg=result_msg, success=success, party_strength=party_strength, found_items=found_items)
 
 #quest adding page (shouldn't be public in final build)
 @auth.requires_login()
