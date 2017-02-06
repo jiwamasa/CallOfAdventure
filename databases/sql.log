@@ -1,7 +1,7 @@
-timestamp: 2017-02-03T15:10:07.273000
+timestamp: 2017-02-06T14:56:42.919000
 CREATE TABLE quests(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title CHAR(512) UNIQUE,
+    title CHAR(512),
     quest_giver CHAR(512),
     gold INTEGER,
     prestige INTEGER,
@@ -11,7 +11,7 @@ CREATE TABLE quests(
     details TEXT
 );
 success!
-timestamp: 2017-02-03T15:10:07.311000
+timestamp: 2017-02-06T14:56:42.959000
 CREATE TABLE equip_items(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name CHAR(512) UNIQUE,
@@ -19,23 +19,25 @@ CREATE TABLE equip_items(
     defense INTEGER,
     speed INTEGER,
     cost INTEGER,
-    type CHAR(512),
+    category INTEGER,
     details TEXT
 );
 success!
-timestamp: 2017-02-03T15:10:07.345000
+timestamp: 2017-02-06T14:56:42.999000
 CREATE TABLE loadouts(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name CHAR(512),
+    name CHAR(512) UNIQUE,
     creator INTEGER,
-    lhand_equip INTEGER,
-    rhand_equip INTEGER,
-    head_equip INTEGER,
-    chest_equip INTEGER,
-    legs_equip INTEGER
+    equip_list TEXT
 );
 success!
-timestamp: 2017-02-03T15:10:07.390000
+timestamp: 2017-02-06T14:56:43.031000
+CREATE TABLE equip_types(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name CHAR(512)
+);
+success!
+timestamp: 2017-02-06T14:56:43.063000
 CREATE TABLE auth_user(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     first_name CHAR(128),
@@ -53,21 +55,21 @@ CREATE TABLE auth_user(
     saved_loadouts TEXT
 );
 success!
-timestamp: 2017-02-03T15:10:07.418000
+timestamp: 2017-02-06T14:56:43.095000
 CREATE TABLE auth_group(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     role CHAR(512),
     description TEXT
 );
 success!
-timestamp: 2017-02-03T15:10:07.454000
+timestamp: 2017-02-06T14:56:43.124000
 CREATE TABLE auth_membership(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
     group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE  
 );
 success!
-timestamp: 2017-02-03T15:10:07.483000
+timestamp: 2017-02-06T14:56:43.159000
 CREATE TABLE auth_permission(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE  ,
@@ -76,7 +78,7 @@ CREATE TABLE auth_permission(
     record_id INTEGER
 );
 success!
-timestamp: 2017-02-03T15:10:07.521000
+timestamp: 2017-02-06T14:56:43.195000
 CREATE TABLE auth_event(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     time_stamp TIMESTAMP,
@@ -86,7 +88,7 @@ CREATE TABLE auth_event(
     description TEXT
 );
 success!
-timestamp: 2017-02-03T15:10:07.556000
+timestamp: 2017-02-06T14:56:43.243000
 CREATE TABLE auth_cas(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
@@ -95,431 +97,4 @@ CREATE TABLE auth_cas(
     ticket CHAR(512),
     renew CHAR(1)
 );
-success!
-success!
-timestamp: 2017-02-03T13:12:59.052000
-ALTER TABLE equip_items ADD category INTEGER;
-success!
-success!
-timestamp: 2017-02-03T13:13:43.089000
-ALTER TABLE loadouts ADD equip_list TEXT;
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-timestamp: 2017-02-03T13:48:11.269000
-CREATE TABLE equip_types(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name CHAR(512)
-);
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
 success!

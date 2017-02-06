@@ -54,7 +54,7 @@ sg9
 I00
 sg10
 g11
-ssS'gold'
+ssS'cost_to_hire'
 p18
 (dp19
 g4
@@ -62,7 +62,7 @@ I512
 sg5
 I00
 sg6
-I10
+I11
 sg7
 S'INTEGER'
 p20
@@ -71,7 +71,7 @@ I00
 sg10
 S'integer'
 p21
-ssS'cost_to_hire'
+ssS'gold'
 p22
 (dp23
 g4
@@ -79,7 +79,7 @@ I512
 sg5
 I00
 sg6
-I11
+I10
 sg7
 S'INTEGER'
 p24
@@ -103,7 +103,7 @@ sg9
 I00
 sg10
 g11
-ssS'id'
+ssS'email'
 p28
 (dp29
 g4
@@ -111,18 +111,17 @@ I512
 sg5
 I00
 sg6
-I1
+I4
 sg7
-S'INTEGER PRIMARY KEY AUTOINCREMENT'
+S'CHAR(512)'
 p30
 sg9
 I00
 sg10
-S'id'
-p31
+g11
 ssS'reset_password_key'
-p32
-(dp33
+p31
+(dp32
 g4
 I512
 sg5
@@ -131,14 +130,14 @@ sg6
 I8
 sg7
 S'CHAR(512)'
-p34
+p33
 sg9
 I00
 sg10
 g11
 ssS'inventory'
-p35
-(dp36
+p34
+(dp35
 g4
 I512
 sg5
@@ -147,15 +146,15 @@ sg6
 I12
 sg7
 S'TEXT'
-p37
+p36
 sg9
 I00
 sg10
 S'list:integer'
-p38
+p37
 ssS'saved_loadouts'
-p39
-(dp40
+p38
+(dp39
 g4
 I512
 sg5
@@ -164,14 +163,14 @@ sg6
 I14
 sg7
 S'TEXT'
-p41
+p40
 sg9
 I00
 sg10
-g38
+g37
 ssS'password'
-p42
-(dp43
+p41
+(dp42
 g4
 I512
 sg5
@@ -180,22 +179,14 @@ sg6
 I6
 sg7
 S'CHAR(512)'
-p44
+p43
 sg9
 I00
 sg10
-<<<<<<< HEAD
 g41
 ssS'registration_key'
 p44
 (dp45
-=======
-S'password'
-p45
-ssS'registration_key'
-p46
-(dp47
->>>>>>> fcdfceac7b769134ed958bda0ad752fca368b8b0
 g4
 I512
 sg5
@@ -204,46 +195,27 @@ sg6
 I7
 sg7
 S'CHAR(512)'
-<<<<<<< HEAD
 p46
-=======
-p48
->>>>>>> fcdfceac7b769134ed958bda0ad752fca368b8b0
 sg9
 I00
 sg10
 g11
-<<<<<<< HEAD
 ssS'id'
 p47
 (dp48
-=======
-ssS'email'
-p49
-(dp50
->>>>>>> fcdfceac7b769134ed958bda0ad752fca368b8b0
 g4
 I512
 sg5
 I00
 sg6
-I4
+I1
 sg7
-<<<<<<< HEAD
 S'INTEGER PRIMARY KEY AUTOINCREMENT'
 p49
 sg9
 I00
 sg10
 g47
-=======
-S'CHAR(512)'
-p51
-sg9
-I00
-sg10
-g11
->>>>>>> fcdfceac7b769134ed958bda0ad752fca368b8b0
 ssS'curr_loadout'
 p50
 (dp51

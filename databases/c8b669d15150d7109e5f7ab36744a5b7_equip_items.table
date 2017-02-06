@@ -1,9 +1,5 @@
 (dp1
-<<<<<<< HEAD
-S'defense'
-=======
 S'category'
->>>>>>> fcdfceac7b769134ed958bda0ad752fca368b8b0
 p2
 (dp3
 S'length'
@@ -14,11 +10,7 @@ p5
 I00
 sS'sortable'
 p6
-<<<<<<< HEAD
-I4
-=======
 I7
->>>>>>> fcdfceac7b769134ed958bda0ad752fca368b8b0
 sS'sql'
 p7
 S'INTEGER'
@@ -30,81 +22,42 @@ sS'type'
 p10
 S'integer'
 p11
-ssS'name'
+ssS'defense'
 p12
 (dp13
 g4
 I512
 sg5
-I01
+I00
 sg6
-I2
+I4
 sg7
-S'CHAR(512) UNIQUE'
+S'INTEGER'
 p14
 sg9
 I00
 sg10
-<<<<<<< HEAD
-S'string'
-=======
 g11
 ssS'name'
->>>>>>> fcdfceac7b769134ed958bda0ad752fca368b8b0
 p15
-ssg10
 (dp16
 g4
 I512
 sg5
 I01
 sg6
-<<<<<<< HEAD
-I7
-sg7
-S'CHAR(512)'
-=======
 I2
 sg7
 S'CHAR(512) UNIQUE'
->>>>>>> fcdfceac7b769134ed958bda0ad752fca368b8b0
 p17
 sg9
 I00
 sg10
-<<<<<<< HEAD
-g15
-ssS'attack'
-=======
 S'string'
->>>>>>> fcdfceac7b769134ed958bda0ad752fca368b8b0
 p18
-ssS'type'
+ssS'attack'
 p19
 (dp20
-S'sortable'
-p21
-L7L
-sS'sql'
-p22
-S'CHAR(512)'
-p23
-sS'length'
-p24
-L512L
-sS'notnull'
-p25
-L0L
-sS'unique'
-p26
-L0L
-sS'type'
-p27
-S'string'
-p28
-ssS'attack'
-p29
-(dp30
 g4
 I512
 sg5
@@ -113,23 +66,14 @@ sg6
 I3
 sg7
 S'INTEGER'
-<<<<<<< HEAD
-p20
-=======
-p31
->>>>>>> fcdfceac7b769134ed958bda0ad752fca368b8b0
+p21
 sg9
 I00
 sg10
 g11
 ssS'cost'
-<<<<<<< HEAD
-p21
-(dp22
-=======
-p32
-(dp33
->>>>>>> fcdfceac7b769134ed958bda0ad752fca368b8b0
+p22
+(dp23
 g4
 I512
 sg5
@@ -138,22 +82,14 @@ sg6
 I6
 sg7
 S'INTEGER'
-<<<<<<< HEAD
-p23
-=======
-p34
->>>>>>> fcdfceac7b769134ed958bda0ad752fca368b8b0
+p24
 sg9
 I00
 sg10
 g11
 ssS'details'
-<<<<<<< HEAD
-p24
-(dp25
-=======
-p35
-(dp36
+p25
+(dp26
 g4
 I32768
 sg5
@@ -162,45 +98,15 @@ sg6
 I8
 sg7
 S'TEXT'
-p37
-sg9
-I00
-sg10
-S'text'
-p38
-ssS'speed'
-p39
-(dp40
->>>>>>> fcdfceac7b769134ed958bda0ad752fca368b8b0
-g4
-I32768
-sg5
-I00
-sg6
-I8
-sg7
-<<<<<<< HEAD
-S'TEXT'
-p26
-sg9
-I00
-sg10
-S'text'
 p27
-ssS'speed'
-p28
-(dp29
-=======
-S'INTEGER'
-p41
 sg9
 I00
 sg10
-g11
-ssS'id'
-p42
-(dp43
->>>>>>> fcdfceac7b769134ed958bda0ad752fca368b8b0
+S'text'
+p28
+ssS'speed'
+p29
+(dp30
 g4
 I512
 sg5
@@ -208,16 +114,15 @@ I00
 sg6
 I5
 sg7
-<<<<<<< HEAD
 S'INTEGER'
-p30
+p31
 sg9
 I00
 sg10
 g11
 ssS'id'
-p31
-(dp32
+p32
+(dp33
 g4
 I512
 sg5
@@ -226,18 +131,9 @@ sg6
 I1
 sg7
 S'INTEGER PRIMARY KEY AUTOINCREMENT'
-p33
+p34
 sg9
 I00
 sg10
-g31
-=======
-S'INTEGER PRIMARY KEY AUTOINCREMENT'
-p44
-sg9
-I00
-sg10
-S'id'
-p45
->>>>>>> fcdfceac7b769134ed958bda0ad752fca368b8b0
+g32
 ss.
