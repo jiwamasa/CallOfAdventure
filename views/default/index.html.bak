@@ -1,8 +1,12 @@
 {{extend 'layout.html'}}
-<h1>Call Of Adventure</h1>
-<h2>Current Quests</h2>
-<ul>
-{{for quest in questList:}}
-{{=LI(A(quest.title, _href=URL("showQuest", args=quest.id)))}}
-{{pass}}
-</ul>
+<html>
+    <head>
+        <title> Call of Adventure </title>
+        <link rel="stylesheet" href="{{=URL('static','css/index.css')}}"/>
+    </head>
+
+    <body>
+        <h1>Call Of Adventure</h1>
+        <h2>This is the home page</h2>
+    </body>
+</html>
