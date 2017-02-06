@@ -180,7 +180,9 @@ def profilePage():
         if not current_user.curr_loadout: #if first loadout, make new loadout
             new_loadout = db.loadouts.insert(creator=current_user.id)
             current_user.update_record(curr_loadout=new_loadout)
-        db.loadouts(current_user.curr_loadout).update_record(lhand_equip=equipped.id)
+        new_equip_list = db.loadouts(current_user.curr_loadout).equip_list or [0]*10
+        new_equip_list[equipped.category] = equipped
+        db.loadouts(current_user.curr_loadout).update_record(equip_list=new_equip_list)
         session.flash = 'Equipped ' + equipped.name
         redirect(URL("profilePage"))
     return dict(form=form, current_user=current_user)
