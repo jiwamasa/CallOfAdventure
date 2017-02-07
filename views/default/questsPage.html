@@ -1,7 +1,13 @@
 {{extend 'layout.html'}}
 <h1>Available Quests</h1>
 <ul>
-{{for quest in questList:}}
-{{=LI(A(quest.title, _href=URL("showQuest", args=quest.id)))}}
-{{pass}}
+{{for quest in questList:
+    # Added this because quests would sometimes not have a title, PURGE THEM ALL!
+    if hasattr(quest, 'title'):
+        =LI(A(quest.title+' Difficulty '+str(quest.difficulty), _href=URL("showQuest", args=quest.id)))
+    else:
+        questList.remove(quest)
+    pass
+    pass
+}}
 </ul>
