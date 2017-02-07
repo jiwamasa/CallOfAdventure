@@ -99,6 +99,34 @@ def shop():
     itemList = db().select(db.equip_items.ALL, orderby=db.equip_items.cost)
     return dict(itemList=itemList)
 
+@auth.requires_login()
+def discussion():
+    return dict()
+
+@auth.requires_login()
+def discussion_quests():
+    form = SQLFORM(db.discussion_quests)
+    if form.process().accepted:
+        response.flash = 'Your comment was posted'
+    comments = db().select(db.discussion_quests.ALL, orderby=db.discussion_quests.author)
+    return dict(comments=comments, form=form)
+
+@auth.requires_login()
+def discussion_equipment():
+    form = SQLFORM(db.discussion_equipment)
+    if form.process().accepted:
+        response.flash = 'Your comment was posted'
+    comments = db().select(db.discussion_equipment.ALL, orderby=db.discussion_equipment.author)
+    return dict(comments=comments, form=form)
+
+@auth.requires_login()
+def discussion_other():
+    form = SQLFORM(db.discussion_other)
+    if form.process().accepted:
+        response.flash = 'Your comment was posted'
+    comments = db().select(db.discussion_other.ALL, orderby=db.discussion_other.author)
+    return dict(comments = comments, form = form)
+
 #adding preview item to buy page
 @auth.requires_login()
 def showBuyItem():

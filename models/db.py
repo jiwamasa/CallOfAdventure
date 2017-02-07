@@ -22,6 +22,18 @@ db.define_table('equip_items',
                 Field('cost', 'integer', readable=True),
                 Field('details', 'text'))
 
+db.define_table('discussion_quests',
+                Field('author'),
+                Field('body', 'text'))
+
+db.define_table('discussion_equipment',
+                Field('author'),
+                Field('body', 'text'))
+
+db.define_table('discussion_other',
+                Field('author'),
+                Field('body', 'text'))
+
 from gluon.tools import Auth
 auth = Auth(db)
 auth.settings.extra_fields['auth_user']= [
