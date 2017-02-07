@@ -145,7 +145,14 @@ def profilePage():
     return dict(form=form, current_user=current_user)
 
 def unityTest():
+    filename = 'applications/callofadventure/static/battle_stats/' + str(auth.user.id)
+    stat_file = open(filename,'w')
+    stat_file.write('hello file!\nstats go here.\n')
     return dict()
+
+def unitywrtest():
+    print 'unity web request recieved!'
+    return 'i received your msg\n'
 
 def user():
     if request.args(0) == 'profile':
