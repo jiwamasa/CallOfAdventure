@@ -15,6 +15,7 @@ def questsPage():
 @auth.requires_login()
 def showQuest():
     quest = db.quests(request.args(0, cast=int)) or redirect(URL('index'))
+    db.auth_user(auth.user.id).update_record(curr_session_id=request.cookies["session_id_callofadventure"].value)
     return dict(quest=quest)
 
 #result of quest
@@ -150,9 +151,35 @@ def unityTest():
     stat_file.write('hello file!\nstats go here.\n')
     return dict()
 
+#depricated test method, use unitywrtest2 instead
 def unitywrtest():
-    print 'unity web request recieved!'
-    return 'i received your msg\n'
+    request_session_id = request.cookies["session_id_callofadventure"].value
+    questing_user = db(db.auth_user.curr_session_id == request_session_id).select().first()
+    stats = ""
+    if not questing_user:
+        stats = 'error, no matching user'
+    else:
+        #PUT STATS ENCODED IN STRING HERE
+        #WILL BE SENT TO UNITY TO BE PARSED
+        stats = 'NAME:'+questing_user.first_name
+    return stats
+
+def unitywrtest2():
+    print request
+    request_session_id = request.cookies["session_id_callofadventure"].value
+    questing_user = db(db.auth_user.curr_session_id == request_session_id).select().first()
+    stats = ""
+    if not questing_user:
+        stats = 'error, no matching user'
+    else:
+        #PUT STATS ENCODED IN STRING HERE
+        #WILL BE SENT TO UNITY TO BE PARSED
+        stats = 'NAME:'+questing_user.first_name
+    return stats
+
+
+def status():
+    return dict(session=session,request=request,response=response,auser=auth.user);
 
 def user():
     if request.args(0) == 'profile':

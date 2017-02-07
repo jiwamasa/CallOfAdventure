@@ -1,6 +1,9 @@
 # Create database
 db = DAL("sqlite://storage.sqlite")
 
+# Add sessions to database
+session.connect(request, response, db, masterapp=None)
+
 # Table containing quests to take
 db.define_table('quests',
                 Field('title', unique=True),
@@ -39,6 +42,7 @@ auth.settings.extra_fields['auth_user']= [
     Field('cost_to_hire', 'integer', readable=True, writable=True),
     Field('inventory', 'list:integer', default=[]),
     Field('curr_loadout', 'integer', 0), # Currently equipped loadout
-    Field('saved_loadouts', 'list:integer') # All saved loadouts
+    Field('saved_loadouts', 'list:integer'), # All saved loadouts
+    Field('curr_session_id') # Current session for battle tracking
 ]
 auth.define_tables(username=True)

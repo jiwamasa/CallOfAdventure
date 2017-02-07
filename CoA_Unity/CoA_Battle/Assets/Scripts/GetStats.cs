@@ -15,7 +15,7 @@ public class GetStats : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		showStats = GetComponent<Text> ();
-		webRequest = new UnityWebRequest ("http://127.0.0.1:8000/callofadventure/default/unitywrtest");
+		webRequest = new UnityWebRequest ("http://127.0.0.1:8000/callofadventure/default/unitywrtest2");
 		webRequest.downloadHandler = new DownloadHandlerBuffer ();
 		requestOp = webRequest.Send ();
 	}
