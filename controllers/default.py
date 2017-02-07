@@ -32,7 +32,8 @@ def questsPage():
                 rand_id = random.randint(0,len(quests)-1)
                 session.quest_list.append(quests[rand_id])
                 rand_amount=rand_amount-1
-            rand_amount=-1
+            else:
+                rand_amount=-1
     return dict(questList=session.quest_list)
     
 #details about a certain quest
