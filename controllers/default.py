@@ -153,28 +153,24 @@ def unityTest():
 
 #depricated test method, use unitywrtest2 instead
 def unitywrtest():
-    request_session_id = request.cookies["session_id_callofadventure"].value
-    questing_user = db(db.auth_user.curr_session_id == request_session_id).select().first()
-    stats = ""
-    if not questing_user:
-        stats = 'error, no matching user'
-    else:
-        #PUT STATS ENCODED IN STRING HERE
-        #WILL BE SENT TO UNITY TO BE PARSED
-        stats = 'NAME:'+questing_user.first_name
-    return stats
+    return dict()
 
 def unitywrtest2():
-    print request
-    request_session_id = request.cookies["session_id_callofadventure"].value
-    questing_user = db(db.auth_user.curr_session_id == request_session_id).select().first()
+    #request_session_id = request.cookies["session_id_callofadventure"].value
+    #questing_user = db(db.auth_user.curr_session_id == request_session_id).select().first()
+    #quest_session = db(db.web2py_session_CallOfAdventure.unique_key == request_session_id[2:]).select().first()
+    session.connect(request)
+    print session.auth.user.first_name
     stats = ""
-    if not questing_user:
-        stats = 'error, no matching user'
-    else:
+    stats += session.auth.user.first_name
+    for party_id in session.party:
+        stats+=db.auth_user(party_id).first_name
+    #if not questing_user:
+    #    stats = 'error, no matching user'
+    #else:
         #PUT STATS ENCODED IN STRING HERE
         #WILL BE SENT TO UNITY TO BE PARSED
-        stats = 'NAME:'+questing_user.first_name
+    #    stats = 'NAME:'+questing_user.first_name
     return stats
 
 
