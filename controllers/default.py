@@ -176,6 +176,7 @@ def showBuyItem():
     buyItem = db.equip_items(request.args(0, cast=int)) or redirect(URL('index'))
     cost = buyItem.cost or 0
     current_gold = db.auth_user(auth.user.id).gold or 0
+    current_inventory = db.auth_user(auth.user.id).inventory
 
     buyNow = FORM('', INPUT(_name='buyNow', _type='submit', _value='Buy'))
     goPrevious = FORM('', INPUT(_name='goPrevious', _type='submit', _value='Cancel'))
@@ -185,12 +186,13 @@ def showBuyItem():
             redirect(URL('shop'))
         else:
             new_gold = current_gold - cost
+            current_inventory.append(buyItem)
             db.auth_user(auth.user.id).update_record(gold=new_gold)
+            db.auth_user(auth.user.id).update_record(inventory = current_inventory)
             session.flash = buyItem.name + " has been purchased!"
             redirect(URL('shop'))
     if goPrevious.process(formname='go_previous').accepted:
         redirect(URL('shop'))
-
     return dict(buyItem=buyItem, cost=cost, buyNow=buyNow, goPrevious=goPrevious)
 
 #profile page

@@ -1,0 +1,943 @@
+(dp1
+S'output'
+p2
+S"<class 'sqlite3.OperationalError'> no such table: auth_user"
+p3
+sS'layer'
+p4
+S'/Users/JMazer/web2py/applications/CallOfAdventure/controllers/default.py'
+p5
+sS'code'
+p6
+S'#default controller\n\n#home page\n@auth.requires_login()\ndef index():\n    return dict()\n\n#all quests page\n@auth.requires_login()\ndef questsPage():\n    questList = db().select(db.quests.ALL, orderby=db.quests.title)\n    return dict(questList=questList)\n\n#details about a certain quest\n@auth.requires_login()\ndef showQuest():\n    quest = db.quests(request.args(0, cast=int)) or redirect(URL(\'index\'))\n    return dict(quest=quest)\n\n#result of quest\n@auth.requires_login()\ndef questResult():\n    quest = db.quests(request.args(0, cast=int)) or redirect(URL(\'index\'))\n    if session.party:\n        party_strength=len(session.party)+1\n    else:\n        party_strength=1\n    if float(party_strength)>=float(quest.difficulty):\n        result_msg=\'was a success!\'\n        success = 1\n        new_gold = quest.gold + db.auth_user(auth.user.id).gold\n        db.auth_user(auth.user.id).update_record(gold=new_gold)\n        user_items=db.auth_user(auth.user.id).inventory\n        for item in quest.loot_items:\n            user_items.append(item)\n        db.auth_user(auth.user.id).update_record(inventory=user_items)\n        response.flash = \'Success!\'\n    else:\n        result_msg=\'was a failure...\'\n        success = 0\n    return dict(quest=quest, result_msg=result_msg, success=success)\n\n#quest adding page (shouldn\'t be public in final build)\n@auth.requires_login()\ndef addQuest():\n    grid = SQLFORM.smartgrid(db.quests)\n    return dict(grid=grid)\n\n#all hires page\n@auth.requires_login()\ndef hirePage():\n    hireList = db().select(db.auth_user.ALL, orderby=db.auth_user.first_name)\n    disband = FORM(\'\', INPUT(_name=\'disband\', _type=\'submit\',\n                             _value=\'Disband Party\'))\n    if disband.process().accepted: #if disband button is clicked\n        session.party = [] #empty party\n        response.flash = \'Party disbanded\'\n    return dict(hireList=hireList, disband=disband)\n\n#details about a certain person to hire them\n@auth.requires_login()\ndef showHire():\n    hire = db.auth_user(request.args(0, cast=int)) or redirect(URL(\'index\'))\n    cost = hire.cost_to_hire or 0\n    current_gold = db.auth_user(auth.user.id).gold or 0\n    form = FORM(\'\', INPUT(_name=\'hire\', _type=\'submit\', _value=\'Hire\'))\n    if form.process().accepted: #when hire button is clicked...\n        if session.party: #if party already started...\n            if hire.id in session.party: #but already hired, alert user\n                session.flash = \'Already hired \' + hire.first_name\n                redirect(URL(\'hirePage\'))\n            else: #otherwise, add to party\n                session.party.append(hire.id)\n        else: #if party hasn\'t been started, create a new one\n            session.party = [hire.id]\n        if current_gold < cost: #if not enough money...\n            session.party.remove(hire.id) #remove hire\n            session.flash = \'Not enough gold to hire\'\n            redirect(URL(\'hirePage\'))\n        new_gold = current_gold - cost #deduct hiring cost \n        db.auth_user(auth.user.id).update_record(gold=new_gold) \n        new_gold = hire.gold + cost #add payment\n        hire.update_record(gold=new_gold)\n        session.flash = \'Successfully hired adventurer \' + hire.first_name\n        redirect(URL(\'hirePage\'))\n    return dict(hire=hire, cost=cost, form=form)\n\n#adding item page (shouldn\'t be public in final build)\n@auth.requires_login()\ndef addItem():\n    grid = SQLFORM.smartgrid(db.equip_items)\n    return dict(grid=grid)\n\n\n\n#adding shop page\n@auth.requires_login()\ndef shop():\n    itemList = db().select(db.equip_items.ALL, orderby=db.equip_items.cost)\n    return dict(itemList=itemList)\n\n@auth.requires_login()\ndef discussion():\n    return dict()\n\n@auth.requires_login()\ndef discussion_quests():\n    form = SQLFORM(db.discussion_quests)\n    if form.process().accepted:\n        response.flash = \'Your comment was posted\'\n    comments = db().select(db.discussion_quests.ALL, orderby=db.discussion_quests.author)\n    return dict(comments=comments, form=form)\n\n@auth.requires_login()\ndef discussion_equipment():\n    form = SQLFORM(db.discussion_equipment)\n    if form.process().accepted:\n        response.flash = \'Your comment was posted\'\n    comments = db().select(db.discussion_equipment.ALL, orderby=db.discussion_equipment.author)\n    return dict(comments=comments, form=form)\n\n@auth.requires_login()\ndef discussion_other():\n    form = SQLFORM(db.discussion_other)\n    if form.process().accepted:\n        response.flash = \'Your comment was posted\'\n    comments = db().select(db.discussion_other.ALL, orderby=db.discussion_other.author)\n    return dict(comments = comments, form = form)\n\n#adding preview item to buy page\n@auth.requires_login()\ndef showBuyItem():\n    buyItem = db.equip_items(request.args(0, cast=int)) or redirect(URL(\'index\'))\n    cost = buyItem.cost or 0\n    current_gold = db.auth_user(auth.user.id).gold or 0\n\n    buyNow = FORM(\'\', INPUT(_name=\'buyNow\', _type=\'submit\', _value=\'Buy\'))\n    goPrevious = FORM(\'\', INPUT(_name=\'goPrevious\', _type=\'submit\', _value=\'Cancel\'))\n    if buyNow.process(formname=\'buy_now\').accepted: #if buy button pressed\n        if current_gold < cost: #transact\n            session.flash = \'Not enough gold to buy the item\'\n            redirect(URL(\'shop\'))\n        else:\n            new_gold = current_gold - cost\n            db.auth_user(auth.user.id).update_record(gold=new_gold)\n            session.flash = buyItem.name + " has been purchased!"\n            redirect(URL(\'shop\'))\n    if goPrevious.process(formname=\'go_previous\').accepted:\n        redirect(URL(\'shop\'))\n\n    return dict(buyItem=buyItem, cost=cost, buyNow=buyNow, goPrevious=goPrevious)\n\n#profile page\ndef profilePage():\n    #free money button (debug)\n    form = FORM(\'\', INPUT(_name=\'free\', _type=\'submit\', _value=\'FREE GOLD\'))\n    if form.process().accepted:\n        new_gold = db.auth_user(auth.user.id).gold + 1000\n        db.auth_user(auth.user.id).update_record(gold=new_gold)\n       \n    return dict(form=form)\n\ndef user():\n    if request.args(0) == \'profile\':\n        redirect(URL(\'profilePage\'))\n    return dict(form=auth())\n\nresponse._vars=response._caller(user)\n'
+p7
+sS'snapshot'
+p8
+(dp9
+S'exception'
+p10
+(dp11
+S'__module__'
+p12
+S"'sqlite3'"
+p13
+sS'__getslice__'
+p14
+S"<method-wrapper '__getslice__' of OperationalError object>"
+p15
+sS'__str__'
+p16
+S"<method-wrapper '__str__' of OperationalError object>"
+p17
+sS'__reduce__'
+p18
+S'<built-in method __reduce__ of OperationalError object>'
+p19
+sS'__dict__'
+p20
+S'{}'
+p21
+sS'__sizeof__'
+p22
+S'<built-in method __sizeof__ of OperationalError object>'
+p23
+sS'__weakref__'
+p24
+S'None'
+p25
+sS'__init__'
+p26
+S"<method-wrapper '__init__' of OperationalError object>"
+p27
+sS'__setattr__'
+p28
+S"<method-wrapper '__setattr__' of OperationalError object>"
+p29
+sS'__reduce_ex__'
+p30
+S'<built-in method __reduce_ex__ of OperationalError object>'
+p31
+sS'__new__'
+p32
+S'<built-in method __new__ of type object>'
+p33
+sS'__format__'
+p34
+S'<built-in method __format__ of OperationalError object>'
+p35
+sS'__class__'
+p36
+S"<class 'sqlite3.OperationalError'>"
+p37
+sS'__doc__'
+p38
+S'None'
+p39
+sS'__getitem__'
+p40
+S"<method-wrapper '__getitem__' of OperationalError object>"
+p41
+sS'__setstate__'
+p42
+S'<built-in method __setstate__ of OperationalError object>'
+p43
+sS'__getattribute__'
+p44
+S"<method-wrapper '__getattribute__' of OperationalError object>"
+p45
+sS'args'
+p46
+S"('no such table: auth_user',)"
+p47
+sS'__subclasshook__'
+p48
+S'<built-in method __subclasshook__ of type object>'
+p49
+sS'__unicode__'
+p50
+S'<built-in method __unicode__ of OperationalError object>'
+p51
+sS'__delattr__'
+p52
+S"<method-wrapper '__delattr__' of OperationalError object>"
+p53
+sS'__repr__'
+p54
+S"<method-wrapper '__repr__' of OperationalError object>"
+p55
+sS'__hash__'
+p56
+S"<method-wrapper '__hash__' of OperationalError object>"
+p57
+ssS'evalue'
+p58
+S'no such table: auth_user'
+p59
+sS'request'
+p60
+cgluon.html
+XML_unpickle
+p61
+(S's\xcec\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top;">ajax</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">application</td><td style="vertical-align:top;">:</td><td><div>CallOfAdventure</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">args</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>login</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cid</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">client</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">controller</td><td style="vertical-align:top;">:</td><td><div>default</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cookies</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">session_id_admin</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-889d800c-dd2a-414e-9741-b4e7e3d7c882<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_callofadventure</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-6c47fb6f-d82c-40f0-ae48-183673222f88<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_welcome</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-d2e98ade-0edf-4f2d-9cb2-8c96021399c9<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">env</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">CONTENT_LENGTH</td><td style="vertical-align:top;">:</td><td><div>603</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">CONTENT_TYPE</td><td style="vertical-align:top;">:</td><td><div>multipart/form-data; boundary=----WebKitFormBoundaryM090hXRB11xOgm0H</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ACCEPT</td><td style="vertical-align:top;">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ACCEPT_ENCODING</td><td style="vertical-align:top;">:</td><td><div>gzip, deflate, br</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ACCEPT_LANGUAGE</td><td style="vertical-align:top;">:</td><td><div>en-US,en;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_CACHE_CONTROL</td><td style="vertical-align:top;">:</td><td><div>max-age=0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_CONNECTION</td><td style="vertical-align:top;">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_CONTENT_LENGTH</td><td style="vertical-align:top;">:</td><td><div>603</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_CONTENT_TYPE</td><td style="vertical-align:top;">:</td><td><div>multipart/form-data; boundary=----WebKitFormBoundaryM090hXRB11xOgm0H</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_COOKIE</td><td style="vertical-align:top;">:</td><td><div>session_id_welcome=127.0.0.1-d2e98ade-0edf-4f2d-9cb2-8c96021399c9; session_id_admin=127.0.0.1-889d800c-dd2a-414e-9741-b4e7e3d7c882; session_id_callofadventure=127.0.0.1-6c47fb6f-d82c-40f0-ae48-183673222f88</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_HOST</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1:8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ORIGIN</td><td style="vertical-align:top;">:</td><td><div>http://127.0.0.1:8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_REFERER</td><td style="vertical-align:top;">:</td><td><div>http://127.0.0.1:8000/CallOfAdventure/default/user/login?_next=/CallOfAdventure/default/index</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_UPGRADE_INSECURE_REQUESTS</td><td style="vertical-align:top;">:</td><td><div>1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_USER_AGENT</td><td style="vertical-align:top;">:</td><td><div>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">PATH_INFO</td><td style="vertical-align:top;">:</td><td><div>/CallOfAdventure/default/user/login</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">QUERY_STRING</td><td style="vertical-align:top;">:</td><td><div>_next=/CallOfAdventure/default/index</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">REMOTE_ADDR</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">REMOTE_PORT</td><td style="vertical-align:top;">:</td><td><div>51617</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">REQUEST_METHOD</td><td style="vertical-align:top;">:</td><td><div>POST</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SCRIPT_NAME</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_NAME</td><td style="vertical-align:top;">:</td><td><div>jsmazer</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_PORT</td><td style="vertical-align:top;">:</td><td><div>8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_PROTOCOL</td><td style="vertical-align:top;">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_SOFTWARE</td><td style="vertical-align:top;">:</td><td><div>Rocket 1.2.6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">app_folders</td><td style="vertical-align:top;">:</td><td><div>set([&#x27;/Users/JMazer/web2py/applications/CallOfAdventure/&#x27;, &#x27;/Users/JMazer/web2py/applications/welcome/&#x27;, &#x27;/Users/JMazer/web2py/applications/admin/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">applications_parent</td><td style="vertical-align:top;">:</td><td><div>/Users/JMazer/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_args</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_options</td><td style="vertical-align:top;">:</td><td><div>&lt;Values at 0x10488d368: {&#x27;verbose&#x27;: False, &#x27;ip&#x27;: &#x27;127.0.0.1&#x27;, &#x27;debuglevel&#x27;: 30, &#x27;with_scheduler&#x27;: False, &#x27;shutdown_timeout&#x27;: 5, &#x27;taskbar&#x27;: False, &#x27;with_coverage&#x27;: False, &#x27;pid_filename&#x27;: &#x27;httpserver.pid&#x27;, &#x27;maxthreads&#x27;: None, &#x27;softcron&#x27;: False, &#x27;server_name&#x27;: &#x27;jsmazer&#x27;, &#x27;bpython&#x27;: False, &#x27;nogui&#x27;: False, &#x27;port&#x27;: 8000, &#x27;print_errors&#x27;: False, &#x27;extcron&#x27;: False, &#x27;runcron&#x27;: False, &#x27;run_system_tests&#x27;: False, &#x27;test&#x27;: None, &#x27;folder&#x27;: &#x27;/Users/JMazer/web2py&#x27;, &#x27;config&#x27;: &#x27;&#x27;, &#x27;minthreads&#x27;: None, &#x27;shell&#x27;: None, &#x27;run&#x27;: &#x27;&#x27;, &#x27;log_filename&#x27;: &#x27;httpserver.log&#x27;, &#x27;profiler_dir&#x27;: None, &#x27;args&#x27;: [&#x27;&#x27;], &#x27;socket_timeout&#x27;: 5, &#x27;ssl_ca_certificate&#x27;: None, &#x27;scheduler&#x27;: None, &#x27;interfaces&#x27;: None, &#x27;ssl_private_key&#x27;: &#x27;&#x27;, &#x27;gae&#x27;: None, &#x27;password&#x27;: &#x27;******&#x27;, &#x27;request_queue_size&#x27;: 5, &#x27;ssl_certificate&#x27;: &#x27;&#x27;, &#x27;cronjob&#x27;: False, &#x27;numthreads&#x27;: None, &#x27;quiet&#x27;: False, &#x27;import_models&#x27;: False, &#x27;timeout&#x27;: 10, &#x27;plain&#x27;: False, &#x27;nobanner&#x27;: False}&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">content_length</td><td style="vertical-align:top;">:</td><td><div>603</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">content_type</td><td style="vertical-align:top;">:</td><td><div>multipart/form-data; boundary=----WebKitFormBoundaryM090hXRB11xOgm0H</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">db_sessions</td><td style="vertical-align:top;">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">debugging</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">gluon_parent</td><td style="vertical-align:top;">:</td><td><div>/Users/JMazer/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_accept</td><td style="vertical-align:top;">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_accept_encoding</td><td style="vertical-align:top;">:</td><td><div>gzip, deflate, br</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_accept_language</td><td style="vertical-align:top;">:</td><td><div>en-US,en;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_cache_control</td><td style="vertical-align:top;">:</td><td><div>max-age=0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_connection</td><td style="vertical-align:top;">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_content_length</td><td style="vertical-align:top;">:</td><td><div>603</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_content_type</td><td style="vertical-align:top;">:</td><td><div>multipart/form-data; boundary=----WebKitFormBoundaryM090hXRB11xOgm0H</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_cookie</td><td style="vertical-align:top;">:</td><td><div>session_id_welcome=127.0.0.1-d2e98ade-0edf-4f2d-9cb2-8c96021399c9; session_id_admin=127.0.0.1-889d800c-dd2a-414e-9741-b4e7e3d7c882; session_id_callofadventure=127.0.0.1-6c47fb6f-d82c-40f0-ae48-183673222f88</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_host</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1:8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_origin</td><td style="vertical-align:top;">:</td><td><div>http://127.0.0.1:8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_referer</td><td style="vertical-align:top;">:</td><td><div>http://127.0.0.1:8000/CallOfAdventure/default/user/login?_next=/CallOfAdventure/default/index</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_upgrade_insecure_requests</td><td style="vertical-align:top;">:</td><td><div>1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_user_agent</td><td style="vertical-align:top;">:</td><td><div>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_jython</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_pypy</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_source</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">local_hosts</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>::1</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr><tr><td><div>jsmazer</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path_info</td><td style="vertical-align:top;">:</td><td><div>/CallOfAdventure/default/user/login</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">query_string</td><td style="vertical-align:top;">:</td><td><div>_next=/CallOfAdventure/default/index</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">remote_addr</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">remote_port</td><td style="vertical-align:top;">:</td><td><div>51617</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">request_method</td><td style="vertical-align:top;">:</td><td><div>POST</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">request_uri</td><td style="vertical-align:top;">:</td><td><div>/CallOfAdventure/default/user/login?_next=/CallOfAdventure/default/index</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">script_name</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_name</td><td style="vertical-align:top;">:</td><td><div>jsmazer</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_port</td><td style="vertical-align:top;">:</td><td><div>8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_protocol</td><td style="vertical-align:top;">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_software</td><td style="vertical-align:top;">:</td><td><div>Rocket 1.2.6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">web2py_path</td><td style="vertical-align:top;">:</td><td><div>/Users/JMazer/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">web2py_version</td><td style="vertical-align:top;">:</td><td><div>2.14.6-stable+timestamp.2016.05.10.00.21.47</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.errors</td><td style="vertical-align:top;">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x1003511e0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.file_wrapper</td><td style="vertical-align:top;">:</td><td><div>&lt;class wsgiref.util.FileWrapper at 0x1045944c8&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.input</td><td style="vertical-align:top;">:</td><td><div>&lt;socket._fileobject object at 0x10dd98250&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.multiprocess</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.multithread</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.run_once</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.url_scheme</td><td style="vertical-align:top;">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.version</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>1</div></td></tr><tr><td><div>0</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_errors</td><td style="vertical-align:top;">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x1003511e0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_file_wrapper</td><td style="vertical-align:top;">:</td><td><div>&lt;class wsgiref.util.FileWrapper at 0x1045944c8&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_input</td><td style="vertical-align:top;">:</td><td><div>&lt;socket._fileobject object at 0x10dd98250&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_multiprocess</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_multithread</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_run_once</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_url_scheme</td><td style="vertical-align:top;">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_version</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>1</div></td></tr><tr><td><div>0</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">extension</td><td style="vertical-align:top;">:</td><td><div>html</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">folder</td><td style="vertical-align:top;">:</td><td><div>/Users/JMazer/web2py/applications/CallOfAdventure/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">function</td><td style="vertical-align:top;">:</td><td><div>user</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">global_settings</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">app_folders</td><td style="vertical-align:top;">:</td><td><div>set([&#x27;/Users/JMazer/web2py/applications/CallOfAdventure/&#x27;, &#x27;/Users/JMazer/web2py/applications/welcome/&#x27;, &#x27;/Users/JMazer/web2py/applications/admin/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">applications_parent</td><td style="vertical-align:top;">:</td><td><div>/Users/JMazer/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_args</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_options</td><td style="vertical-align:top;">:</td><td><div>&lt;Values at 0x10488d368: {&#x27;verbose&#x27;: False, &#x27;ip&#x27;: &#x27;127.0.0.1&#x27;, &#x27;debuglevel&#x27;: 30, &#x27;with_scheduler&#x27;: False, &#x27;shutdown_timeout&#x27;: 5, &#x27;taskbar&#x27;: False, &#x27;with_coverage&#x27;: False, &#x27;pid_filename&#x27;: &#x27;httpserver.pid&#x27;, &#x27;maxthreads&#x27;: None, &#x27;softcron&#x27;: False, &#x27;server_name&#x27;: &#x27;jsmazer&#x27;, &#x27;bpython&#x27;: False, &#x27;nogui&#x27;: False, &#x27;port&#x27;: 8000, &#x27;print_errors&#x27;: False, &#x27;extcron&#x27;: False, &#x27;runcron&#x27;: False, &#x27;run_system_tests&#x27;: False, &#x27;test&#x27;: None, &#x27;folder&#x27;: &#x27;/Users/JMazer/web2py&#x27;, &#x27;config&#x27;: &#x27;&#x27;, &#x27;minthreads&#x27;: None, &#x27;shell&#x27;: None, &#x27;run&#x27;: &#x27;&#x27;, &#x27;log_filename&#x27;: &#x27;httpserver.log&#x27;, &#x27;profiler_dir&#x27;: None, &#x27;args&#x27;: [&#x27;&#x27;], &#x27;socket_timeout&#x27;: 5, &#x27;ssl_ca_certificate&#x27;: None, &#x27;scheduler&#x27;: None, &#x27;interfaces&#x27;: None, &#x27;ssl_private_key&#x27;: &#x27;&#x27;, &#x27;gae&#x27;: None, &#x27;password&#x27;: &#x27;******&#x27;, &#x27;request_queue_size&#x27;: 5, &#x27;ssl_certificate&#x27;: &#x27;&#x27;, &#x27;cronjob&#x27;: False, &#x27;numthreads&#x27;: None, &#x27;quiet&#x27;: False, &#x27;import_models&#x27;: False, &#x27;timeout&#x27;: 10, &#x27;plain&#x27;: False, &#x27;nobanner&#x27;: False}&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">db_sessions</td><td style="vertical-align:top;">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">debugging</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">gluon_parent</td><td style="vertical-align:top;">:</td><td><div>/Users/JMazer/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_jython</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_pypy</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_source</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">local_hosts</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>::1</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr><tr><td><div>jsmazer</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">web2py_version</td><td style="vertical-align:top;">:</td><td><div>2.14.6-stable+timestamp.2016.05.10.00.21.47</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_https</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_local</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_restful</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_scheduler</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_shell</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">now</td><td style="vertical-align:top;">:</td><td><div>datetime.datetime(2017, 2, 6, 17, 21, 51, 974825)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">raw_args</td><td style="vertical-align:top;">:</td><td><div>login</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">raw_extension</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">url</td><td style="vertical-align:top;">:</td><td><div>/CallOfAdventure/default/user/login</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">utcnow</td><td style="vertical-align:top;">:</td><td><div>datetime.datetime(2017, 2, 7, 1, 21, 51, 974831)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi</td><td style="vertical-align:top;">:</td><td><div>&lt;gluon.main.LazyWSGI object at 0x10de92d50&gt;</div></td></tr></table></div>'
+tRp62
+sS'frames'
+p63
+(lp64
+(dp65
+S'file'
+p66
+S'/Users/JMazer/web2py/gluon/restricted.py'
+p67
+sS'dump'
+p68
+(dp69
+S'environment'
+p70
+S"{'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'ASSIGNJS': <function ASSIGNJS>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'BUTTON': <class 'gluon.html.BUTTON'>, 'CAT': <class 'gluon.html.CAT'>, ...}"
+p71
+sS'ccode'
+p72
+S'<code object <module> at 0x10de2eeb0, file "/Use.../CallOfAdventure/controllers/default.py", line 4>'
+p73
+ssS'lnum'
+p74
+I227
+sS'lines'
+p75
+(dp76
+I224
+S'            ccode = code'
+p77
+sI225
+S'        else:'
+p78
+sI226
+S'            ccode = compile2(code, layer)'
+p79
+sI227
+S'        exec ccode in environment'
+p80
+sI228
+S'    except HTTP:'
+p81
+sI229
+S'        raise'
+p82
+sI230
+S'    except RestrictedError:'
+p83
+sI231
+S'        # do not encapsulate (obfuscate) the original RestrictedError'
+p84
+sI222
+S'    try:'
+p85
+sI223
+S'        if isinstance(code, types.CodeType):'
+p86
+ssS'call'
+p87
+S"(code='#default controller\\n\\n#home page\\n@auth.requires_l...m=auth())\\n\\nresponse._vars=response._caller(user)\\n', environment={'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'ASSIGNJS': <function ASSIGNJS>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'BUTTON': <class 'gluon.html.BUTTON'>, 'CAT': <class 'gluon.html.CAT'>, ...}, layer='/Users/JMazer/web2py/applications/CallOfAdventure/controllers/default.py')"
+p88
+sS'func'
+p89
+S'restricted'
+p90
+sa(dp91
+g66
+S'/Users/JMazer/web2py/applications/CallOfAdventure/controllers/default.py'
+p92
+sg68
+(dp93
+sg74
+I168
+sg75
+(dp94
+I160
+S''
+sI161
+S'    return dict(form=form)'
+p95
+sI162
+S''
+sI163
+S'def user():'
+p96
+sI164
+S"    if request.args(0) == 'profile':"
+p97
+sI165
+S"        redirect(URL('profilePage'))"
+p98
+sI166
+S'    return dict(form=auth())'
+p99
+sI157
+S'    if form.process().accepted:'
+p100
+sI158
+S'        new_gold = db.auth_user(auth.user.id).gold + 1000'
+p101
+sI159
+S'        db.auth_user(auth.user.id).update_record(gold=new_gold)'
+p102
+ssg87
+S'()'
+p103
+sg89
+S'<module>'
+p104
+sa(dp105
+g66
+S'/Users/JMazer/web2py/gluon/globals.py'
+p106
+sg68
+(dp107
+S'self'
+p108
+S'undefined'
+p109
+sS'f'
+S'<function user>'
+p110
+ssg74
+I417
+sg75
+(dp111
+I416
+S'        self._vars = None'
+p112
+sI417
+S'        self._caller = lambda f: f()'
+p113
+sI418
+S'        self._view_environment = None'
+p114
+sI419
+S'        self._custom_commit = None'
+p115
+sI420
+S'        self._custom_rollback = None'
+p116
+sI421
+S"        self.generic_patterns = ['*']"
+p117
+sI412
+S"        self.flash = ''            # used by the default view layout"
+p118
+sI413
+S'        self.meta = Storage()      # used by web2py_ajax.html'
+p119
+sI414
+S'        self.menu = []             # used by the default view layout'
+p120
+sI415
+S'        self.files = []            # used by web2py_ajax.html'
+p121
+ssg87
+S'(f=<function user>)'
+p122
+sg89
+S'<lambda>'
+p123
+sa(dp124
+g66
+S'/Users/JMazer/web2py/applications/CallOfAdventure/controllers/default.py'
+p125
+sg68
+(dp126
+S'global auth'
+p127
+S'<gluon.tools.Auth object>'
+p128
+sS'form'
+p129
+g109
+sS'builtindict'
+p130
+S"<type 'dict'>"
+p131
+ssg74
+I166
+sg75
+(dp132
+I160
+S''
+sI161
+S'    return dict(form=form)'
+p133
+sI162
+S''
+sI163
+S'def user():'
+p134
+sI164
+S"    if request.args(0) == 'profile':"
+p135
+sI165
+S"        redirect(URL('profilePage'))"
+p136
+sI166
+S'    return dict(form=auth())'
+p137
+sI157
+S'    if form.process().accepted:'
+p138
+sI158
+S'        new_gold = db.auth_user(auth.user.id).gold + 1000'
+p139
+sI159
+S'        db.auth_user(auth.user.id).update_record(gold=new_gold)'
+p140
+ssg87
+S'()'
+p141
+sg89
+S'user'
+p142
+sa(dp143
+g66
+S'/Users/JMazer/web2py/gluon/tools.py'
+p144
+sg68
+(dp145
+S'self'
+p146
+S'<gluon.tools.Auth object>'
+p147
+sS'args'
+p148
+S"['login']"
+p149
+sS'builtingetattr'
+p150
+S'<built-in function getattr>'
+p151
+ssg74
+I1941
+sg75
+(dp152
+I1936
+S"                       'impersonate', 'not_authorized', 'confirm_registration',"
+p153
+sI1937
+S"                       'bulk_register', 'manage_tokens', 'jwt'):"
+p154
+sI1938
+S"            if len(request.args) >= 2 and args[0] == 'impersonate':"
+p155
+sI1939
+S'                return getattr(self, args[0])(request.args[1])'
+p156
+sI1940
+S'            else:'
+p157
+sI1941
+S'                return getattr(self, args[0])()'
+p158
+sI1942
+S"        elif args[0] == 'cas' and not self.settings.cas_provider:"
+p159
+sI1943
+S"            if args(1) == self.settings.cas_actions['login']:"
+p160
+sI1944
+S'                return self.cas_login(version=2)'
+p161
+sI1945
+S"            elif args(1) == self.settings.cas_actions['validate']:"
+p162
+ssg87
+S'(self=<gluon.tools.Auth object>)'
+p163
+sg89
+S'__call__'
+p164
+sa(dp165
+g66
+S'/Users/JMazer/web2py/gluon/tools.py'
+p166
+sg68
+(dp167
+S'table_user'
+p168
+S'<Table auth_user (id, first_name, last_name, ema... registration_id, gold, cost_to_hire, inventory)>'
+p169
+sS'username'
+p170
+S"'username'"
+p171
+sS'entered_username'
+p172
+S"'jsmazer'"
+p173
+sS'user'
+p174
+S'None'
+p175
+ssg74
+I2963
+sg75
+(dp176
+I2958
+S'                    entered_username = form.vars[username]'
+p177
+sI2959
+S"                    if multi_login and '@' in entered_username:"
+p178
+sI2960
+S"                        # if '@' in username check for email, not username"
+p179
+sI2961
+S'                        user = table_user(email=entered_username)'
+p180
+sI2962
+S'                    else:'
+p181
+sI2963
+S'                        user = table_user(**{username: entered_username})'
+p182
+sI2964
+S'                    if user:'
+p183
+sI2965
+S'                        # user in db, check if registration pending or disabled'
+p184
+sI2966
+S'                        temp_user = user'
+p185
+sI2967
+S"                        if (temp_user.registration_key or '').startswith('pending'):"
+p186
+ssg87
+S"(self=<gluon.tools.Auth object>, next='/CallOfAdventure/default/index', onvalidation=[], onaccept=[], log='User %(id)s Logged-in')"
+p187
+sg89
+S'login'
+p188
+sa(dp189
+g66
+S'/Users/JMazer/web2py/gluon/packages/dal/pydal/objects.py'
+p190
+sg68
+(dp191
+S'orderby_on_limitby'
+p192
+g109
+sS').first'
+p193
+g109
+sS'builtinFalse'
+p194
+S'False'
+p195
+ssg74
+I546
+sg75
+(dp196
+I544
+S'                                          for_update=for_update,'
+p197
+sI545
+S'                                          orderby=orderby,'
+p198
+sI546
+S'                                          orderby_on_limitby=False).first()'
+p199
+sI547
+S'        else:'
+p200
+sI548
+S'            return None'
+p201
+sI549
+S''
+sI550
+S'    def __setitem__(self, key, value):'
+p202
+sI541
+S'        elif kwargs:'
+p203
+sI542
+S'            query = reduce(lambda a, b: a & b, [self[k] == v for k, v in iteritems(kwargs)])'
+p204
+sI543
+S'            return self._db(query).select(limitby=(0, 1),'
+p205
+ssg87
+S"(self=<Table auth_user (id, first_name, last_name, ema... registration_id, gold, cost_to_hire, inventory)>, key=<function <lambda>>, **kwargs={'username': 'jsmazer'})"
+p206
+sg89
+g164
+sa(dp207
+g66
+S'/Users/JMazer/web2py/gluon/packages/dal/pydal/objects.py'
+p208
+sg68
+(dp209
+S'self.query'
+p210
+S"<Query (auth_user.username = 'jsmazer')>"
+p211
+sS'adapter.select'
+p212
+S'<bound method SQLiteAdapter.select of <pydal.adapters.sqlite.SQLiteAdapter object>>'
+p213
+sS'fields'
+p214
+S'[<pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>]'
+p215
+sS'adapter'
+p216
+S'<pydal.adapters.sqlite.SQLiteAdapter object>'
+p217
+sS'attributes'
+p218
+S"{'for_update': False, 'limitby': (0, 1), 'orderby': None, 'orderby_on_limitby': False}"
+p219
+sS'self'
+p220
+S"<Set (auth_user.username = 'jsmazer')>"
+p221
+ssg74
+I2020
+sg75
+(dp222
+I2016
+S"                                    attributes.get('left', None),"
+p223
+sI2017
+S"                                    attributes.get('orderby', None),"
+p224
+sI2018
+S"                                    attributes.get('groupby', None))"
+p225
+sI2019
+S'        fields = adapter.expand_all(fields, tablenames)'
+p226
+sI2020
+S'        return adapter.select(self.query, fields, attributes)'
+p227
+sI2021
+S''
+sI2022
+S'    def iterselect(self, *fields, **attributes):'
+p228
+sI2023
+S'        adapter = self.db._adapter'
+p229
+sI2024
+S'        tablenames = adapter.tables(self.query,'
+p230
+sI2015
+S"                                    attributes.get('join', None),"
+p231
+ssg87
+S"(self=<Set (auth_user.username = 'jsmazer')>, *fields=[<pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>], **attributes={'for_update': False, 'limitby': (0, 1), 'orderby': None, 'orderby_on_limitby': False})"
+p232
+sg89
+S'select'
+p233
+sa(dp234
+g66
+S'/Users/JMazer/web2py/gluon/packages/dal/pydal/adapters/sqlite.py'
+p235
+sg68
+(dp236
+S'fields'
+p237
+S'[<pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>]'
+p238
+sS'self'
+p239
+S'<pydal.adapters.sqlite.SQLiteAdapter object>'
+p240
+sS').select'
+p241
+S'<bound method SQLiteAdapter.select of <pydal.adapters.sqlite.SQLiteAdapter object>>'
+p242
+sS'attributes'
+p243
+S"{'for_update': False, 'limitby': (0, 1), 'orderby': None, 'orderby_on_limitby': False}"
+p244
+sS'global SQLiteAdapter'
+p245
+S"<class 'pydal.adapters.sqlite.SQLiteAdapter'>"
+p246
+sS'query'
+p247
+S"<Query (auth_user.username = 'jsmazer')>"
+p248
+sS'builtinsuper'
+p249
+S"<type 'super'>"
+p250
+ssg74
+I123
+sg75
+(dp251
+I118
+S'        Note that the entire database, rather than one record, is locked'
+p252
+sI119
+S'        (it will be locked eventually anyway by the following UPDATE).'
+p253
+sI120
+S'        """'
+p254
+sI121
+S"        if attributes.get('for_update', False) and not 'cache' in attributes:"
+p255
+sI122
+S"            self.execute('BEGIN IMMEDIATE TRANSACTION;')"
+p256
+sI123
+S'        return super(SQLiteAdapter, self).select(query, fields, attributes)'
+p257
+sI124
+S''
+sI125
+S''
+sI126
+S'SPATIALLIBS = {'
+p258
+sI127
+S"    'Windows':'mod_spatialite.dll',"
+p259
+ssg87
+S"(self=<pydal.adapters.sqlite.SQLiteAdapter object>, query=<Query (auth_user.username = 'jsmazer')>, fields=[<pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>], attributes={'for_update': False, 'limitby': (0, 1), 'orderby': None, 'orderby_on_limitby': False})"
+p260
+sg89
+g233
+sa(dp261
+g66
+S'/Users/JMazer/web2py/gluon/packages/dal/pydal/adapters/base.py'
+p262
+sg68
+(dp263
+S'fields'
+p264
+S'[<pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>]'
+p265
+sS'self'
+p266
+S'<pydal.adapters.sqlite.SQLiteAdapter object>'
+p267
+sS'attributes'
+p268
+S"{'for_update': False, 'limitby': (0, 1), 'orderby': None, 'orderby_on_limitby': False}"
+p269
+sS'self._select_aux'
+p270
+S'<bound method SQLiteAdapter._select_aux of <pydal.adapters.sqlite.SQLiteAdapter object>>'
+p271
+sS'sql'
+p272
+S'"SELECT  auth_user.id, auth_user.first_name, auth...auth_user.username = \'jsmazer\') LIMIT 1 OFFSET 0;"'
+p273
+ssg74
+I1296
+sg75
+(dp274
+I1291
+S'            return cache_model('
+p275
+sI1292
+S'                key,'
+p276
+sI1293
+S'                lambda self=self,args=args:self._select_aux(*args),'
+p277
+sI1294
+S'                time_expire)'
+p278
+sI1295
+S'        else:'
+p279
+sI1296
+S'            return self._select_aux(sql,fields,attributes)'
+p280
+sI1297
+S''
+sI1298
+S'    def iterselect(self, query, fields, attributes):'
+p281
+sI1299
+S'        sql = self._select(query, fields, attributes)'
+p282
+sI1300
+S"        cacheable = attributes.get('cacheable', False)"
+p283
+ssg87
+S"(self=<pydal.adapters.sqlite.SQLiteAdapter object>, query=<Query (auth_user.username = 'jsmazer')>, fields=[<pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>], attributes={'for_update': False, 'limitby': (0, 1), 'orderby': None, 'orderby_on_limitby': False})"
+p284
+sg89
+g233
+sa(dp285
+g66
+S'/Users/JMazer/web2py/gluon/packages/dal/pydal/adapters/base.py'
+p286
+sg68
+(dp287
+S'self'
+p288
+S'<pydal.adapters.sqlite.SQLiteAdapter object>'
+p289
+sS'self.execute'
+p290
+S'<bound method SQLiteAdapter.execute of <pydal.adapters.sqlite.SQLiteAdapter object>>'
+p291
+sS'sql'
+p292
+S'"SELECT  auth_user.id, auth_user.first_name, auth...auth_user.username = \'jsmazer\') LIMIT 1 OFFSET 0;"'
+p293
+ssg74
+I1253
+sg75
+(dp294
+I1248
+S''
+sI1249
+S'    def _select_aux(self, sql, fields, attributes):'
+p295
+sI1250
+S'        args_get = attributes.get'
+p296
+sI1251
+S"        cache = args_get('cache',None)"
+p297
+sI1252
+S'        if not cache:'
+p298
+sI1253
+S'            self.execute(sql)'
+p299
+sI1254
+S'            rows = self._fetchall()'
+p300
+sI1255
+S'        else:'
+p301
+sI1256
+S'            if isinstance(cache, dict):'
+p302
+sI1257
+S"                cache_model = cache['model']"
+p303
+ssg87
+S'(self=<pydal.adapters.sqlite.SQLiteAdapter object>, sql="SELECT  auth_user.id, auth_user.first_name, auth...auth_user.username = \'jsmazer\') LIMIT 1 OFFSET 0;", fields=[<pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>], attributes={\'for_update\': False, \'limitby\': (0, 1), \'orderby\': None, \'orderby_on_limitby\': False})'
+p304
+sg89
+S'_select_aux'
+p305
+sa(dp306
+g66
+S'/Users/JMazer/web2py/gluon/packages/dal/pydal/adapters/base.py'
+p307
+sg68
+(dp308
+S'a'
+S'("SELECT  auth_user.id, auth_user.first_name, auth...auth_user.username = \'jsmazer\') LIMIT 1 OFFSET 0;",)'
+p309
+sS'self'
+p310
+S'<pydal.adapters.sqlite.SQLiteAdapter object>'
+p311
+sS'b'
+g21
+sS'self.log_execute'
+p312
+S'<bound method SQLiteAdapter.log_execute of <pydal.adapters.sqlite.SQLiteAdapter object>>'
+p313
+ssg74
+I1388
+sg75
+(dp314
+I1383
+S'        self.db._timings.append((command,time.time()-t0))'
+p315
+sI1384
+S'        del self.db._timings[:-TIMINGSSIZE]'
+p316
+sI1385
+S'        return ret'
+p317
+sI1386
+S''
+sI1387
+S'    def execute(self, *a, **b):'
+p318
+sI1388
+S'        return self.log_execute(*a, **b)'
+p319
+sI1389
+S''
+sI1390
+S'    def execute_test_query(self):'
+p320
+sI1391
+S'        return self.execute(self.test_query)'
+p321
+sI1392
+S''
+ssg87
+S'(self=<pydal.adapters.sqlite.SQLiteAdapter object>, *a=("SELECT  auth_user.id, auth_user.first_name, auth...auth_user.username = \'jsmazer\') LIMIT 1 OFFSET 0;",), **b={})'
+p322
+sg89
+S'execute'
+p323
+sa(dp324
+g66
+S'/Users/JMazer/web2py/gluon/packages/dal/pydal/adapters/base.py'
+p325
+sg68
+(dp326
+S'a'
+S'("SELECT  auth_user.id, auth_user.first_name, auth...auth_user.username = \'jsmazer\') LIMIT 1 OFFSET 0;",)'
+p327
+sS'b'
+g21
+sS'self'
+p328
+S'<pydal.adapters.sqlite.SQLiteAdapter object>'
+p329
+sS'ret'
+p330
+g109
+sS'command'
+p331
+S'"SELECT  auth_user.id, auth_user.first_name, auth...auth_user.username = \'jsmazer\') LIMIT 1 OFFSET 0;"'
+p332
+sS'self.get_cursor'
+p333
+S'<bound method SQLiteAdapter.get_cursor of <pydal.adapters.sqlite.SQLiteAdapter object>>'
+p334
+sS').execute'
+p335
+g109
+ssg74
+I1382
+sg75
+(dp336
+I1377
+S'            command = self.filter_sql_command(command)'
+p337
+sI1378
+S'        if self.db._debug:'
+p338
+sI1379
+S"            self.db.logger.debug('SQL: %s' % command)"
+p339
+sI1380
+S'        self.db._lastsql = command'
+p340
+sI1381
+S'        t0 = time.time()'
+p341
+sI1382
+S'        ret = self.get_cursor().execute(command, *a[1:], **b)'
+p342
+sI1383
+S'        self.db._timings.append((command,time.time()-t0))'
+p343
+sI1384
+S'        del self.db._timings[:-TIMINGSSIZE]'
+p344
+sI1385
+S'        return ret'
+p345
+sI1386
+S''
+ssg87
+S'(self=<pydal.adapters.sqlite.SQLiteAdapter object>, *a=("SELECT  auth_user.id, auth_user.first_name, auth...auth_user.username = \'jsmazer\') LIMIT 1 OFFSET 0;",), **b={})'
+p346
+sg89
+S'log_execute'
+p347
+sasS'pyver'
+p348
+S'Python 2.7.12: //anaconda/bin/python (prefix: //anaconda)'
+p349
+sS'session'
+p350
+g61
+(S's\x98\x00\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top;">flash</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div>'
+tRp351
+sS'etype'
+p352
+S"<class 'sqlite3.OperationalError'>"
+p353
+sS'date'
+p354
+S'Mon Feb  6 17:21:52 2017'
+p355
+sS'response'
+p356
+g61
+(S's\x8c<\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top;">body</td><td style="vertical-align:top;">:</td><td><div>&lt;cStringIO.StringO object at 0x10de8ef48&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cookies</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">session_id_callofadventure</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-6c47fb6f-d82c-40f0-ae48-183673222f88<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div>/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">delimiters</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>{{</div></td></tr><tr><td><div>}}</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">files</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">flash</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">form_label_separator</td><td style="vertical-align:top;">:</td><td><div>: </div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">formstyle</td><td style="vertical-align:top;">:</td><td><div>table3cols</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">generic_patterns</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>*</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">headers</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">X-Powered-By</td><td style="vertical-align:top;">:</td><td><div>web2py</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">logo</td><td style="vertical-align:top;">:</td><td><div><a class="navbar-brand" href="http://www.web2py.com/" id="web2py-logo"><b>web<span>2</span>py</b>&trade;&nbsp;</a></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">menu</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div><table><tr><td><div>Home</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/CallOfAdventure/default/index</div></td></tr><tr><td><div><table></table></div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>My Sites</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/admin/default/site</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>This App</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>#</div></td></tr><tr><td><div><table><tr><td><div><table><tr><td><div>Design</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/admin/default/design/CallOfAdventure</div></td></tr></table></div></td></tr><tr><td><div><li class="divider"></li></div></td></tr><tr><td><div><table><tr><td><div>Controller</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/admin/default/edit/CallOfAdventure/controllers/default.py</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>View</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/admin/default/edit/CallOfAdventure/views/default/user.html</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>DB Model</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/admin/default/edit/CallOfAdventure/models/db.py</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Menu Model</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/admin/default/edit/CallOfAdventure/models/menu.py</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Config.ini</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/admin/default/edit/CallOfAdventure/private/appconfig.ini</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Layout</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/admin/default/edit/CallOfAdventure/views/layout.html</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Stylesheet</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/admin/default/edit/CallOfAdventure/static/css/web2py-bootstrap3.css</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Database</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/CallOfAdventure/appadmin/index</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Errors</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/admin/default/errors/CallOfAdventure</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>About</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/admin/default/about/CallOfAdventure</div></td></tr></table></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>web2py.com</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>#</div></td></tr><tr><td><div><table><tr><td><div><table><tr><td><div>Download</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.web2py.com/examples/default/download</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Support</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.web2py.com/examples/default/support</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Demo</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://web2py.com/demo_admin</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Quick Examples</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://web2py.com/examples/default/examples</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>FAQ</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://web2py.com/AlterEgo</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Videos</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.web2py.com/examples/default/videos/</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Free Applications</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://web2py.com/appliances</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Plugins</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://web2py.com/plugins</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Recipes</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://web2pyslices.com/</div></td></tr></table></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Documentation</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>#</div></td></tr><tr><td><div><table><tr><td><div><table><tr><td><div>Online book</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.web2py.com/book</div></td></tr></table></div></td></tr><tr><td><div><li class="divider"></li></div></td></tr><tr><td><div><table><tr><td><div>Preface</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.web2py.com/book/default/chapter/00</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Introduction</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.web2py.com/book/default/chapter/01</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Python</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.web2py.com/book/default/chapter/02</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Overview</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.web2py.com/book/default/chapter/03</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>The Core</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.web2py.com/book/default/chapter/04</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>The Views</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.web2py.com/book/default/chapter/05</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Database</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.web2py.com/book/default/chapter/06</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Forms and Validators</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.web2py.com/book/default/chapter/07</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Email and SMS</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.web2py.com/book/default/chapter/08</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Access Control</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.web2py.com/book/default/chapter/09</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Services</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.web2py.com/book/default/chapter/10</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Ajax Recipes</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.web2py.com/book/default/chapter/11</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Components and Plugins</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.web2py.com/book/default/chapter/12</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Deployment Recipes</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.web2py.com/book/default/chapter/13</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Other Recipes</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.web2py.com/book/default/chapter/14</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Helping web2py</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.web2py.com/book/default/chapter/15</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Buy web2py\'s book</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://stores.lulu.com/web2py</div></td></tr></table></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Community</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>None</div></td></tr><tr><td><div><table><tr><td><div><table><tr><td><div>Groups</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.web2py.com/examples/default/usergroups</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Twitter</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://twitter.com/web2py</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Live Chat</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://webchat.freenode.net/?channels=web2py</div></td></tr></table></div></td></tr></table></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">meta</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">models_to_run</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>^\\w+\\.py$</div></td></tr><tr><td><div>^default/\\w+\\.py$</div></td></tr><tr><td><div>^default/user/\\w+\\.py$</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">postprocessing</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_client</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_cookie_compression_level</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_cookie_expires</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_data_name</td><td style="vertical-align:top;">:</td><td><div>session_data_callofadventure</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_file</td><td style="vertical-align:top;">:</td><td><div>&lt;open file &#x27;/Users/JMazer/web2py/applications/CallOfAdventure/sessions/15e/06a/127.0.0.1-6c47fb6f-d82c-40f0-ae48-183673222f88&#x27;, mode &#x27;rb+&#x27; at 0x10e23aae0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_filename</td><td style="vertical-align:top;">:</td><td><div>/Users/JMazer/web2py/applications/CallOfAdventure/sessions/127.0.0.1-6c47fb6f-d82c-40f0-ae48-183673222f88</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_hash</td><td style="vertical-align:top;">:</td><td><div>0a45961c64d3da42d4635f6c6a942fee</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-6c47fb6f-d82c-40f0-ae48-183673222f88</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_name</td><td style="vertical-align:top;">:</td><td><div>session_id_callofadventure</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_locked</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_masterapp</td><td style="vertical-align:top;">:</td><td><div>CallOfAdventure</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_new</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_storage_type</td><td style="vertical-align:top;">:</td><td><div>file</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">status</td><td style="vertical-align:top;">:</td><td><div>200</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">subtitle</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">title</td><td style="vertical-align:top;">:</td><td><div>Callofadventure</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">view</td><td style="vertical-align:top;">:</td><td><div>default/user.html</div></td></tr></table></div>'
+tRp357
+sS'locals'
+p358
+(dp359
+S'a'
+S'("SELECT  auth_user.id, auth_user.first_name, auth...auth_user.username = \'jsmazer\') LIMIT 1 OFFSET 0;",)'
+p360
+sS'self'
+p361
+S'<pydal.adapters.sqlite.SQLiteAdapter object>'
+p362
+sS'b'
+g21
+sS'command'
+p363
+S'"SELECT  auth_user.id, auth_user.first_name, auth...auth_user.username = \'jsmazer\') LIMIT 1 OFFSET 0;"'
+p364
+sS't0'
+p365
+S'1486430511.998119'
+p366
+sssS'traceback'
+p367
+S'Traceback (most recent call last):\n  File "/Users/JMazer/web2py/gluon/restricted.py", line 227, in restricted\n    exec ccode in environment\n  File "/Users/JMazer/web2py/applications/CallOfAdventure/controllers/default.py", line 168, in <module>\n  File "/Users/JMazer/web2py/gluon/globals.py", line 417, in <lambda>\n    self._caller = lambda f: f()\n  File "/Users/JMazer/web2py/applications/CallOfAdventure/controllers/default.py", line 166, in user\n    return dict(form=auth())\n  File "/Users/JMazer/web2py/gluon/tools.py", line 1941, in __call__\n    return getattr(self, args[0])()\n  File "/Users/JMazer/web2py/gluon/tools.py", line 2963, in login\n    user = table_user(**{username: entered_username})\n  File "/Users/JMazer/web2py/gluon/packages/dal/pydal/objects.py", line 546, in __call__\n    orderby_on_limitby=False).first()\n  File "/Users/JMazer/web2py/gluon/packages/dal/pydal/objects.py", line 2020, in select\n    return adapter.select(self.query, fields, attributes)\n  File "/Users/JMazer/web2py/gluon/packages/dal/pydal/adapters/sqlite.py", line 123, in select\n    return super(SQLiteAdapter, self).select(query, fields, attributes)\n  File "/Users/JMazer/web2py/gluon/packages/dal/pydal/adapters/base.py", line 1296, in select\n    return self._select_aux(sql,fields,attributes)\n  File "/Users/JMazer/web2py/gluon/packages/dal/pydal/adapters/base.py", line 1253, in _select_aux\n    self.execute(sql)\n  File "/Users/JMazer/web2py/gluon/packages/dal/pydal/adapters/base.py", line 1388, in execute\n    return self.log_execute(*a, **b)\n  File "/Users/JMazer/web2py/gluon/packages/dal/pydal/adapters/base.py", line 1382, in log_execute\n    ret = self.get_cursor().execute(command, *a[1:], **b)\nOperationalError: no such table: auth_user\n'
+p368
+s.

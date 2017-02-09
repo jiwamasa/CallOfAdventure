@@ -1,9 +1,16 @@
 {{extend 'layout.html'}}
-<h1>Shop</h1>
-<h2>Welcome to shop! Buy and sell items here!</h2>
-<ul>
-    {{for buyItem in itemList:}}
-    {{=LI(A(buyItem.name, _href=URL("showBuyItem", args=buyItem.id)))}}
-    {{pass}}
- 
-</ul>
+<html>
+    <head>
+        <link rel="stylesheet" href="{{=URL('static','css/shop.css')}}"/>
+    </head>
+
+    <body>
+        <h1>Shop</h1>
+        <h2> Items </h2>
+        <ul>
+            {{for buyItem in itemList:}}
+             <p> <a href = {{=URL("showBuyItem", args=buyItem.id)}}> {{=buyItem.name}} </a> </p>
+            {{pass}}
+        </ul>
+    </body>
+</html>

@@ -1,0 +1,23 @@
+h1{
+    text-align: center;
+    font-family: fantasy;
+    font-size: 48px;
+}
+
+h2{
+    text-align: left;
+    font-family: fantasy;
+    font-size: 36px;
+    margin-left: 40px;
+}
+
+a:link{
+    color: black;
+}
+
+a:visited{
+    color: cornflowerblue;
+}
+p{
+    text-align: left;
+}
