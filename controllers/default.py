@@ -28,9 +28,12 @@ def questsPage():
         quests = db().select(db.quests.ALL, orderby=db.quests.difficulty)
         rand_amount = random.randint(QUEST_ADD_MIN,QUEST_ADD_MAX)
         while rand_amount>0:
-            rand_id = random.randint(0,len(quests)-1)
-            session.quest_list.append(quests[rand_id])
-            rand_amount=rand_amount-1
+            if len(quests)>=1:
+                rand_id = random.randint(0,len(quests)-1)
+                session.quest_list.append(quests[rand_id])
+                rand_amount=rand_amount-1
+            else:
+                rand_amount=-1
     return dict(questList=session.quest_list)
     
 #details about a certain quest
@@ -47,6 +50,16 @@ def questResult():
     #calculate user power
     #hp, atk, def
     party_strength=[5.0,5.0,5.0]
+    
+    #calculate user's item power
+    if current_user.curr_loadout > 0:
+        loadout=db.loadouts(current_user.curr_loadout).equip_list
+        for item_id in loadout:
+            if item_id>0:
+                item=db.equip_items(item_id)
+                party_strength[1]=party_strength[1]+item.attack
+                party_strength[2]=party_strength[2]+item.defense
+                
     #calculate party power
     if session.party:
         for i in range(0,len(session.party)):
@@ -59,7 +72,7 @@ def questResult():
      #loser is who reaches 0 health first
     while party_strength[0]>0.0 and monster_strength[0]>0.0:
         monster_strength[0]-=party_strength[1]
-        party_strength[0]-=monster_strength[1]
+        party_strength[0]-=monster_strength[1]*(party_strength[2]/(party_strength[2]+10))
 
     found_items=[]
     if party_strength[0]>=0.0:

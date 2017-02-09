@@ -15,9 +15,9 @@
 {{pass}}
 <br>
 <h1>Stats</h1>
-HP Left: {{=party_strength[0]}}
-DEF: {{=party_strength[1]}}
-ATK: {{=party_strength[2]}}
+HP Left: {{=int((party_strength[0]+0.5))}}
+ATK: {{=party_strength[1]}}
+DEF: {{=party_strength[2]}}
 </body>
 <br>
 {{=A('Continue', _href=URL("index"))}}

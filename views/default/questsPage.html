@@ -1,5 +1,6 @@
 {{extend 'layout.html'}}
 <h1>Available Quests</h1>
+{{if len(questList)>=1:}}
 <ul>
 {{for quest in questList:
     # Added this because quests would sometimes not have a title, PURGE THEM ALL!
@@ -11,3 +12,6 @@
     pass
 }}
 </ul>
+{{else:}}
+No quests :'(
+{{pass}}
