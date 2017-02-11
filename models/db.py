@@ -48,7 +48,7 @@ auth = Auth(db)
 auth.settings.extra_fields['auth_user']= [
     Field('gold', 'integer', readable=True, writable=True),
     Field('cost_to_hire', 'integer', readable=True, writable=True),
-    Field('inventory', 'list:integer', default=[]),
+    Field('inventory', 'list:integer', default=[], readable=True, writable=True),
     Field('curr_loadout', 'integer', 0), # Currently equipped loadout
     Field('saved_loadouts', 'list:integer') # All saved loadouts
 ]
