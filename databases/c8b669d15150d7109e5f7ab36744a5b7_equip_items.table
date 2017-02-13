@@ -22,7 +22,7 @@ sS'type'
 p10
 S'reference equip_types'
 p11
-ssS'cost'
+ssS'defense'
 p12
 (dp13
 g4
@@ -30,7 +30,7 @@ I512
 sg5
 I00
 sg6
-I6
+I4
 sg7
 S'INTEGER'
 p14
@@ -72,7 +72,7 @@ sg9
 I00
 sg10
 g15
-ssS'defense'
+ssS'cost'
 p23
 (dp24
 g4
@@ -80,7 +80,7 @@ I512
 sg5
 I00
 sg6
-I4
+I6
 sg7
 S'INTEGER'
 p25
@@ -136,6 +136,5 @@ p35
 sg9
 I00
 sg10
-S'id'
-p36
+g33
 ss.

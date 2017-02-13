@@ -1,4 +1,22 @@
-timestamp: 2017-02-07T10:31:10.541000
+timestamp: 2017-02-13T15:37:27.810000
+CREATE TABLE equip_types(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name CHAR(512)
+);
+success!
+timestamp: 2017-02-13T15:37:27.845000
+CREATE TABLE equip_items(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name CHAR(512) UNIQUE,
+    attack INTEGER,
+    defense INTEGER,
+    speed INTEGER,
+    cost INTEGER,
+    category INTEGER REFERENCES equip_types (id) ON DELETE CASCADE  ,
+    details TEXT
+);
+success!
+timestamp: 2017-02-13T15:37:27.874000
 CREATE TABLE quests(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title CHAR(512),
@@ -11,54 +29,35 @@ CREATE TABLE quests(
     details TEXT
 );
 success!
-timestamp: 2017-02-07T10:31:10.587000
-CREATE TABLE equip_items(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name CHAR(512) UNIQUE,
-    attack INTEGER,
-    defense INTEGER,
-    speed INTEGER,
-    cost INTEGER,
-    category INTEGER,
-    details TEXT
-);
-success!
-timestamp: 2017-02-07T10:31:10.653000
+timestamp: 2017-02-13T15:37:27.910000
 CREATE TABLE discussion_quests(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     author CHAR(512),
     body TEXT
 );
 success!
-timestamp: 2017-02-07T10:31:10.726000
+timestamp: 2017-02-13T15:37:27.947000
 CREATE TABLE discussion_equipment(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     author CHAR(512),
     body TEXT
 );
 success!
-timestamp: 2017-02-07T10:31:10.785000
+timestamp: 2017-02-13T15:37:27.976000
 CREATE TABLE discussion_other(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     author CHAR(512),
     body TEXT
 );
 success!
-timestamp: 2017-02-07T10:31:10.845000
+timestamp: 2017-02-13T15:37:28.001000
 CREATE TABLE loadouts(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name CHAR(512) UNIQUE,
-    creator INTEGER,
     equip_list TEXT
 );
 success!
-timestamp: 2017-02-07T10:31:10.905000
-CREATE TABLE equip_types(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name CHAR(512)
-);
-success!
-timestamp: 2017-02-07T10:31:10.945000
+timestamp: 2017-02-13T15:37:28.042000
 CREATE TABLE auth_user(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     first_name CHAR(128),
@@ -72,25 +71,25 @@ CREATE TABLE auth_user(
     gold INTEGER,
     cost_to_hire INTEGER,
     inventory TEXT,
-    curr_loadout INTEGER,
+    curr_loadout INTEGER REFERENCES loadouts (id) ON DELETE CASCADE  ,
     saved_loadouts TEXT
 );
 success!
-timestamp: 2017-02-07T10:31:10.993000
+timestamp: 2017-02-13T15:37:28.072000
 CREATE TABLE auth_group(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     role CHAR(512),
     description TEXT
 );
 success!
-timestamp: 2017-02-07T10:31:11.028000
+timestamp: 2017-02-13T15:37:28.098000
 CREATE TABLE auth_membership(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
     group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE  
 );
 success!
-timestamp: 2017-02-07T10:31:11.066000
+timestamp: 2017-02-13T15:37:28.135000
 CREATE TABLE auth_permission(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE  ,
@@ -99,7 +98,7 @@ CREATE TABLE auth_permission(
     record_id INTEGER
 );
 success!
-timestamp: 2017-02-07T10:31:11.118000
+timestamp: 2017-02-13T15:37:28.171000
 CREATE TABLE auth_event(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     time_stamp TIMESTAMP,
@@ -109,7 +108,7 @@ CREATE TABLE auth_event(
     description TEXT
 );
 success!
-timestamp: 2017-02-07T10:31:11.163000
+timestamp: 2017-02-13T15:37:28.202000
 CREATE TABLE auth_cas(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
@@ -118,22 +117,4 @@ CREATE TABLE auth_cas(
     ticket CHAR(512),
     renew CHAR(1)
 );
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
-success!
 success!
