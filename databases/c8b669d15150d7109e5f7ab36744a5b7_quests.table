@@ -20,7 +20,7 @@ p9
 I00
 sS'type'
 p10
-S'list:integer'
+S'list:reference equip_items'
 p11
 ssS'gold'
 p12
@@ -135,10 +135,11 @@ p34
 sg9
 I00
 sg10
-g32
-ssS'details'
+S'id'
 p35
-(dp36
+ssS'details'
+p36
+(dp37
 g4
 I32768
 sg5
@@ -147,10 +148,10 @@ sg6
 I9
 sg7
 S'TEXT'
-p37
+p38
 sg9
 I00
 sg10
 S'text'
-p38
+p39
 ss.
