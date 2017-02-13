@@ -25,7 +25,10 @@ def questsPage():
         session.quest_list.pop(rand_remove)
     # low on quests, add more
     elif quest_count <= QUEST_MIN:
-        quests = db().select(db.quests.ALL, orderby=db.quests.difficulty)
+        #calculate user strength here
+        min_lvl = 0
+        max_lvl = 100000
+        quests = db(((db.quests.difficulty>=min_lvl) and (db.quests.difficulty<=max_lvl))).select(db.quests.ALL, orderby=db.quests.difficulty)
         rand_amount = random.randint(QUEST_ADD_MIN,QUEST_ADD_MAX)
         while rand_amount>0:
             if len(quests)>=1:
@@ -72,7 +75,7 @@ def questResult():
      #loser is who reaches 0 health first
     while party_strength[0]>0.0 and monster_strength[0]>0.0:
         monster_strength[0]-=party_strength[1]
-        party_strength[0]-=monster_strength[1]*(party_strength[2]/(party_strength[2]+10))
+        party_strength[0]-=monster_strength[1]*(1-((1/100)*party_strength[2]))
 
     found_items=[]
     if party_strength[0]>=0.0:
