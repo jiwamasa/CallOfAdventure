@@ -7,6 +7,9 @@ def index():
 
 
 #---Necessary for Quest Generation---#
+from gluon.custom_import import track_changes
+track_changes(True)
+
 import random
 import quest_helper
 QUEST_MIN = 5
@@ -17,7 +20,7 @@ QUEST_ADD_MIN = 2
 #all quests page
 @auth.requires_login()
 def questsPage():
-    print (quest_helper.test(5))
+    print(quest_helper.monster_strength(2))
     if not session.quest_list:
         session.quest_list=[]
     quest_count = len(session.quest_list)
