@@ -1,4 +1,18 @@
-#default controller
+#-----------------------------#
+#      default_controller      #
+#-----------------------------#
+
+#import control
+from gluon.custom_import import track_changes
+track_changes(True)
+
+#python lib modules
+import random
+import datetime
+
+#custom moudles
+import quest_helper
+
 
 #home page
 @auth.requires_login()
@@ -7,11 +21,6 @@ def index():
 
 
 #---Necessary for Quest Generation---#
-from gluon.custom_import import track_changes
-track_changes(True)
-
-import random
-import quest_helper
 QUEST_MIN = 5
 QUEST_MAX = 9
 QUEST_ADD_MAX = 5
@@ -155,12 +164,21 @@ def addItem():
     grid = SQLFORM.smartgrid(db.equip_items)
     return dict(grid=grid)
 
-
+#shop_vars
 
 #adding shop page
 @auth.requires_login()
 def shop():
-    itemList = db().select(db.equip_items.ALL, orderby=db.equip_items.cost)
+    #need a system to choose what items are available...
+    #maybe do it based on time?
+    if not session.shop_items:
+        session.shop_items=[]
+    if not session.last_shop_time:
+        session.last_shop_time=datetime.timedelta
+    
+    if session.last_shop_time:
+        print(session.last_shop_time)
+    itemList = db(db.equip_items.id<15).select(db.equip_items.ALL, orderby=db.equip_items.cost)
     return dict(itemList=itemList)
 
 @auth.requires_login()
