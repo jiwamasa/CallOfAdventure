@@ -14,6 +14,23 @@ db.define_table('equip_items',
                 Field('category', 'reference equip_types', default=0),
                 Field('details', 'text'))
 
+# Table containing equipment loadout sets (created by users)
+db.define_table('loadouts',
+                Field('name', unique=True),
+                Field('equip_list', 'list:reference equip_items'))
+
+# User database
+from gluon.tools import Auth
+auth = Auth(db)
+auth.settings.extra_fields['auth_user']= [
+    Field('gold', 'integer', readable=True, writable=True),
+    Field('rare_ore', 'integer', readable=True, writable=True),
+    Field('cost_to_hire', 'integer', readable=True, writable=True),
+    Field('inventory', 'list:reference equip_items', default=[], readable=True, writable=True),
+    Field('curr_loadout', 'reference loadouts', 0),
+    Field('saved_loadouts', 'list:reference loadouts')]
+auth.define_tables(username=True)
+
 # Table containing quests to take
 db.define_table('quests',
                 Field('title'),
@@ -35,19 +52,3 @@ db.define_table('discussion_equipment',
 db.define_table('discussion_other',
                 Field('author'),
                 Field('body', 'text'))
-
-# Table containing equipment loadout sets (created by users)
-db.define_table('loadouts',
-                Field('name', unique=True),
-                Field('equip_list', 'list:reference equip_items'))
-
-# User database
-from gluon.tools import Auth
-auth = Auth(db)
-auth.settings.extra_fields['auth_user']= [
-    Field('gold', 'integer', readable=True, writable=True),
-    Field('cost_to_hire', 'integer', readable=True, writable=True),
-    Field('inventory', 'list:reference equip_items', default=[], readable=True, writable=True),
-    Field('curr_loadout', 'reference loadouts', 0),
-    Field('saved_loadouts', 'list:reference loadouts')]
-auth.define_tables(username=True)

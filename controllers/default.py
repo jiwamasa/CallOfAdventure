@@ -1,6 +1,7 @@
 #-----------------------------#
-#      default_controller      #
+#      default_controller     #
 #-----------------------------#
+
 
 #import control
 from gluon.custom_import import track_changes
@@ -85,8 +86,8 @@ def questResult():
             
     monster_strength=[3.0*quest.difficulty,3.0*quest.difficulty,3.0*quest.difficulty]
      
-     #main 'battle logic' take turns killing each other
-     #loser is who reaches 0 health first
+    #main 'battle logic' take turns killing each other
+    #loser is who reaches 0 health first
     while party_strength[0]>0.0 and monster_strength[0]>0.0:
         monster_strength[0]-=party_strength[1]
         party_strength[0]-=monster_strength[1]*(1-((1/100)*party_strength[2]))
@@ -113,10 +114,10 @@ def questResult():
         result_msg = 'was a failure...'      
     return dict(quest=quest, result_msg=result_msg, success=success, party_strength=party_strength, found_items=found_items)
 
-#quest adding page (shouldn't be public in final build)
+#quest adding page
 @auth.requires_login()
 def addQuest():
-    grid = SQLFORM.smartgrid(db.quests)
+    grid = SQLFORM(db.quests)
     return dict(grid=grid)
 
 #all hires page
@@ -248,7 +249,7 @@ def profilePage():
     if request.args(0): #equipping items to current loadout
         equipped = db.equip_items(request.args(0))
         if not current_user.curr_loadout: #if first loadout, make new loadout
-            new_loadout = db.loadouts.insert(creator=current_user.id)
+            new_loadout = db.loadouts.insert()
             current_user.update_record(curr_loadout=new_loadout)
         new_equip_list = db.loadouts(current_user.curr_loadout).equip_list or [0]*10
         new_equip_list[equipped.category] = equipped

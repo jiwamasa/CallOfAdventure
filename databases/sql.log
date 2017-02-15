@@ -1,10 +1,10 @@
-timestamp: 2017-02-14T11:45:16.648000
+timestamp: 2017-02-15T08:25:07.699000
 CREATE TABLE equip_types(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name CHAR(512)
 );
 success!
-timestamp: 2017-02-14T11:45:16.681000
+timestamp: 2017-02-15T08:25:07.904000
 CREATE TABLE equip_items(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name CHAR(512) UNIQUE,
@@ -16,7 +16,76 @@ CREATE TABLE equip_items(
     details TEXT
 );
 success!
-timestamp: 2017-02-14T11:45:16.711000
+timestamp: 2017-02-15T08:25:08.060000
+CREATE TABLE loadouts(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name CHAR(512) UNIQUE,
+    equip_list TEXT
+);
+success!
+timestamp: 2017-02-15T08:25:08.184000
+CREATE TABLE auth_user(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    first_name CHAR(128),
+    last_name CHAR(128),
+    email CHAR(512),
+    username CHAR(128),
+    password CHAR(512),
+    registration_key CHAR(512),
+    reset_password_key CHAR(512),
+    registration_id CHAR(512),
+    gold INTEGER,
+    rare_ore INTEGER,
+    cost_to_hire INTEGER,
+    inventory TEXT,
+    curr_loadout INTEGER REFERENCES loadouts (id) ON DELETE CASCADE  ,
+    saved_loadouts TEXT
+);
+success!
+timestamp: 2017-02-15T08:25:08.312000
+CREATE TABLE auth_group(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    role CHAR(512),
+    description TEXT
+);
+success!
+timestamp: 2017-02-15T08:25:08.440000
+CREATE TABLE auth_membership(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
+    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE  
+);
+success!
+timestamp: 2017-02-15T08:25:08.598000
+CREATE TABLE auth_permission(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE  ,
+    name CHAR(512),
+    table_name CHAR(512),
+    record_id INTEGER
+);
+success!
+timestamp: 2017-02-15T08:25:08.778000
+CREATE TABLE auth_event(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    time_stamp TIMESTAMP,
+    client_ip CHAR(512),
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
+    origin CHAR(512),
+    description TEXT
+);
+success!
+timestamp: 2017-02-15T08:25:08.946000
+CREATE TABLE auth_cas(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
+    created_on TIMESTAMP,
+    service CHAR(512),
+    ticket CHAR(512),
+    renew CHAR(1)
+);
+success!
+timestamp: 2017-02-15T08:25:09.121000
 CREATE TABLE quests(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title CHAR(512),
@@ -29,92 +98,24 @@ CREATE TABLE quests(
     details TEXT
 );
 success!
-timestamp: 2017-02-14T11:45:16.741000
+timestamp: 2017-02-15T08:25:09.338000
 CREATE TABLE discussion_quests(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     author CHAR(512),
     body TEXT
 );
 success!
-timestamp: 2017-02-14T11:45:16.775000
+timestamp: 2017-02-15T08:25:09.498000
 CREATE TABLE discussion_equipment(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     author CHAR(512),
     body TEXT
 );
 success!
-timestamp: 2017-02-14T11:45:16.805000
+timestamp: 2017-02-15T08:25:09.664000
 CREATE TABLE discussion_other(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     author CHAR(512),
     body TEXT
-);
-success!
-timestamp: 2017-02-14T11:45:16.832000
-CREATE TABLE loadouts(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name CHAR(512) UNIQUE,
-    equip_list TEXT
-);
-success!
-timestamp: 2017-02-14T11:45:16.862000
-CREATE TABLE auth_user(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    first_name CHAR(128),
-    last_name CHAR(128),
-    email CHAR(512),
-    username CHAR(128),
-    password CHAR(512),
-    registration_key CHAR(512),
-    reset_password_key CHAR(512),
-    registration_id CHAR(512),
-    gold INTEGER,
-    cost_to_hire INTEGER,
-    inventory TEXT,
-    curr_loadout INTEGER REFERENCES loadouts (id) ON DELETE CASCADE  ,
-    saved_loadouts TEXT
-);
-success!
-timestamp: 2017-02-14T11:45:16.903000
-CREATE TABLE auth_group(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    role CHAR(512),
-    description TEXT
-);
-success!
-timestamp: 2017-02-14T11:45:16.952000
-CREATE TABLE auth_membership(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
-    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE  
-);
-success!
-timestamp: 2017-02-14T11:45:17.011000
-CREATE TABLE auth_permission(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE  ,
-    name CHAR(512),
-    table_name CHAR(512),
-    record_id INTEGER
-);
-success!
-timestamp: 2017-02-14T11:45:17.061000
-CREATE TABLE auth_event(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    time_stamp TIMESTAMP,
-    client_ip CHAR(512),
-    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
-    origin CHAR(512),
-    description TEXT
-);
-success!
-timestamp: 2017-02-14T11:45:17.132000
-CREATE TABLE auth_cas(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
-    created_on TIMESTAMP,
-    service CHAR(512),
-    ticket CHAR(512),
-    renew CHAR(1)
 );
 success!
