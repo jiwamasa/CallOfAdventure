@@ -10,3 +10,11 @@ def monster_strength(diff):
     atk=diff*2
     defense=diff*2
     return([hp,atk,defense])
+    
+def test():
+    print(1)
+    
+def test2(db):
+    temp = db.auth_user(1)
+    print(temp)
+    return 0

@@ -29,7 +29,6 @@ QUEST_ADD_MIN = 2
 #all quests page
 @auth.requires_login()
 def questsPage():
-    print(quest_helper.monster_strength(2))
     if not session.quest_list:
         session.quest_list=[]
     quest_count = len(session.quest_list)
@@ -169,17 +168,32 @@ def addItem():
 #adding shop page
 @auth.requires_login()
 def shop():
-    #need a system to choose what items are available...
-    #maybe do it based on time?
+    update=0
     if not session.shop_items:
         session.shop_items=[]
     if not session.last_shop_time:
-        session.last_shop_time=datetime.timedelta
+        session.last_shop_time=datetime.datetime.now()
     
     if session.last_shop_time:
-        print(session.last_shop_time)
-    itemList = db(db.equip_items.id<15).select(db.equip_items.ALL, orderby=db.equip_items.cost)
-    return dict(itemList=itemList)
+        time=datetime.datetime.now()
+        delta=time-session.last_shop_time
+        #update every 30 seconds right now
+        if(delta.seconds>30 or delta.days>0):
+            session.last_shop_time=datetime.datetime.now()
+            session.shop_items=[]
+            #session.flash='new items!' out of sync?
+            update=1
+            #print('update')
+            items=db(db.equip_items.id<15).select(db.equip_items.ALL)
+            #give them 3 items
+            items_needed=3
+            while items_needed>0:
+                rand_id=random.randint(0,len(items)-1)
+                session.shop_items.append(items[rand_id])
+                items_needed=items_needed-1  
+        #print(str(delta))
+    #itemList = db(db.equip_items.id<15).select(db.equip_items.ALL, orderby=db.equip_items.cost)
+    return dict(itemList=session.shop_items, update=update)
 
 @auth.requires_login()
 def discussion():
@@ -229,6 +243,7 @@ def showBuyItem():
             current_inv.append(int(buyItem.id)) #add bought item to inventory
             db.auth_user(auth.user.id).update_record(inventory=current_inv)
             session.flash = (buyItem.name) + " has been purchased!"
+            session.shop_items.remove(db.equip_items(buyItem.id))
             redirect(URL('shop'))
     if goPrevious.process(formname='go_previous').accepted:
         redirect(URL('shop'))
@@ -248,7 +263,7 @@ def profilePage():
     if request.args(0): #equipping items to current loadout
         equipped = db.equip_items(request.args(0))
         if not current_user.curr_loadout: #if first loadout, make new loadout
-            new_loadout = db.loadouts.insert(creator=current_user.id)
+            new_loadout = db.loadouts.insert()
             current_user.update_record(curr_loadout=new_loadout)
         new_equip_list = db.loadouts(current_user.curr_loadout).equip_list or [0]*10
         new_equip_list[equipped.category] = equipped
