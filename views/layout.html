@@ -61,7 +61,18 @@
         <div class="collapse navbar-collapse navbar-ex1-collapse">
           <ul class="nav navbar-nav navbar-right">
             <li>
-              <a>Gold: {{=db.auth_user(auth.user.id).gold}}</a>
+              <a>Gold:
+		{{if auth.user.gold:}}
+		{{=db.auth_user(auth.user.id).gold}}
+		{{pass}}
+	      </a>
+            </li>
+            <li>
+              <a>Rare Ore:
+		{{if auth.user.rare_ore:}}
+		{{=db.auth_user(auth.user.id).rare_ore}}
+		{{pass}}
+	      </a>
             </li>
             <li class="dropdown"><a href=''>Current Party</a>
               <ul class="dropdown-menu">

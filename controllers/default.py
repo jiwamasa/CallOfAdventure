@@ -107,6 +107,10 @@ def questResult():
                 user_items.append(item)
                 found_items.append(item)
         current_user.update_record(inventory=user_items)
+        #give rare ore to user who posted quest
+        new_rare_ore = 10*quest.difficulty + quest.quest_giver.rare_ore
+        quest.quest_giver.update_record(rare_ore=new_rare_ore)
+        
         if session.quest_list:
             session.quest_list.remove(quest)
     else:
