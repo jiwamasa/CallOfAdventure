@@ -62,12 +62,14 @@
           <ul class="nav navbar-nav navbar-right">
             <li>
               <a>Gold:
-		{{
-		if auth.user.gold:
-		=db.auth_user(auth.user.id).gold
-		}}
+		{{=db.auth_user(auth.user.id).gold}}
 	      </a>
             </li>
+	    <li>
+              <a>Rare Ore:
+		{{=db.auth_user(auth.user.id).rare_ore}}
+	      </a>
+	    </li>
             <li class="dropdown"><a href=''>Current Party</a>
               <ul class="dropdown-menu">
                 {{

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | CoA Battle</title>
+    <link rel="stylesheet" href="{{=URL('static','TemplateData/style.css')}}" />
+    <link rel="shortcut icon" href="{{=URL('static','TemplateData/favicon.ico')}}" />
+    <script src="{{=URL('static','TemplateData/UnityProgress.js')}}"></script>
+  </head>
+  <body class="template">
+    <div class="template-wrap clear">
+      <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" height="600px" width="960px"></canvas>
+      <br>
+      <div class="logo"></div>
+      <div class="fullscreen"><img src="{{=URL('static','TemplateData/fullscreen.png')}}" width="38" height="38" alt="Fullscreen" title="Fullscreen" onclick="SetFullscreen(1);" /></div>
+      <div class="title">CoA Battle</div>
+    </div>
+    <script type='text/javascript'>
+  var Module = {
+    TOTAL_MEMORY: 268435456,
+    errorhandler: null,			// arguments: err, url, line. This function must return 'true' if the error is handled, otherwise 'false'
+    compatibilitycheck: null,
+    backgroundColor: "#222C36",
+    splashStyle: "Light",
+    dataUrl: "{{=URL('static','Release/CoA_Unity.data')}}",
+    codeUrl: "{{=URL('static','Release/CoA_Unity.js')}}",
+    asmUrl: "{{=URL('static','Release/CoA_Unity.asm.js')}}",
+    memUrl: "{{=URL('static','Release/CoA_Unity.mem')}}",
+  };
+</script>
+<script src="{{=URL('static','Release/UnityLoader.js')}}"></script>
+
+  </body>
+</html>
