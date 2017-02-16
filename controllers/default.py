@@ -48,7 +48,8 @@ def questsPage():
         while rand_amount>0:
             if len(quests)>=1:
                 rand_id = random.randint(0,len(quests)-1)
-                session.quest_list.append(quests[rand_id])
+                if quests[rand_id].quest_giver.id != auth.user.id:
+                    session.quest_list.append(quests[rand_id])
                 rand_amount=rand_amount-1
             else:
                 rand_amount=-1
