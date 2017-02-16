@@ -3,16 +3,14 @@
 <body>
     {{if success:}}
     You earned {{=quest.gold}} Gold! <br>
-    {{if quest.loot_items:}}
     <ul>
         {{if found_items:}}
         {{for loot in found_items:}}
-        {{=LI('Found: ' + db.equip_items(loot).name)}}
+        {{=LI('Found: ' + loot.name)}}
         {{pass}}
         {{pass}}
     </ul>
     {{pass}}
-{{pass}}
 <br>
 <h1>Stats</h1>
 HP Left: {{=int((party_strength[0]+0.5))}}

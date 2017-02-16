@@ -17,9 +17,18 @@ import quest_helper
 #home page
 @auth.requires_login()
 def index():
+    if not session.last_shop_time:
+        session.last_shop_time=datetime.datetime.now()
     return dict()
 
-
+#Middle point for shop and quests
+#items with stat total less the this go into shop
+#quest loot is higher than this
+ITEM_MID = 20
+#base rate of 5%, +1% per difficulty level
+RARE_ITEM_RATE = 0.05
+RARE_ITEM_RATE_ADD = 0.01
+    
 #---Necessary for Quest Generation---#
 QUEST_MIN = 5
 QUEST_MAX = 9
@@ -104,6 +113,12 @@ def questResult():
             if random.random()>0.5:
                 user_items.append(item)
                 found_items.append(item)
+        #chance for rare strong items
+        if random.random()<(RARE_ITEM_RATE+(RARE_ITEM_RATE_ADD*quest.difficulty)):
+            rare_items = db((db.equip_items.attack+db.equip_items.defense+db.equip_items.speed)>=ITEM_MID).select(db.equip_items.ALL)
+            rare_item = rare_items[random.randint(0,len(rare_items)-1)]
+            user_items.append(rare_item)
+            found_items.append(rare_item)
         current_user.update_record(inventory=user_items)
         if session.quest_list:
             session.quest_list.remove(quest)
@@ -184,9 +199,11 @@ def shop():
             #session.flash='new items!' out of sync?
             update=1
             #print('update')
-            items=db(db.equip_items.id<15).select(db.equip_items.ALL)
+            #items=db(db.equip_items.id<15).select(db.equip_items.ALL)
+            #select based on stat total
+            items=db((db.equip_items.attack+db.equip_items.defense+db.equip_items.speed)<=ITEM_MID).select(db.equip_items.ALL)
             #give them 3 items
-            items_needed=3
+            items_needed=random.randint(4,7)
             while items_needed>0:
                 rand_id=random.randint(0,len(items)-1)
                 session.shop_items.append(items[rand_id])
