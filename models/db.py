@@ -10,7 +10,7 @@ db.define_table('equip_items',
                 Field('attack', 'integer', default=0),
                 Field('defense', 'integer', default=0),
                 Field('speed', 'integer', default=0),
-                Field('cost', 'integer', readable=True),
+                Field('cost', 'integer', readable=False, writable=False),
                 Field('category', 'reference equip_types', default=0),
                 Field('details', 'text'))
 

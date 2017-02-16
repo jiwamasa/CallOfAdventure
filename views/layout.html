@@ -64,6 +64,8 @@
               <a>Gold:
 		{{if auth.user.gold:}}
 		{{=db.auth_user(auth.user.id).gold}}
+		{{else:}}
+		{{=0}}
 		{{pass}}
 	      </a>
             </li>
@@ -71,6 +73,8 @@
               <a>Rare Ore:
 		{{if auth.user.rare_ore:}}
 		{{=db.auth_user(auth.user.id).rare_ore}}
+		{{else:}}
+		{{=0}}
 		{{pass}}
 	      </a>
             </li>

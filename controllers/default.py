@@ -172,7 +172,6 @@ def showHire():
         redirect(URL('hirePage'))
     return dict(hire=hire, cost=cost, form=form)
 
-#shop_vars
 #adding shop page
 @auth.requires_login()
 def shop():
