@@ -34,13 +34,16 @@ auth.define_tables(username=True)
 # Table containing quests to take
 db.define_table('quests',
                 Field('title'),
-                Field('quest_giver'),
+                Field('quest_giver', readable=False, writable=False),
                 Field('gold', 'integer'),
-                Field('prestige', 'integer'),
+                Field('prestige', 'integer', readable=False, writable=False),
                 Field('difficulty', 'integer'),
                 Field('location'),
-                Field('loot_items', 'list:reference equip_items', default=[]),
+                Field('loot_items', 'list:reference equip_items', default=[], readable=False, writable=False),
                 Field('details', 'text'))
+
+db.quests.difficulty.requires=IS_IN_SET(range(1,6))
+db.quests.location.requires=IS_IN_SET(['Forest','Cave','Dungeon'])
 
 # Discussion pages
 db.define_table('discussion_quests',

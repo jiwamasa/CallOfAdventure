@@ -117,8 +117,12 @@ def questResult():
 #quest adding page
 @auth.requires_login()
 def addQuest():
-    grid = SQLFORM(db.quests)
-    return dict(grid=grid)
+    form = SQLFORM(db.quests)
+    if form.process().accepted:
+        form.vars.quest_giver=auth.user.first_name + auth.user.last_name
+        form.vars.prestige=form.vars.difficulty #prestige gain = diff
+        #RANDOMIZE LOOT ITEMS BASED ON DIFFCULTY
+    return dict(form=form)
 
 #all hires page
 @auth.requires_login()
@@ -159,14 +163,7 @@ def showHire():
         redirect(URL('hirePage'))
     return dict(hire=hire, cost=cost, form=form)
 
-#adding item page (shouldn't be public in final build)
-@auth.requires_login()
-def addItem():
-    grid = SQLFORM.smartgrid(db.equip_items)
-    return dict(grid=grid)
-
 #shop_vars
-
 #adding shop page
 @auth.requires_login()
 def shop():
