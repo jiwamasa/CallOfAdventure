@@ -117,10 +117,14 @@ def questResult():
 #quest adding page
 @auth.requires_login()
 def addQuest():
+    curr_user = db.auth_user(auth.user.id)
+    db.quests.gold.requires=IS_INT_IN_RANGE(0,curr_user.gold,error_message='Not enough gold')
     form = SQLFORM(db.quests)
     if form.process().accepted:
-        form.vars.quest_giver=auth.user.first_name + auth.user.last_name
-        form.vars.prestige=form.vars.difficulty #prestige gain = diff
+        new_gold = curr_user.gold - form.vars.gold
+        curr_user.update_record(gold=new_gold)
+        db.quests(form.vars.id).update_record(quest_giver=curr_user)
+        db.quests(form.vars.id).update_record(prestige=form.vars.difficulty)
         #RANDOMIZE LOOT ITEMS BASED ON DIFFCULTY
     return dict(form=form)
 

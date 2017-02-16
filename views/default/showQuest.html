@@ -1,6 +1,6 @@
 {{extend 'layout.html'}}
 <h1>{{=quest.title}}</h1>
-<h2>By: {{=quest.quest_giver}}</h2>
+<h2>By: {{=quest.quest_giver.first_name}} {{=quest.quest_giver.last_name}}</h2>
 <h3>Rewards:</h3>
 <ul>
     <li>Gold: {{=quest.gold}}</li>

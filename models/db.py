@@ -34,7 +34,7 @@ auth.define_tables(username=True)
 # Table containing quests to take
 db.define_table('quests',
                 Field('title'),
-                Field('quest_giver', readable=False, writable=False),
+                Field('quest_giver', 'reference auth_user', readable=False, writable=False),
                 Field('gold', 'integer'),
                 Field('prestige', 'integer', readable=False, writable=False),
                 Field('difficulty', 'integer'),
