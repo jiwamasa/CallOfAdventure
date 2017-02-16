@@ -237,6 +237,16 @@ def showBuyItem():
 
     return dict(buyItem=buyItem, cost=cost, buyNow=buyNow, goPrevious=goPrevious)
 
+#sends data to unity game
+def web2unity:
+    session.connect(request)
+    print session.auth.user.first_name
+    stats = ""
+    stats += session.auth.user.first_name
+    for party_id in session.party:
+        stats+=db.auth_user(party_id).first_name
+    return stats    
+
 #profile page
 @auth.requires_login()
 def profilePage():
