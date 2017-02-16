@@ -9,7 +9,7 @@ def monster_strength(diff):
     hp=diff*2
     atk=diff*2
     defense=diff*2
-    return([hp,atk,defense])
+    return([hp,atk,defense]
     
 def test():
     print(1)

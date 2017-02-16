@@ -1,0 +1,7 @@
+equip_types.id,equip_types.name
+1,Weapon
+2,Off-Hand
+3,Head
+4,Body
+5,Legs
+6,Accessory

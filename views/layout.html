@@ -61,7 +61,22 @@
         <div class="collapse navbar-collapse navbar-ex1-collapse">
           <ul class="nav navbar-nav navbar-right">
             <li>
-              <a>Gold: {{=db.auth_user(auth.user.id).gold}}</a>
+              <a>Gold:
+		{{if auth.user.gold:}}
+		{{=db.auth_user(auth.user.id).gold}}
+		{{else:}}
+		{{=0}}
+		{{pass}}
+	      </a>
+            </li>
+            <li>
+              <a>Rare Ore:
+		{{if auth.user.rare_ore:}}
+		{{=db.auth_user(auth.user.id).rare_ore}}
+		{{else:}}
+		{{=0}}
+		{{pass}}
+	      </a>
             </li>
             <li class="dropdown"><a href=''>Current Party</a>
               <ul class="dropdown-menu">
@@ -91,28 +106,21 @@
                   <a href="/callofadventure/default/questsPage">Available Quests</a>
                 </li>
                 <li>
-                  <a href="/callofadventure/default/addQuest">Add Quest DEV!</a>
+                  <a href="/callofadventure/default/addQuest">Add a Quest</a>
                 </li>
               </ul>
 	    </li>
-            
+
 	    <li>
 	      <a href="/callofadventure/default/hirePage">Hire</a>
-	    </li>
-
-	    <li>
-	      <a href="/callofadventure/default/addItem">Add Item DEV!</a>
-	    </li>
-
-          
+	    </li>          
 	    <li>
 	      <a href="/callofadventure/default/shop">Shop</a>
 	    </li>
+            <li>
+              <a href = "/callofadventure/default/discussion"> Discussion</a>
+            </li>
 
-        <li>
-          <a href = "/callofadventure/default/discussion"> Discussion</a>
-        </li>
-          
 	  </ul>
         </div>
       </div>

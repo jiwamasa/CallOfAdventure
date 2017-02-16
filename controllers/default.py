@@ -1,6 +1,7 @@
 #-----------------------------#
-#      default_controller      #
+#      default_controller     #
 #-----------------------------#
+
 
 #import control
 from gluon.custom_import import track_changes
@@ -55,7 +56,8 @@ def questsPage():
         while rand_amount>0:
             if len(quests)>=1:
                 rand_id = random.randint(0,len(quests)-1)
-                session.quest_list.append(quests[rand_id])
+                if quests[rand_id].quest_giver.id != auth.user.id:
+                    session.quest_list.append(quests[rand_id])
                 rand_amount=rand_amount-1
             else:
                 rand_amount=-1
@@ -93,8 +95,8 @@ def questResult():
             
     monster_strength=[3.0*quest.difficulty,3.0*quest.difficulty,3.0*quest.difficulty]
      
-     #main 'battle logic' take turns killing each other
-     #loser is who reaches 0 health first
+    #main 'battle logic' take turns killing each other
+    #loser is who reaches 0 health first
     while party_strength[0]>0.0 and monster_strength[0]>0.0:
         monster_strength[0]-=party_strength[1]
         party_strength[0]-=monster_strength[1]*(1-((1/100)*party_strength[2]))
@@ -120,6 +122,10 @@ def questResult():
             user_items.append(rare_item)
             found_items.append(rare_item)
         current_user.update_record(inventory=user_items)
+        #give rare ore to user who posted quest
+        new_rare_ore = 10*quest.difficulty + quest.quest_giver.rare_ore
+        quest.quest_giver.update_record(rare_ore=new_rare_ore)
+        
         if session.quest_list:
             session.quest_list.remove(quest)
     else:
@@ -127,11 +133,19 @@ def questResult():
         result_msg = 'was a failure...'      
     return dict(quest=quest, result_msg=result_msg, success=success, party_strength=party_strength, found_items=found_items)
 
-#quest adding page (shouldn't be public in final build)
+#quest adding page
 @auth.requires_login()
 def addQuest():
-    grid = SQLFORM.smartgrid(db.quests)
-    return dict(grid=grid)
+    curr_user = db.auth_user(auth.user.id)
+    db.quests.gold.requires=IS_INT_IN_RANGE(0,curr_user.gold,error_message='Not enough gold')
+    form = SQLFORM(db.quests)
+    if form.process().accepted:
+        new_gold = curr_user.gold - form.vars.gold
+        curr_user.update_record(gold=new_gold)
+        db.quests(form.vars.id).update_record(quest_giver=curr_user)
+        db.quests(form.vars.id).update_record(prestige=form.vars.difficulty)
+        #RANDOMIZE LOOT ITEMS BASED ON DIFFCULTY
+    return dict(form=form)
 
 #all hires page
 @auth.requires_login()
@@ -171,14 +185,6 @@ def showHire():
         session.flash = 'Successfully hired adventurer ' + hire.first_name
         redirect(URL('hirePage'))
     return dict(hire=hire, cost=cost, form=form)
-
-#adding item page (shouldn't be public in final build)
-@auth.requires_login()
-def addItem():
-    grid = SQLFORM.smartgrid(db.equip_items)
-    return dict(grid=grid)
-
-#shop_vars
 
 #adding shop page
 @auth.requires_login()
