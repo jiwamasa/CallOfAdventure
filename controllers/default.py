@@ -72,6 +72,19 @@ def showQuest():
 #result of quest
 @auth.requires_login()
 def questResult():
+    #check if we still have this quest
+    quest_id=request.args(0, cast=int)
+    valid_quest=False
+    if session.quest_list:
+        for quest in session.quest_list:
+            if quest.id==quest_id:
+                valid_quest=True
+        if not valid_quest:
+            session.flash='Invaild Quest'
+            redirect(URL('index'))
+    else:
+        session.flash='Invaild Quest'
+        redirect(URL('index'))
     quest = db.quests(request.args(0, cast=int)) or redirect(URL('index'))
     current_user = db.auth_user(auth.user.id)
     #calculate user power
