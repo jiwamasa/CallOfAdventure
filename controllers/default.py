@@ -11,9 +11,8 @@ track_changes(True)
 import random
 import datetime
 
-#custom moudles
+#custom modules
 import quest_helper
-
 
 #home page
 @auth.requires_login()
@@ -39,6 +38,7 @@ QUEST_ADD_MIN = 2
 #all quests page
 @auth.requires_login()
 def questsPage():
+    print('Strength: '+str(quest_helper.player_strength(db,db.auth_user(auth.user.id))))
     if not session.quest_list:
         session.quest_list=[]
     quest_count = len(session.quest_list)
