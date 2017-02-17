@@ -25,9 +25,9 @@ def index():
 #items with stat total less the this go into shop
 #quest loot is higher than this
 ITEM_MID = 20
-#base rate of 5%, +1% per difficulty level
-RARE_ITEM_RATE = 0.05
-RARE_ITEM_RATE_ADD = 0.01
+#base rate of 25%, +5% per difficulty level
+RARE_ITEM_RATE = 0.25
+RARE_ITEM_RATE_ADD = 0.05
     
 #---Necessary for Quest Generation---#
 QUEST_MIN = 5
@@ -38,7 +38,8 @@ QUEST_ADD_MIN = 2
 #all quests page
 @auth.requires_login()
 def questsPage():
-    print('Strength: '+str(quest_helper.player_strength(db,db.auth_user(auth.user.id))))
+    player_strength = quest_helper.player_strength(db,db.auth_user(auth.user.id))
+    #print('Strength: '+str(player_strength))
     if not session.quest_list:
         session.quest_list=[]
     quest_count = len(session.quest_list)
@@ -49,8 +50,8 @@ def questsPage():
     # low on quests, add more
     elif quest_count <= QUEST_MIN:
         #calculate user strength here
-        min_lvl = 0
-        max_lvl = 100000
+        min_lvl = (player_strength/20)-1
+        max_lvl = (player_strength/20)+1
         quests = db(((db.quests.difficulty>=min_lvl) and (db.quests.difficulty<=max_lvl))).select(db.quests.ALL, orderby=db.quests.difficulty)
         rand_amount = random.randint(QUEST_ADD_MIN,QUEST_ADD_MAX)
         while rand_amount>0:
@@ -77,7 +78,7 @@ def questResult():
     valid_quest=False
     if session.quest_list:
         for quest in session.quest_list:
-            if quest.id==quest_id:
+            if hasattr(quest, 'id') and quest.id==quest_id:
                 valid_quest=True
         if not valid_quest:
             session.flash='Invaild Quest'
@@ -129,7 +130,7 @@ def questResult():
                 user_items.append(item)
                 found_items.append(item)
         #chance for rare strong items
-        if random.random()<(RARE_ITEM_RATE+(RARE_ITEM_RATE_ADD*quest.difficulty)):
+        if random.random()<(RARE_ITEM_RATE+(RARE_ITEM_RATE_ADD*(quest.difficulty-1))):
             rare_items = db((db.equip_items.attack+db.equip_items.defense+db.equip_items.speed)>=ITEM_MID).select(db.equip_items.ALL)
             rare_item = rare_items[random.randint(0,len(rare_items)-1)]
             user_items.append(rare_item)
