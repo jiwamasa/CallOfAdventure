@@ -14,12 +14,10 @@ import datetime
 #custom moudles
 import quest_helper
 
-
 #home page
 @auth.requires_login()
 def index():
     return dict()
-
 
 #---Necessary for Quest Generation---#
 QUEST_MIN = 5
@@ -48,7 +46,8 @@ def questsPage():
         while rand_amount>0:
             if len(quests)>=1:
                 rand_id = random.randint(0,len(quests)-1)
-                session.quest_list.append(quests[rand_id])
+                if quests[rand_id].quest_giver.id != auth.user.id:
+                    session.quest_list.append(quests[rand_id])
                 rand_amount=rand_amount-1
             else:
                 rand_amount=-1
@@ -107,6 +106,10 @@ def questResult():
                 user_items.append(item)
                 found_items.append(item)
         current_user.update_record(inventory=user_items)
+        #give rare ore to user who posted quest
+        new_rare_ore = 10*quest.difficulty + quest.quest_giver.rare_ore
+        quest.quest_giver.update_record(rare_ore=new_rare_ore)
+        
         if session.quest_list:
             session.quest_list.remove(quest)
     else:
@@ -167,8 +170,7 @@ def showHire():
         redirect(URL('hirePage'))
     return dict(hire=hire, cost=cost, form=form)
 
-#shop_vars
-#adding shop page
+#shop page
 @auth.requires_login()
 def shop():
     #need a system to choose what items are available...
@@ -211,7 +213,7 @@ def discussion_other():
     comments = db().select(db.discussion_other.ALL, orderby=db.discussion_other.author)
     return dict(comments = comments, form = form)
 
-#adding preview item to buy page
+#preview item to buy page
 @auth.requires_login()
 def showBuyItem():
     buyItem = db.equip_items(request.args(0, cast=int)) or redirect(URL('index'))
@@ -242,10 +244,12 @@ def showBuyItem():
 def profilePage():
     current_user = db.auth_user(auth.user.id)
     #free money button (debug)
-    form = FORM('', INPUT(_name='free', _type='submit', _value='FREE GOLD'))
+    form = FORM('', INPUT(_name='free', _type='submit', _value='FREE STUFF'))
     if form.process().accepted:
         new_gold = current_user.gold + 1000
+        new_rare_ore = current_user.rare_ore + 100
         current_user.update_record(gold=new_gold)
+        current_user.update_record(rare_ore=new_rare_ore)
         
     if request.args(0): #equipping items to current loadout
         equipped = db.equip_items(request.args(0))

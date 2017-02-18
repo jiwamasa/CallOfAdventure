@@ -10,9 +10,11 @@ db.define_table('equip_items',
                 Field('attack', 'integer', default=0),
                 Field('defense', 'integer', default=0),
                 Field('speed', 'integer', default=0),
-                Field('cost', 'integer', readable=True),
+                Field('cost', 'integer', default=0),
                 Field('category', 'reference equip_types', default=0),
                 Field('details', 'text'))
+
+db.equip_items.requires=IS_IN_DB(db.equip_types, 'equip_types.name', '%(name)s')
 
 # Table containing equipment loadout sets (created by users)
 db.define_table('loadouts',
