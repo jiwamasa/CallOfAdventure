@@ -12,7 +12,7 @@ import forge_helper
 def forge():
     current_user = db.auth_user(auth.user.id)
     form = FORM('Name: ', INPUT(_name='itemname', _type='text', requires=IS_NOT_EMPTY()), BR(),
-                'Rare Ore: ', INPUT(_name='rareore', _type='number', requires=IS_INT_IN_RANGE(0, current_user.rare_ore+1, error_message='Not enough Rare Ore')), BR(),
+                'Rare Ore: ', INPUT(_name='rareore', _type='number', requires=IS_INT_IN_RANGE(1, current_user.rare_ore+1, error_message='Not enough Rare Ore')), BR(),
                 'Booze: ', INPUT(_name='booze', _type='range'), BR(),
                 'Words of Encouragement: ', INPUT(_name='words', _type='text', requires=IS_NOT_EMPTY(error_message='Let him know you care!')),
                 BR(), INPUT(_type='submit', _value='Submit'))
