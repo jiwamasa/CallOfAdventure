@@ -14,12 +14,10 @@ import datetime
 #custom moudles
 import quest_helper
 
-
 #home page
 @auth.requires_login()
 def index():
     return dict()
-
 
 #---Necessary for Quest Generation---#
 QUEST_MIN = 5
@@ -240,28 +238,6 @@ def showBuyItem():
         redirect(URL('shop'))
 
     return dict(buyItem=buyItem, cost=cost, buyNow=buyNow, goPrevious=goPrevious)
-
-#forge equip items with rare ore
-def forge():
-    current_user = db.auth_user(auth.user.id)
-    form = FORM('Name: ', INPUT(_name='itemname', _type='text', requires=IS_NOT_EMPTY()), BR(),
-                'Rare Ore: ', INPUT(_name='rareore', _type='number', requires=IS_INT_IN_RANGE(0, current_user.rare_ore, error_message='Not enough Rare Ore')), BR(),
-                'Booze: ', INPUT(_name='booze', _type='range'), BR(),
-                'Words of Encouragement: ', INPUT(_name='words', _type='text', requires=IS_NOT_EMPTY(error_message='Let him know you care!')),
-                BR(), INPUT(_type='submit', _value='Submit'))
-    if form.accepts(request, session):
-        #CHECK NAME FOR DUPLICATE
-        #CALCULATE TYPE AND STATS FROM INPUT
-        forgeItem = db.equip_items.insert(name=form.vars.itemname,
-                                          attack=1, defense=1, speed=1, cost=10,
-                                          category=1,
-                                          details='test')
-        redirect(URL('forgeResults', args=forgeItem))
-    return dict(form=form)
-
-#results of forging
-def forgeResults():
-    return dict(forge_id=request.args(0))
 
 #profile page
 @auth.requires_login()
