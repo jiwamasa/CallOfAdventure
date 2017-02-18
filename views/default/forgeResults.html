@@ -1,0 +1,10 @@
+{{extend 'layout.html'}}
+{{forged = db.equip_items(forge_id)}}
+<h1>It's done!</h1>
+<ul>
+  <li>Name: {{=forged.name}}</li>
+  <li>Type: {{=db.equip_types(forged.category).name}}</li>
+  <li>Attack: {{=forged.attack}}</li>
+  <li>Defense: {{=forged.defense}}</li>
+  <li>Speed: {{=forged.speed}}</li>
+</ul>

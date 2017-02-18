@@ -172,7 +172,7 @@ def showHire():
         redirect(URL('hirePage'))
     return dict(hire=hire, cost=cost, form=form)
 
-#adding shop page
+#shop page
 @auth.requires_login()
 def shop():
     #need a system to choose what items are available...
@@ -215,7 +215,7 @@ def discussion_other():
     comments = db().select(db.discussion_other.ALL, orderby=db.discussion_other.author)
     return dict(comments = comments, form = form)
 
-#adding preview item to buy page
+#preview item to buy page
 @auth.requires_login()
 def showBuyItem():
     buyItem = db.equip_items(request.args(0, cast=int)) or redirect(URL('index'))
@@ -241,15 +241,39 @@ def showBuyItem():
 
     return dict(buyItem=buyItem, cost=cost, buyNow=buyNow, goPrevious=goPrevious)
 
+#forge equip items with rare ore
+def forge():
+    current_user = db.auth_user(auth.user.id)
+    form = FORM('Name: ', INPUT(_name='itemname', _type='text', requires=IS_NOT_EMPTY()), BR(),
+                'Rare Ore: ', INPUT(_name='rareore', _type='number', requires=IS_INT_IN_RANGE(0, current_user.rare_ore, error_message='Not enough Rare Ore')), BR(),
+                'Booze: ', INPUT(_name='booze', _type='range'), BR(),
+                'Words of Encouragement: ', INPUT(_name='words', _type='text', requires=IS_NOT_EMPTY(error_message='Let him know you care!')),
+                BR(), INPUT(_type='submit', _value='Submit'))
+    if form.accepts(request, session):
+        #CHECK NAME FOR DUPLICATE
+        #CALCULATE TYPE AND STATS FROM INPUT
+        forgeItem = db.equip_items.insert(name=form.vars.itemname,
+                                          attack=1, defense=1, speed=1, cost=10,
+                                          category=1,
+                                          details='test')
+        redirect(URL('forgeResults', args=forgeItem))
+    return dict(form=form)
+
+#results of forging
+def forgeResults():
+    return dict(forge_id=request.args(0))
+
 #profile page
 @auth.requires_login()
 def profilePage():
     current_user = db.auth_user(auth.user.id)
     #free money button (debug)
-    form = FORM('', INPUT(_name='free', _type='submit', _value='FREE GOLD'))
+    form = FORM('', INPUT(_name='free', _type='submit', _value='FREE STUFF'))
     if form.process().accepted:
         new_gold = current_user.gold + 1000
+        new_rare_ore = current_user.rare_ore + 100
         current_user.update_record(gold=new_gold)
+        current_user.update_record(rare_ore=new_rare_ore)
         
     if request.args(0): #equipping items to current loadout
         equipped = db.equip_items(request.args(0))
