@@ -137,8 +137,8 @@ def profilePage():
         current_user.update_record(gold=new_gold)
         current_user.update_record(rare_ore=new_rare_ore)
         
-    if request.args(0): #equipping items to current loadout
-        equipped = db.equip_items(request.args(0))
+    if request.args(0) == 'equip': #equipping items to current loadout
+        equipped = db.equip_items(request.args(1))
         if not current_user.curr_loadout: #if first loadout, make new loadout
             new_loadout = db.loadouts.insert()
             current_user.update_record(curr_loadout=new_loadout)
@@ -147,6 +147,15 @@ def profilePage():
         db.loadouts(current_user.curr_loadout).update_record(equip_list=new_equip_list)
         session.flash = 'Equipped ' + equipped.name
         redirect(URL("profilePage"))
+
+    if request.args(0) == 'unequip': #unequipping items from current loadout
+        unequipped = db.equip_items(request.args(1))
+        new_equip_list = db.loadouts(current_user.curr_loadout).equip_list 
+        new_equip_list[unequipped.category] = 0
+        db.loadouts(current_user.curr_loadout).update_record(equip_list=new_equip_list)
+        session.flash = 'Unequipped ' + unequipped.name
+        redirect(URL("profilePage"))
+
     return dict(form=form, current_user=current_user)
 
 def user():
