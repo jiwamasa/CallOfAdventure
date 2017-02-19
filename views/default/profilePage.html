@@ -11,14 +11,18 @@
   <td><b>Attack</b></td>
   <td><b>Defense</b></td>
   <td><b>Speed</b></td>
-  {{
-  for item_id in current_user.inventory:
-  print db.equip_items(item_id)
-  
-    item = db.equip_items(item_id)
-    =TR(TD(item.name),TD(db.equip_types(item.category).name),TD(item.attack),TD(item.defense),TD(item.speed),TD(FORM(INPUT(_name='equip', _type='submit', _value='Equip'), _action=URL("profilePage", args=["equip",item_id]))))
-pass
-  }}
+  <td></td>
+  {{for item_id in current_user.inventory:}}
+  {{  item = db.equip_items(item_id)}}
+  <tr>
+    {{=TD(item.name)}}
+    {{=TD(db.equip_types(item.category).name)}}
+    {{=TD(item.attack)}}
+    {{=TD(item.defense)}}
+    {{=TD(item.speed)}}
+    <td class='button'>{{=FORM(INPUT(_name='equip', _type='submit', _value='Equip'), _action=URL("profilePage", args=["equip",item_id]))}}</td>
+  </tr>
+  {{pass}}
 </table>
 
 
@@ -26,18 +30,22 @@ pass
 <b>Current Loadout</b>
 {{if current_user.curr_loadout:}}
 <table border="1">
-  <td><b>Slot</b></td><td><b>Name</b></td>
-  {{
-  loadout_list = db.loadouts(current_user.curr_loadout).equip_list
-  for slot_id in range(1,7):
-    if loadout_list[slot_id]:
-      equip_item = db.equip_items(loadout_list[slot_id])
-      =TR(TD(db.equip_types(slot_id).name), TD(equip_item.name), TD(FORM(INPUT(_type="submit",_value="Unequip"),_action=URL("profilePage", args=["unequip",equip_item.id]))))
-    else:
-      =TR(TD(db.equip_types(slot_id).name), TD("None"))
-    pass
-  pass
-  }}
+  <td><b>Slot</b></td><td><b>Name</b></td><td></td>
+  {{loadout_list = db.loadouts(current_user.curr_loadout).equip_list}}
+  {{for slot_id in range(1,7):}}
+  {{  if loadout_list[slot_id]:}}
+  {{    equip_item = db.equip_items(loadout_list[slot_id])}}
+  <tr>
+    {{=TD(db.equip_types(slot_id).name)}}
+    {{=TD(equip_item.name)}}
+    <td class='button'>
+      {{=FORM(INPUT(_type="submit",_value="Unequip"),_action=URL("profilePage", args=["unequip",equip_item.id]))}}
+    </td>
+  </tr>
+  {{  else:}}
+  {{    =TR(db.equip_types(slot_id).name, "None")}}
+  {{  pass}}
+  {{pass}}
 </table>
 {{else:}}
   <br>Nothing Equipped
