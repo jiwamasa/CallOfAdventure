@@ -1,11 +1,18 @@
+input[type=text] {
+    height: 25px;
+    margin-bottom: 5px;
+}
+input[type=number] {
+    height: 25px;
+    margin-bottom: 5px;
+}
 input[type='range'] {
     width: 200px;
-    height: 20px;
+    height: 10px;
     display: inline;
     -webkit-appearance: none; /*Hides the slider for custom*/
     background: transparent;
 }
-
 input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
     border: 1px solid #000000;
@@ -17,3 +24,4 @@ input[type=range]::-webkit-slider-thumb {
     margin-top: -14px;
     box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
 }
+
