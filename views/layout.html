@@ -62,14 +62,14 @@
           <ul class="nav navbar-nav navbar-right">
             <li>
               <a>Gold:
-		{{if db.auth_user(auth.user.id)):}}
+		{{if db.auth_user(auth.user.id):}}
 		{{=db.auth_user(auth.user.id).gold}}
 		{{pass}}
 	      </a>
             </li>
             <li>
               <a>Rare Ore:
-		{{if db.auth_user(auth.user.id)):}}
+		{{if db.auth_user(auth.user.id):}}
 		{{=db.auth_user(auth.user.id).rare_ore}}
 		{{pass}}
 	      </a>

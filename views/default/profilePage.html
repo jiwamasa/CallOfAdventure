@@ -1,4 +1,5 @@
 {{extend 'layout.html'}}
+<head><link rel="stylesheet" href="{{=URL('static','css/profilePage.css')}}"></head>
 <h1>"{{=current_user.first_name}} {{=current_user.last_name}}"</h1>
 <h2>Gold: {{=current_user.gold}}</h2>
 {{=form}}
@@ -12,6 +13,8 @@
   <td><b>Speed</b></td>
   {{
   for item_id in current_user.inventory:
+  print db.equip_items(item_id)
+  
     item = db.equip_items(item_id)
     =TR(TD(item.name),TD(db.equip_types(item.category).name),TD(item.attack),TD(item.defense),TD(item.speed),TD(FORM(INPUT(_name='equip', _type='submit', _value='Equip'), _action=URL("profilePage", args=["equip",item_id]))))
 pass
@@ -37,6 +40,5 @@ pass
   }}
 </table>
 {{else:}}
-  =BR()
-  =B("Nothing Equipped")
+  <br>Nothing Equipped
 {{pass}}

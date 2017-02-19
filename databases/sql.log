@@ -1,10 +1,10 @@
-timestamp: 2017-02-15T16:44:39.440000
+timestamp: 2017-02-18T22:57:23.715000
 CREATE TABLE equip_types(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name CHAR(512)
 );
 success!
-timestamp: 2017-02-15T16:44:39.599000
+timestamp: 2017-02-18T22:57:23.963000
 CREATE TABLE equip_items(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name CHAR(512) UNIQUE,
@@ -16,14 +16,14 @@ CREATE TABLE equip_items(
     details TEXT
 );
 success!
-timestamp: 2017-02-15T16:44:39.749000
+timestamp: 2017-02-18T22:57:24.140000
 CREATE TABLE loadouts(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name CHAR(512) UNIQUE,
     equip_list TEXT
 );
 success!
-timestamp: 2017-02-15T16:44:39.864000
+timestamp: 2017-02-18T22:57:24.262000
 CREATE TABLE auth_user(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     first_name CHAR(128),
@@ -42,21 +42,21 @@ CREATE TABLE auth_user(
     saved_loadouts TEXT
 );
 success!
-timestamp: 2017-02-15T16:44:40.060000
+timestamp: 2017-02-18T22:57:24.411000
 CREATE TABLE auth_group(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     role CHAR(512),
     description TEXT
 );
 success!
-timestamp: 2017-02-15T16:44:40.218000
+timestamp: 2017-02-18T22:57:24.539000
 CREATE TABLE auth_membership(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
     group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE  
 );
 success!
-timestamp: 2017-02-15T16:44:40.372000
+timestamp: 2017-02-18T22:57:24.683000
 CREATE TABLE auth_permission(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE  ,
@@ -65,7 +65,7 @@ CREATE TABLE auth_permission(
     record_id INTEGER
 );
 success!
-timestamp: 2017-02-15T16:44:40.528000
+timestamp: 2017-02-18T22:57:24.817000
 CREATE TABLE auth_event(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     time_stamp TIMESTAMP,
@@ -75,7 +75,7 @@ CREATE TABLE auth_event(
     description TEXT
 );
 success!
-timestamp: 2017-02-15T16:44:40.706000
+timestamp: 2017-02-18T22:57:24.950000
 CREATE TABLE auth_cas(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
@@ -85,7 +85,7 @@ CREATE TABLE auth_cas(
     renew CHAR(1)
 );
 success!
-timestamp: 2017-02-15T16:44:40.875000
+timestamp: 2017-02-18T22:57:25.095000
 CREATE TABLE quests(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title CHAR(512),
@@ -98,21 +98,21 @@ CREATE TABLE quests(
     details TEXT
 );
 success!
-timestamp: 2017-02-15T16:44:41.041000
+timestamp: 2017-02-18T22:57:25.272000
 CREATE TABLE discussion_quests(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     author CHAR(512),
     body TEXT
 );
 success!
-timestamp: 2017-02-15T16:44:41.150000
+timestamp: 2017-02-18T22:57:25.387000
 CREATE TABLE discussion_equipment(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     author CHAR(512),
     body TEXT
 );
 success!
-timestamp: 2017-02-15T16:44:41.282000
+timestamp: 2017-02-18T22:57:25.554000
 CREATE TABLE discussion_other(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     author CHAR(512),
