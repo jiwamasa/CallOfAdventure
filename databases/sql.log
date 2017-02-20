@@ -1,18 +1,10 @@
-<<<<<<< HEAD
-timestamp: 2017-02-16T11:38:03.631000
-=======
-timestamp: 2017-02-18T22:57:23.715000
->>>>>>> 6f59febce98d3e2556c67d797c31d99e94691235
+timestamp: 2017-02-19T20:24:16.327000
 CREATE TABLE equip_types(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name CHAR(512)
 );
 success!
-<<<<<<< HEAD
-timestamp: 2017-02-16T11:38:03.677000
-=======
-timestamp: 2017-02-18T22:57:23.963000
->>>>>>> 6f59febce98d3e2556c67d797c31d99e94691235
+timestamp: 2017-02-19T20:24:16.350000
 CREATE TABLE equip_items(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name CHAR(512) UNIQUE,
@@ -24,22 +16,14 @@ CREATE TABLE equip_items(
     details TEXT
 );
 success!
-<<<<<<< HEAD
-timestamp: 2017-02-16T11:38:03.721000
-=======
-timestamp: 2017-02-18T22:57:24.140000
->>>>>>> 6f59febce98d3e2556c67d797c31d99e94691235
+timestamp: 2017-02-19T20:24:16.373000
 CREATE TABLE loadouts(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name CHAR(512) UNIQUE,
     equip_list TEXT
 );
 success!
-<<<<<<< HEAD
-timestamp: 2017-02-16T11:38:03.756000
-=======
-timestamp: 2017-02-18T22:57:24.262000
->>>>>>> 6f59febce98d3e2556c67d797c31d99e94691235
+timestamp: 2017-02-19T20:24:16.393000
 CREATE TABLE auth_user(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     first_name CHAR(128),
@@ -58,33 +42,21 @@ CREATE TABLE auth_user(
     saved_loadouts TEXT
 );
 success!
-<<<<<<< HEAD
-timestamp: 2017-02-16T11:38:03.794000
-=======
-timestamp: 2017-02-18T22:57:24.411000
->>>>>>> 6f59febce98d3e2556c67d797c31d99e94691235
+timestamp: 2017-02-19T20:24:16.420000
 CREATE TABLE auth_group(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     role CHAR(512),
     description TEXT
 );
 success!
-<<<<<<< HEAD
-timestamp: 2017-02-16T11:38:03.826000
-=======
-timestamp: 2017-02-18T22:57:24.539000
->>>>>>> 6f59febce98d3e2556c67d797c31d99e94691235
+timestamp: 2017-02-19T20:24:16.437000
 CREATE TABLE auth_membership(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
     group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE  
 );
 success!
-<<<<<<< HEAD
-timestamp: 2017-02-16T11:38:03.861000
-=======
-timestamp: 2017-02-18T22:57:24.683000
->>>>>>> 6f59febce98d3e2556c67d797c31d99e94691235
+timestamp: 2017-02-19T20:24:16.453000
 CREATE TABLE auth_permission(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE  ,
@@ -93,11 +65,7 @@ CREATE TABLE auth_permission(
     record_id INTEGER
 );
 success!
-<<<<<<< HEAD
-timestamp: 2017-02-16T11:38:03.898000
-=======
-timestamp: 2017-02-18T22:57:24.817000
->>>>>>> 6f59febce98d3e2556c67d797c31d99e94691235
+timestamp: 2017-02-19T20:24:16.474000
 CREATE TABLE auth_event(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     time_stamp TIMESTAMP,
@@ -107,11 +75,7 @@ CREATE TABLE auth_event(
     description TEXT
 );
 success!
-<<<<<<< HEAD
-timestamp: 2017-02-16T11:38:03.926000
-=======
-timestamp: 2017-02-18T22:57:24.950000
->>>>>>> 6f59febce98d3e2556c67d797c31d99e94691235
+timestamp: 2017-02-19T20:24:16.492000
 CREATE TABLE auth_cas(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
@@ -121,11 +85,7 @@ CREATE TABLE auth_cas(
     renew CHAR(1)
 );
 success!
-<<<<<<< HEAD
-timestamp: 2017-02-16T11:38:03.959000
-=======
-timestamp: 2017-02-18T22:57:25.095000
->>>>>>> 6f59febce98d3e2556c67d797c31d99e94691235
+timestamp: 2017-02-19T20:24:16.510000
 CREATE TABLE quests(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title CHAR(512),
@@ -138,33 +98,21 @@ CREATE TABLE quests(
     details TEXT
 );
 success!
-<<<<<<< HEAD
-timestamp: 2017-02-16T11:38:03.994000
-=======
-timestamp: 2017-02-18T22:57:25.272000
->>>>>>> 6f59febce98d3e2556c67d797c31d99e94691235
+timestamp: 2017-02-19T20:24:16.534000
 CREATE TABLE discussion_quests(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     author CHAR(512),
     body TEXT
 );
 success!
-<<<<<<< HEAD
-timestamp: 2017-02-16T11:38:04.034000
-=======
-timestamp: 2017-02-18T22:57:25.387000
->>>>>>> 6f59febce98d3e2556c67d797c31d99e94691235
+timestamp: 2017-02-19T20:24:16.559000
 CREATE TABLE discussion_equipment(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     author CHAR(512),
     body TEXT
 );
 success!
-<<<<<<< HEAD
-timestamp: 2017-02-16T11:38:04.066000
-=======
-timestamp: 2017-02-18T22:57:25.554000
->>>>>>> 6f59febce98d3e2556c67d797c31d99e94691235
+timestamp: 2017-02-19T20:24:16.580000
 CREATE TABLE discussion_other(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     author CHAR(512),
