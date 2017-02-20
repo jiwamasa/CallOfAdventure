@@ -1,17 +1,25 @@
 {{extend 'layout.html'}}
-<h1>Available Quests</h1>
+<head><link rel="stylesheet" href="{{=URL('static','css/questsPage.css')}}"></head>
+<body>
 {{if len(questList)>=1:}}
-<ul>
-{{for quest in questList:
-    # Added this because quests would sometimes not have a title, PURGE THEM ALL!
-    if hasattr(quest, 'title'):
-        =LI(A(quest.title+' Difficulty '+str(quest.difficulty), _href=URL("showQuest", args=quest.id)))
-    else:
-        questList.remove(quest)
+<h1>Available Quests</h1>
+{{for i in xrange(1,6):
+    =H2('Difficulty '+str(i))
+    =BR()
+    for quest in questList:
+        if hasattr(quest, 'title'):
+            if quest.difficulty==i:
+                =A(quest.title+' Difficulty '+str(quest.difficulty), _href=URL("showQuest", args=quest.id))
+                =BR()
+            pass
+        else:
+            questList.remove(quest)
+        pass
+        
     pass
-    pass
-}}
-</ul>
+pass}}
+
 {{else:}}
 No quests :'(
 {{pass}}
+</body>

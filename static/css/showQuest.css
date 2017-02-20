@@ -1,0 +1,17 @@
+h1 {
+    text-align: center;
+    text-transform: uppercase;
+    font-family: Serif;
+    background-color: #00cc66;
+    
+    border: 2px solid #ffff00;
+    border-radius: 5px;
+}
+
+body {
+    background-color: lightblue;
+}
+
+li.gold{
+    color: #ffff00;
+}

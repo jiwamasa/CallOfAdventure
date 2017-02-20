@@ -11,6 +11,10 @@ import datetime
 #custom modules
 import quest_helper
 
+#
+# for row in db().select(db.person.ALL, orderby='<random>')
+#
+
 #Middle point for shop and quests
 #items with stat total less the this go into shop
 #quest loot is higher than this
@@ -82,11 +86,9 @@ def questResult():
     party_strength=[25.0,5.0,5.0]
     
     #calculate user's item power
-    if current_user.curr_loadout > 0:
-        loadout=db.loadouts(current_user.curr_loadout).equip_list
-        for item_id in loadout:
-            if item_id>0:
-                item=db.equip_items(item_id)
+    if current_user.curr_loadout>0:
+        for item in current_user.curr_loadout.equip_list:
+            if item.id>0:
                 party_strength[1]=party_strength[1]+item.attack
                 party_strength[2]=party_strength[2]+item.defense
                 
@@ -96,7 +98,8 @@ def questResult():
             #add up stats for each member, dummy for now
             party_strength=[sum(x) for x in zip(party_strength, [5.0,5.0,5.0])]
             
-    monster_strength=[10+3.0*quest.difficulty,3.0*quest.difficulty,3.0*quest.difficulty]
+    #monster_strength=[10+3.0*quest.difficulty,3.0*quest.difficulty,3.0*quest.difficulty]
+    monster_strength=quest_helper.monster_strength(quest.difficulty)
      
     #main 'battle logic' take turns killing each other
     #loser is who reaches 0 health first

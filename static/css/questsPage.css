@@ -1,0 +1,28 @@
+h1 {
+    text-align: center;
+    font-family: fantasy;
+    font-size: 60px;
+}
+
+h2 {
+    font-family: fantasy;
+}
+
+body {
+    margin-top: 80px;
+    text-align: center;
+    background-color: #dfbf9f;
+    
+    background-image: url("../images/vine-border-left.png");
+    background-position: 0% 70px;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+ul {
+    font-family: "Times new Roman";
+}
+
+a:link {
+    color: #009933;
+}
