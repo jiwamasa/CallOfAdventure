@@ -27,8 +27,13 @@ jQuery(document).ready(function(){
 	 jQuery('#display_spd').text('{{=item.speed}}');
 	 jQuery('#display_flav').text('{{=item.details}}');
 	 var eq_url = 'profilePage/equip/' + this.id;
-	 jQuery('#equip_form').show();
-	 jQuery('#equip_form').prop('action', eq_url);"
+	 var curr_eq = jQuery('#{{=db.equip_types(item.category).name}}').text();
+	 if (curr_eq != '{{=item.name}}') {
+	   jQuery('#equip_form').show();
+	   jQuery('#equip_form').prop('action', eq_url);
+	 } else {
+	   jQuery('#equip_form').hide();
+	 }"
 	onmouseover="this.style.backgroundColor='yellow'"
 	onmouseout="this.style.backgroundColor='white'"
 	>{{=item.name}}</td>
@@ -68,8 +73,8 @@ jQuery(document).ready(function(){
   {{  if loadout_list[slot_id]:}}
   {{    equip_item = db.equip_items(loadout_list[slot_id])}}
   <tr>
-    {{=TD(db.equip_types(slot_id).name)}}
-    {{=TD(equip_item.name)}}
+    <td>{{=db.equip_types(slot_id).name}}</td>
+    <td id="{{=db.equip_types(slot_id).name}}">{{=equip_item.name}}</td>
     <td class='button'>
       {{=FORM(INPUT(_type="submit",_value="Unequip"),_action=URL("profilePage", args=["unequip",equip_item.id]))}}
     </td>
