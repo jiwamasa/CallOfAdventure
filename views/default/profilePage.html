@@ -10,13 +10,19 @@
   {{for item_id in current_user.inventory:}}
   {{  item = db.equip_items(item_id)}}
     {{if row%5 == 0:}}<tr>{{pass}}
-    <td onclick=
+    <td id="{{=item_id}}"
+	onclick=
 	"jQuery('#display_name').text('{{=item.name}}'); 
 	 jQuery('#display_type').text('{{=db.equip_types(item.category).name}}');
 	 jQuery('#display_atk').text('{{=item.attack}}');
 	 jQuery('#display_def').text('{{=item.defense}}');
 	 jQuery('#display_spd').text('{{=item.speed}}');
-	 jQuery('#display_flav').text('{{=item.details}}');"
+	 jQuery('#display_flav').text('{{=item.details}}');
+	 var eq_url = 'profilePage/equip/' + this.id;
+	 jQuery('#equip_form').prop('action', eq_url);
+	 "
+	onmouseover="this.style.backgroundColor='yellow'"
+	onmouseout="this.style.backgroundColor='white'"
 	>{{=item.name}}</td>
     {{if row%5 == 4:}}</tr>{{pass}}
   {{row += 1}}
@@ -38,7 +44,9 @@
   </tr>
   <tr>
     <td colspan="4" id="display_flav"></td>
-    <td id="equip_button" class='button'>{{=FORM(INPUT(_name='equip', _type='submit', _value='Equip'), _action=URL("profilePage", args=["equip",item_id]))}}</td>
+    <td class="button">
+      <form id="equip_form" action="{{=URL('profilePage')}}">
+	<input type="submit" value="Equip"></input></form></td>
   </tr>
 </table>
 
