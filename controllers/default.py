@@ -90,7 +90,7 @@ def questResult():
     current_user = db.auth_user(auth.user.id)
     #calculate user power
     #hp, atk, def
-    party_strength=[5.0,5.0,5.0]
+    party_strength=[25.0,5.0,5.0]
     
     #calculate user's item power
     if current_user.curr_loadout > 0:
@@ -107,12 +107,12 @@ def questResult():
             #add up stats for each member, dummy for now
             party_strength=[sum(x) for x in zip(party_strength, [5.0,5.0,5.0])]
             
-    monster_strength=[3.0*quest.difficulty,3.0*quest.difficulty,3.0*quest.difficulty]
+    monster_strength=[10+3.0*quest.difficulty,3.0*quest.difficulty,3.0*quest.difficulty]
      
     #main 'battle logic' take turns killing each other
     #loser is who reaches 0 health first
     while party_strength[0]>0.0 and monster_strength[0]>0.0:
-        monster_strength[0]-=party_strength[1]
+        monster_strength[0]-=party_strength[1]*(1-((1/100)*monster_strength[2]))
         party_strength[0]-=monster_strength[1]*(1-((1/100)*party_strength[2]))
 
     found_items=[]
