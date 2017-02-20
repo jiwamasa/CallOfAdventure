@@ -62,19 +62,15 @@
           <ul class="nav navbar-nav navbar-right">
             <li>
               <a>Gold:
-		{{if auth.user.gold:}}
+		{{if db.auth_user(auth.user.id):}}
 		{{=db.auth_user(auth.user.id).gold}}
-		{{else:}}
-		{{=0}}
 		{{pass}}
 	      </a>
             </li>
             <li>
               <a>Rare Ore:
-		{{if auth.user.rare_ore:}}
+		{{if db.auth_user(auth.user.id):}}
 		{{=db.auth_user(auth.user.id).rare_ore}}
-		{{else:}}
-		{{=0}}
 		{{pass}}
 	      </a>
             </li>
@@ -103,10 +99,10 @@
             <li class="dropdown"><a href="#">Quests</a>
               <ul class="dropdown-menu">
                 <li>
-                  <a href="/callofadventure/default/questsPage">Available Quests</a>
+                  <a href="/callofadventure/questing/questsPage">Available Quests</a>
                 </li>
                 <li>
-                  <a href="/callofadventure/default/addQuest">Add a Quest</a>
+                  <a href="/callofadventure/questing/addQuest">Add a Quest</a>
                 </li>
               </ul>
 	    </li>
@@ -117,8 +113,11 @@
 	    <li>
 	      <a href="/callofadventure/default/shop">Shop</a>
 	    </li>
+	    <li>
+	      <a href="/callofadventure/crafting/forge">Forge</a>
+	    </li>
             <li>
-              <a href = "/callofadventure/default/discussion"> Discussion</a>
+              <a href="/callofadventure/default/discussion">Discussion</a>
             </li>
 
 	  </ul>

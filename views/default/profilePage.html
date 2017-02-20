@@ -1,29 +1,52 @@
 {{extend 'layout.html'}}
+<head><link rel="stylesheet" href="{{=URL('static','css/profilePage.css')}}"></head>
 <h1>"{{=current_user.first_name}} {{=current_user.last_name}}"</h1>
 <h2>Gold: {{=current_user.gold}}</h2>
 {{=form}}
 <br>
 <b>Inventory</b>
-{{
-for item_id in current_user.inventory:
-item = db.equip_items(item_id)
-=LI(item.name, B(" ATK: ", item.attack),B(" DEF: ", item.defense),B(" SPD: ", item.speed))
-=FORM('', INPUT(_name='equip', _type='submit', _value='Equip'), _action=URL("profilePage", args=item_id))
-pass
-}}
+<table border="1">
+  <td><b>Name</b></td>
+  <td><b>Type</b></td>
+  <td><b>Attack</b></td>
+  <td><b>Defense</b></td>
+  <td><b>Speed</b></td>
+  <td></td>
+  {{for item_id in current_user.inventory:}}
+  {{  item = db.equip_items(item_id)}}
+  <tr>
+    {{=TD(item.name)}}
+    {{=TD(db.equip_types(item.category).name)}}
+    {{=TD(item.attack)}}
+    {{=TD(item.defense)}}
+    {{=TD(item.speed)}}
+    <td class='button'>{{=FORM(INPUT(_name='equip', _type='submit', _value='Equip'), _action=URL("profilePage", args=["equip",item_id]))}}</td>
+  </tr>
+  {{pass}}
+</table>
+
+
 <br>
 <b>Current Loadout</b>
-{{
-if current_user.curr_loadout:
-loadout_list = db.loadouts(current_user.curr_loadout).equip_list
-for equip_id in loadout_list[1:]:
-if equip_id:
-equip_item = db.equip_items(equip_id)
-=LI(db.equip_types(equip_item.category).name, ": ", equip_item.name)
-pass
-pass
-else:
-=BR()
-=I("Nothing Equipped")
-pass
-}}
+{{if current_user.curr_loadout:}}
+<table border="1">
+  <td><b>Slot</b></td><td><b>Name</b></td><td></td>
+  {{loadout_list = db.loadouts(current_user.curr_loadout).equip_list}}
+  {{for slot_id in range(1,7):}}
+  {{  if loadout_list[slot_id]:}}
+  {{    equip_item = db.equip_items(loadout_list[slot_id])}}
+  <tr>
+    {{=TD(db.equip_types(slot_id).name)}}
+    {{=TD(equip_item.name)}}
+    <td class='button'>
+      {{=FORM(INPUT(_type="submit",_value="Unequip"),_action=URL("profilePage", args=["unequip",equip_item.id]))}}
+    </td>
+  </tr>
+  {{  else:}}
+  {{    =TR(db.equip_types(slot_id).name, "None")}}
+  {{  pass}}
+  {{pass}}
+</table>
+{{else:}}
+  <br>Nothing Equipped
+{{pass}}
