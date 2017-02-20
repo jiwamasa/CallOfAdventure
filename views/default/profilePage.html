@@ -1,9 +1,17 @@
 {{extend 'layout.html'}}
 <head><link rel="stylesheet" href="{{=URL('static','css/profilePage.css')}}"></head>
+
+<script>
+jQuery(document).ready(function(){
+  jQuery('#equip_form').hide();
+});
+</script>
+
 <h1>"{{=current_user.first_name}} {{=current_user.last_name}}"</h1>
 <h2>Gold: {{=current_user.gold}}</h2>
 {{=form}}
 <br>
+
 <b>Inventory</b>
 <table border="1">
   {{row = 0}}
@@ -19,8 +27,8 @@
 	 jQuery('#display_spd').text('{{=item.speed}}');
 	 jQuery('#display_flav').text('{{=item.details}}');
 	 var eq_url = 'profilePage/equip/' + this.id;
-	 jQuery('#equip_form').prop('action', eq_url);
-	 "
+	 jQuery('#equip_form').show();
+	 jQuery('#equip_form').prop('action', eq_url);"
 	onmouseover="this.style.backgroundColor='yellow'"
 	onmouseout="this.style.backgroundColor='white'"
 	>{{=item.name}}</td>
@@ -49,8 +57,8 @@
 	<input type="submit" value="Equip"></input></form></td>
   </tr>
 </table>
-
 <br>
+
 <b>Current Loadout</b>
 {{if current_user.curr_loadout:}}
 <table border="1">
