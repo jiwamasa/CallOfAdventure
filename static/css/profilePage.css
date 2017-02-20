@@ -24,3 +24,12 @@ td.details {
 input {
     height: 80%;
 }
+
+div.inv {
+    float: left;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+table.item_details {
+    float: left;
+}

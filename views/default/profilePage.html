@@ -12,6 +12,7 @@ jQuery(document).ready(function(){
 {{=form}}
 <br>
 
+<div class="inv">
 <b>Inventory</b>
 <table border="1">
   {{row = 0}}
@@ -42,7 +43,7 @@ jQuery(document).ready(function(){
   {{pass}}
 </table>
 
-<table>
+<table class="item_details">
   <td><b>Name</b></td>
   <td><b>Type</b></td>
   <td><b>Attack</b></td>
@@ -62,7 +63,9 @@ jQuery(document).ready(function(){
 	<input type="submit" value="Equip"></input></form></td>
   </tr>
 </table>
-<br>
+
+</div>
+
 
 <b>Current Loadout</b>
 {{if current_user.curr_loadout:}}
@@ -87,3 +90,4 @@ jQuery(document).ready(function(){
 {{else:}}
   <br>Nothing Equipped
 {{pass}}
+
