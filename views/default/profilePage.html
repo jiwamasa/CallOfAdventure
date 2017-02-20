@@ -6,25 +6,41 @@
 <br>
 <b>Inventory</b>
 <table border="1">
+  {{row = 0}}
+  {{for item_id in current_user.inventory:}}
+  {{  item = db.equip_items(item_id)}}
+    {{if row%5 == 0:}}<tr>{{pass}}
+    <td onclick=
+	"jQuery('#display_name').text('{{=item.name}}'); 
+	 jQuery('#display_type').text('{{=db.equip_types(item.category).name}}');
+	 jQuery('#display_atk').text('{{=item.attack}}');
+	 jQuery('#display_def').text('{{=item.defense}}');
+	 jQuery('#display_spd').text('{{=item.speed}}');
+	 jQuery('#display_flav').text('{{=item.details}}');"
+	>{{=item.name}}</td>
+    {{if row%5 == 4:}}</tr>{{pass}}
+  {{row += 1}}
+  {{pass}}
+</table>
+
+<table>
   <td><b>Name</b></td>
   <td><b>Type</b></td>
   <td><b>Attack</b></td>
   <td><b>Defense</b></td>
   <td><b>Speed</b></td>
-  <td></td>
-  {{for item_id in current_user.inventory:}}
-  {{  item = db.equip_items(item_id)}}
   <tr>
-    {{=TD(item.name)}}
-    {{=TD(db.equip_types(item.category).name)}}
-    {{=TD(item.attack)}}
-    {{=TD(item.defense)}}
-    {{=TD(item.speed)}}
-    <td class='button'>{{=FORM(INPUT(_name='equip', _type='submit', _value='Equip'), _action=URL("profilePage", args=["equip",item_id]))}}</td>
+    <td id="display_name"></td>
+    <td id="display_type"></td>
+    <td id="display_atk"></td>
+    <td id="display_def"></td>
+    <td id="display_spd"></td>
   </tr>
-  {{pass}}
+  <tr>
+    <td colspan="4" id="display_flav"></td>
+    <td id="equip_button" class='button'>{{=FORM(INPUT(_name='equip', _type='submit', _value='Equip'), _action=URL("profilePage", args=["equip",item_id]))}}</td>
+  </tr>
 </table>
-
 
 <br>
 <b>Current Loadout</b>

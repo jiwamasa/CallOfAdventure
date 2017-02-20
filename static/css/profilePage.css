@@ -1,16 +1,25 @@
 table {
+    margin-bottom: 20px;
     border: 3px solid black;
 }
+
 td {
     padding: 5px;
-    text-align: left;
-    width: 100px;
-    height: 20px;
+    text-align: center;
+    width: 70px;
+    height: 70px;
 }
 td.button {
     padding: 5px;
     text-align: center;
     height: 20px;
+}
+td.details {
+    colspan: 4;
+}
+
+.btn {
+    padding: 10px 5px;
 }
 input {
     height: 80%;
