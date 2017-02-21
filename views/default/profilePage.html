@@ -8,6 +8,24 @@ jQuery(document).ready(function(){
 </script>
 
 <h1>"{{=current_user.first_name}} {{=current_user.last_name}}"</h1>
+{{
+uatk = 0
+udef = 0
+uspd = 0
+for item in current_user.curr_loadout.equip_list:
+  if item:
+    uatk += item.attack
+    udef += item.defense
+    uspd += item.speed
+  pass
+pass
+=B('Attack: ', uatk)
+=BR()
+=B('Defense: ', udef)
+=BR()
+=B('Speed: ', uspd)
+=BR()
+}}
 <h2>Gold: {{=current_user.gold}}</h2>
 {{=form}}
 <br>
