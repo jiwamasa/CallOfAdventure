@@ -26,8 +26,20 @@ public class GetStats : MonoBehaviour {
 	void Update () {
 		if (requestOp.isDone) { //Check if done reading in input
 			showStats.text = webRequest.downloadHandler.text; //Get text data
+			Parse(showStats.text);
 		} else {
 			showStats.text = "Getting data from database...";
 		}
+	}
+
+	// Tokenize and parse data string
+	string[] Parse (string data) {
+		char[] delim = { '%' };
+		string[] stat_arr = data.Split (delim);
+		print ("location: " + stat_arr[0]);
+		print ("name: " + stat_arr[1] + " " + stat_arr[2]);
+		print ("attack: " + stat_arr[3]);
+		print ("defense: " + stat_arr[4]);
+		return stat_arr;
 	}
 }	
