@@ -16,7 +16,7 @@ body {
     background-image: url("../images/vine-border-left.png");
     background-position: 0% 70px;
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-attachment: free;
 }
 
 ul {

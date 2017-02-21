@@ -1,25 +1,27 @@
 {{extend 'layout.html'}}
 <head><link rel="stylesheet" href="{{=URL('static','css/questsPage.css')}}"></head>
 <body>
+<div class="board">
 {{if len(questList)>=1:}}
 <h1>Available Quests</h1>
-{{for i in xrange(1,6):
-    =H2('Difficulty '+str(i))
-    =BR()
-    for quest in questList:
-        if hasattr(quest, 'title'):
-            if quest.difficulty==i:
-                =A(quest.title+' Difficulty '+str(quest.difficulty), _href=URL("showQuest", args=quest.id))
-                =BR()
-            pass
-        else:
-            questList.remove(quest)
-        pass
-        
-    pass
-pass}}
-
+{{for i in xrange(1,6):}}
+    <div class="post" id={{=i}}>
+    {{=H2('Difficulty '+str(i))}}
+    {{=BR()}}
+    {{for quest in questList:}}
+        {{if hasattr(quest, 'title'):}}
+            {{if quest.difficulty==i:}}
+                {{=A(quest.title+' Difficulty '+str(quest.difficulty), _href=URL("showQuest", args=quest.id))}}
+                {{=BR()}}
+            {{pass}}
+        {{else:}}
+            {{questList.remove(quest)}}
+        {{pass}}
+      {{pass}}
+      </div>
+    {{pass}}
 {{else:}}
 No quests :'(
 {{pass}}
+</div>
 </body>
