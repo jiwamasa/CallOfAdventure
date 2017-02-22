@@ -3,11 +3,11 @@
 <body>
 <div class="board">
 {{if len(questList)>=1:}}
-<h1>Available Quests</h1>
+<h1><u>Available Quests</u></h1>
 {{for i in xrange(1,6):}}
     <div class="post" id={{=i}}>
-    {{=H2('Difficulty '+str(i))}}
-    {{=BR()}}
+    <u>{{=H2('Difficulty '+str(i))}}</u>
+    
     {{for quest in questList:}}
         {{if hasattr(quest, 'title'):}}
             {{if quest.difficulty==i:}}
@@ -18,7 +18,9 @@
             {{questList.remove(quest)}}
         {{pass}}
       {{pass}}
+      <br>
       </div>
+      <br>
     {{pass}}
 {{else:}}
 No quests :'(
