@@ -4,19 +4,25 @@ table {
 }
 
 td {
-    padding: 5px;
     text-align: center;
+    padding: 5px;
     width: 70px;
     height: 70px;
+    border: 1px solid black;
 }
-td.button {
-    padding: 5px;
-    text-align: center;
+td.inv_item_name {
+    cursor: pointer;
+}
+td.category {
     height: 20px;
 }
 td.details {
-    colspan: 4;
+    border-right: none;
 }
+td.equip_button {
+    border: none;
+}
+
 
 .btn {
     padding: 10px 5px;
