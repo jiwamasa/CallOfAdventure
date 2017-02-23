@@ -42,7 +42,8 @@ pass
     {{if row%5 == 0:}}<tr>{{pass}}
     <td class="inv_item_name" id="{{=item_id}}"
 	onclick=
-	"jQuery('#display_name').text('{{=item.name}}'); 
+	"jQuery('#display_name').text('{{=item.name}}');
+	 jQuery('#display_name').css('font-size',$(this).css('font-size'));
 	 jQuery('#display_type').text('{{=db.equip_types(item.category).name}}');
 	 jQuery('#display_atk').text('{{=item.attack}}');
 	 jQuery('#display_def').text('{{=item.defense}}');
@@ -56,7 +57,7 @@ pass
 	 } else {
 	   jQuery('#equip_form').hide();
 	 }
-	 console.log($(this).width());"
+	 "
 	onmouseover="this.style.backgroundColor='yellow'"
 	onmouseout="this.style.backgroundColor='white'"
 	>{{=item.name}}</td>
