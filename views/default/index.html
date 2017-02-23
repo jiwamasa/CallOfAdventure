@@ -10,7 +10,16 @@
             <!--<img src="{{=URL('download', args=second_row.file)}}" class = "bg" />-->
             <img src="{{=URL('download', args=first_row.file)}}" class = "logo" />
             <h1>Call of Adventure</h1>
-            <h2><a href="/callofadventure/default/questsPage">Quests</a></h2>
+
+            <div class="dropdown">
+              <div class="dropbtn">Quests</div>
+              <div class="dropdown-content">
+                  <p><a href="/callofadventure/questing/questsPage">Available Quests</a></p>
+                  <p><a href = "/callofadventure/questing/addQuest"> Add Quest</a></p>
+              </div>
+            </div>
+
+            <!--<h2><a href="/callofadventure/questing/questsPage">Quests</a></h2>-->
             <h2><a href="/callofadventure/default/hirePage">Hire </a></h2>
             <h2><a href="/callofadventure/default/shop">Shop</a></h2>
             <h2><a href="/callofadventure/default/forge">Forge</a></h2>

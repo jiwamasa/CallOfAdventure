@@ -52,3 +52,52 @@ a:active {
     color: red;
     text-decoration: none;
 }
+
+div.dropdown{
+    text-align: center;
+}
+
+div.dropbtn{
+    outline: none;
+    padding: 0;
+    border: none;
+    background: none;
+    color: black;
+    font-family: fantasy;
+    font-size: 24px;
+    text-transform: lowercase;
+    text-transform: capitalize;
+}
+
+button.dropbtn:hover{
+    outline: none;
+    border: none;
+    background: none;
+    color: black;
+    outline: none;
+    text-decoration: none;
+}
+
+
+div.dropdown:hover div.dropbtn {
+    outline: none;
+    border: none;
+    background: none;
+    color: black;
+    outline: none;
+    text-decoration: none;
+}
+
+div.dropdown-content{
+    display: none;
+
+}
+
+div.dropdown:hover div.dropdown-content {
+    display: block;
+    font-family: fantasy;
+    font-size: 15px;
+}
+
+
+
