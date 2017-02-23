@@ -4,6 +4,9 @@
 <script>
 jQuery(document).ready(function(){
   jQuery('#equip_form').hide();
+  jQuery('.inv_item_name').each(function() {
+    $(this).css('font-size', (59/$(this).width())*12);
+  });
 });
 </script>
 
@@ -52,7 +55,8 @@ pass
 	   jQuery('#equip_form').prop('action', eq_url);
 	 } else {
 	   jQuery('#equip_form').hide();
-	 }"
+	 }
+	 console.log($(this).width());"
 	onmouseover="this.style.backgroundColor='yellow'"
 	onmouseout="this.style.backgroundColor='white'"
 	>{{=item.name}}</td>
