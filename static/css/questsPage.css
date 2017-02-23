@@ -11,12 +11,14 @@ h2 {
 body {
     margin-top: 80px;
     text-align: center;
-    background-color: #dfbf9f;
+    background-color: #b3ffff;
     
+    /**
     background-image: url("../images/vine-border-left.png");
     background-position: 0% 70px;
     background-repeat: no-repeat;
     background-attachment: free;
+    **/
 }
 
 ul {
@@ -27,25 +29,29 @@ div.board {
     margin-left: 25%;
     border: 2px solid #996633;
     background-color: #996633;
-    border-radius: 5px;
+    border-radius: 1px;
     width: 50%;
 }
 
 div.post {
     font-family: Sans-Serif;
-    width: 50%;
-    margin-left: 25%;
+    width: 60%;
+    margin-left: 20%;
     background-color: #e6e6e6;
     border: 2px solid #e6e6e6;
-    border-radius: 5px;
+    border-radius: 15px;
 }
 
 a:link {
     color: red;
 }
 
+a:hover {
+    color: blue;
+}
+
 a:visited {
-    color: #003d99;
+    color: red;
 }
 
 a:active {

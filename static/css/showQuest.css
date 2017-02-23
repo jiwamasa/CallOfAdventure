@@ -1,3 +1,4 @@
+/**
 h1 {
     text-align: center;
     text-transform: uppercase;
@@ -7,11 +8,14 @@ h1 {
     border: 2px solid #ffff00;
     border-radius: 5px;
 }
+**/
 
 body {
+    /**
     margin-top: 80px;
     text-align: center;
     background-color: #dfbf9f;
+    **/
     
     background-image: url("../images/vine-border-left.png");
     background-position: 0% 70px;
@@ -19,6 +23,38 @@ body {
     background-attachment: free;
 }
 
-li.gold{
-    color: #ffff00;
+div.quest {
+    margin-top: 90px;
+    margin-left: 20%;
+    width: 60%;
+    text-align: center;
+    font-family: Serif;
+    background-color: #ffffb3;
+}
+
+div.title {
+    font-family: "Comic Sans Ms";
+}
+
+div.body {
+    text-align: left;
+    margin-left: 15%;
+    margin-top: 5%;
+}
+
+div.button_loc {
+    text-align: center;
+}
+
+.button {
+    background-color: #cc0000;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2 px;
+    cursor: pointer;
 }

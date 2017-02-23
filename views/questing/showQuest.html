@@ -1,23 +1,24 @@
 {{extend 'layout.html'}}
 <head><link rel="stylesheet" href="{{=URL('static','css/showQuest.css')}}"></head>
 <body>
-<h1>{{=quest.title}}</h1>
-<h2>By: {{=quest.quest_giver.first_name}} {{=quest.quest_giver.last_name}}</h2>
-<h3>Rewards:</h3>
-
-<ul>
-    <li class="gold">Gold: {{=quest.gold}}</li>
-    <li>Prestige: {{=quest.prestige}}</li>
-    {{if quest.loot_items:}}
-    {{for loot in quest.loot_items:}}
-    {{=LI(db.equip_items(loot).name)}}
-    {{pass}}
-    {{pass}}
-</ul>
-<h3>Difficulty: {{=quest.difficulty}}</h3>
-Location: {{=quest.location}} <br>
-
-    {{=quest.details}} <br>
+<div class="quest">
+    <div class="title">
+        <br>
+        <h1>{{=quest.title}}</h1>
+        <h2>By: {{=quest.quest_giver.first_name}} {{=quest.quest_giver.last_name}}</h2>
+    </div>
+    <div class="body">
+    <h3>Rewards:</h3>
+        Gold: {{=quest.gold}}<br>
+        Prestige: {{=quest.prestige}}
+        {{if quest.loot_items:}}
+        {{for loot in quest.loot_items:}}
+        {{=db.equip_items(loot).name}}
+        {{pass}}
+        {{pass}}    
+    <h3>Difficulty: {{=quest.difficulty}}</h3>
+    Location: {{=quest.location}} <br>
+    <b>Objective:</b> {{=quest.details}} <br>
     Party Members: <br>
     <ul>
         {{if session.party:}}
@@ -28,5 +29,11 @@ Location: {{=quest.location}} <br>
         {{=LI('None')}}
         {{pass}}
     </ul>
-    {{=A('Accept Quest?', _href=URL("questResult", args=quest.id))}}
+    <br><br>
+    </div>
+</div>
+<br>
+<div class="button_loc">
+    {{=A('Accept Quest?', _href=URL("questResult", args=quest.id), _class="button")}}
+</div>
 </body>
