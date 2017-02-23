@@ -48,6 +48,15 @@ db.quests.difficulty.requires=IS_IN_SET(range(1,6))
 db.quests.location.requires=IS_IN_SET(['Forest','Cave','Dungeon'])
 
 # Discussion pages
+import datetime
+
+db.define_table('posts',
+                Field('author', 'reference auth_user', readable=False, writable=False),
+                Field('title', required=True, requires=IS_NOT_EMPTY()),
+                Field('body', 'text', required=True, requires=IS_NOT_EMPTY()),
+                Field('category', 'string', requires=IS_IN_SET(['Quests','Equipment','Other'],zero=T('choose one'),
+                                                                                        error_message='choose a category')),
+                Field('post_date', 'datetime', readable=True, writable=False, default=datetime.datetime.now()))
 db.define_table('discussion_quests',
                 Field('author'),
                 Field('body', 'text'))

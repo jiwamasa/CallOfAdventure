@@ -131,28 +131,20 @@ def discussion():
     return dict()
 
 @auth.requires_login()
-def discussion_quests():
-    form = SQLFORM(db.discussion_quests)
+def discussion_page():
+    
+    db.posts.category.default=request.args(0)
+    db.posts.author.default=auth.user
+    form = SQLFORM(db.posts)
     if form.process().accepted:
-        response.flash = 'Your comment was posted'
-    comments = db().select(db.discussion_quests.ALL, orderby=db.discussion_quests.author)
-    return dict(comments=comments, form=form)
-
-@auth.requires_login()
-def discussion_equipment():
-    form = SQLFORM(db.discussion_equipment)
-    if form.process().accepted:
-        response.flash = 'Your comment was posted'
-    comments = db().select(db.discussion_equipment.ALL, orderby=db.discussion_equipment.author)
-    return dict(comments=comments, form=form)
-
-@auth.requires_login()
-def discussion_other():
-    form = SQLFORM(db.discussion_other)
-    if form.process().accepted:
-        response.flash = 'Your comment was posted'
-    comments = db().select(db.discussion_other.ALL, orderby=db.discussion_other.author)
-    return dict(comments = comments, form = form)
+       response.flash = 'Comment posted!!'
+    elif form.errors:
+       response.flash = 'form has errors'
+    #else:
+       #response.flash = 'please fill out the form'
+       
+    posts=db(db.posts.category==request.args(0)).select(db.posts.ALL, orderby=~db.posts.post_date)
+    return dict(posts=posts, form=form)
 
 #adding preview item to buy page
 @auth.requires_login()

@@ -16,6 +16,7 @@ body {
     text-align: center;
     background-color: #dfbf9f;
     **/
+    background-color: #ccffff;
     
     background-image: url("../images/vine-border-left.png");
     background-position: 0% 70px;
@@ -34,6 +35,8 @@ div.quest {
 
 div.title {
     font-family: "Comic Sans Ms";
+    border-bottom-style: dashed;
+    border-width: 5px;
 }
 
 div.body {
