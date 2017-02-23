@@ -14,7 +14,13 @@ import datetime
 #home page
 @auth.requires_login()
 def index():
-    return dict()
+    rows = db(db.image).select()
+    first_row = rows[0]
+    second_row = rows[1]
+    return dict(first_row = first_row, second_row = second_row)
+
+def download():
+    return response.download(request, db)
 
 #all hires page
 @auth.requires_login()
@@ -67,7 +73,7 @@ def shop():
     
     if session.last_shop_time:
         print(session.last_shop_time)
-    itemList = db(db.equip_items.id<15).select(db.equip_items.ALL, orderby=db.equip_items.cost)
+    itemList = db(db.equip_items.id<15).select(db.equip_items.ALL, orderby=db.equip_items.name) #Ask here, it was cost
     return dict(itemList=itemList)
 
 #preview item to buy page

@@ -119,3 +119,10 @@ CREATE TABLE discussion_other(
     body TEXT
 );
 success!
+timestamp: 2017-02-21T13:10:48.605908
+CREATE TABLE image(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title CHAR(512) UNIQUE,
+    file CHAR(512)
+);
+success!

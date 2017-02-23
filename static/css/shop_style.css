@@ -1,0 +1,23 @@
+body{
+    text-align: center;
+    background-color:#ECECEA;
+}
+
+h1, h2{
+    font-family: fantasy;
+}
+
+h2{
+    font-size: 24px;
+}
+
+a.links{
+    color: black;
+    font-family: fantasy;
+}
+
+a.links:hover{
+    color: red;
+    text-decoration: none;
+}
+

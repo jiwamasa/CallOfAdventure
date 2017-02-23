@@ -2,10 +2,19 @@
 <html>
     <head>
         <title> Call of Adventure </title>
-        <link rel="stylesheet" href="{{=URL('static','css/index.css')}}"/>
+        <link rel="stylesheet" href="{{=URL('static','css/index_style.css')}}">
     </head>
 
     <body>
-        <h1>Call of Adventure</h1>
+        <div class = "context">
+            <!--<img src="{{=URL('download', args=second_row.file)}}" class = "bg" />-->
+            <img src="{{=URL('download', args=first_row.file)}}" class = "logo" />
+            <h1>Call of Adventure</h1>
+            <h2><a href="/callofadventure/default/questsPage">Quests</a></h2>
+            <h2><a href="/callofadventure/default/hirePage">Hire </a></h2>
+            <h2><a href="/callofadventure/default/shop">Shop</a></h2>
+            <h2><a href="/callofadventure/default/forge">Forge</a></h2>
+            <h2><a href="/callofadventure/default/discussion">Discussion</a></h2>
+        </div>
     </body>
 </html>

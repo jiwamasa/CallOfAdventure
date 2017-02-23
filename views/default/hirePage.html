@@ -1,25 +1,31 @@
 {{extend 'layout.html'}}
-<h1>People for Hire</h1>
-<ul>
-  {{for hire in hireList:}}
-  {{if hire.id != auth.user.id:}}
-  {{=LI(A(hire.first_name, _href=URL("showHire", args=hire.id)))}}
-  {{pass}}
-  {{pass}}
-</ul>
-<h2>Current party</h2>
-<ul>
-  {{if session.party:}}
-  {{for party_member in session.party:}}
-  {{=LI(A(db.auth_user(party_member).first_name,
-          _href=URL("showHire", args=party_member)))}}
-  {{pass}}
-  {{else:}}
-  {{=BODY('No one hired yet')}}
-  {{pass}}
-</ul>
-<div>
-  {{if session.party:}}
-  {{=disband}}
-  {{pass}}
-</div>
+
+<html>
+  <head>
+    <title> Hire </title>
+    <link rel="stylesheet" href="{{=URL('static','css/hirePage_style.css')}}">
+  </head>
+  <body>
+    <div class = "hire">
+      <h1>People for Hire</h1>
+        {{for hire in hireList:}}
+          {{if hire.id != auth.user.id:}}
+          <p>{{=A(hire.first_name, _href=URL("showHire", args=hire.id))}}</p>
+          {{pass}}
+        {{pass}}
+      <h2>Current party</h2>
+        {{if session.party:}}
+          {{for party_member in session.party:}}
+          <p>{{=A(db.auth_user(party_member).first_name,
+                  _href=URL("showHire", args=party_member))}}</p>
+          {{pass}}
+        {{else:}}
+          {{=BODY('No one hired yet')}}
+        {{pass}}
+      
+        {{if session.party:}}
+          {{=disband}}
+        {{pass}}
+    </div>
+  </body>
+</html>
