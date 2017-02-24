@@ -22,13 +22,11 @@ def forge():
         new_rare_ore = current_user.rare_ore - rareore
         current_user.update_record(rare_ore=new_rare_ore)
         stats = forge_helper.calcStats(rareore,booze,form.vars.words)
-        forgeItem = db.equip_items.insert(name="Something",
-                                          attack=stats[1],
+        forgeItem = db.equip_items.insert(attack=stats[1],
                                           defense=stats[2],
                                           speed=stats[3],
                                           cost=100,
-                                          category=stats[0],
-                                          details="It's an item")
+                                          category=stats[0])
         current_inv = current_user.inventory
         current_inv.append(forgeItem)
         current_user.update_record(inventory=current_inv)
@@ -38,6 +36,9 @@ def forge():
 #results of forging
 def forgeResults():
     form = SQLFORM(db.equip_items, record=request.args(0), fields=['name','details'], showid=False)
+    db.equip_items.name.requires=IS_NOT_EMPTY()
+    db.equip_items.name.requires=IS_NOT_IN_DB(db, db.equip_items.name)
+    db.equip_items.details.requires=IS_NOT_EMPTY()
     if form.process().accepted:
         redirect(URL('default', 'index'))
     return dict(forge_id=request.args(0),form=form)

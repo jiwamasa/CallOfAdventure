@@ -6,7 +6,7 @@ db.define_table('equip_types', Field('name'))
 
 # Table containing all items
 db.define_table('equip_items',
-                Field('name', unique=True),
+                Field('name'),
                 Field('attack', 'integer', default=0),
                 Field('defense', 'integer', default=0),
                 Field('speed', 'integer', default=0),
