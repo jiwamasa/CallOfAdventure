@@ -83,7 +83,6 @@ def shop():
         session.last_shop_time=datetime.datetime.now()
     
     if session.last_shop_time:
-<<<<<<< HEAD
         time=datetime.datetime.now()
         delta=time-session.last_shop_time
         #update every 30 seconds right now
@@ -105,11 +104,6 @@ def shop():
         #print(str(delta))
     #itemList = db(db.equip_items.id<15).select(db.equip_items.ALL, orderby=db.equip_items.cost)
     return dict(itemList=session.shop_items, update=update)
-=======
-        print(session.last_shop_time)
-    itemList = db(db.equip_items.id<15).select(db.equip_items.ALL, orderby=db.equip_items.name) #Ask here, it was cost
-    return dict(itemList=itemList)
->>>>>>> 864f5a4944eb75753e324371aa9f46d2d922b070
 
 #preview item to buy page
 @auth.requires_login()
