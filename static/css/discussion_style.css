@@ -1,0 +1,26 @@
+body.hire{
+    background-color: #ECECEA;
+}
+
+div.topics{
+    font-family: fantasy;
+    text-align: center;
+}
+
+h1.head{
+    margin-top: 50px;
+    font-size: 60px;
+}
+
+h2{
+    margin-top: 50px;
+}
+
+a{
+    color: black;
+}
+
+a:hover{
+    color: red;
+    text-decoration: none;
+}

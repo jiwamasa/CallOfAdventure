@@ -119,6 +119,7 @@ CREATE TABLE discussion_other(
     body TEXT
 );
 success!
+<<<<<<< HEAD
 timestamp: 2017-02-23T11:35:04.340000
 CREATE TABLE posts(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -131,3 +132,12 @@ success!
 timestamp: 2017-02-23T11:51:54.457000
 ALTER TABLE posts ADD post_date TIMESTAMP;
 success!
+=======
+timestamp: 2017-02-21T13:10:48.605908
+CREATE TABLE image(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title CHAR(512) UNIQUE,
+    file CHAR(512)
+);
+success!
+>>>>>>> 864f5a4944eb75753e324371aa9f46d2d922b070

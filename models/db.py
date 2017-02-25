@@ -57,12 +57,9 @@ db.define_table('posts',
                 Field('category', 'string', requires=IS_IN_SET(['Quests','Equipment','Other'],zero=T('choose one'),
                                                                                         error_message='choose a category')),
                 Field('post_date', 'datetime', readable=True, writable=False, default=datetime.datetime.now()))
-db.define_table('discussion_quests',
-                Field('author'),
-                Field('body', 'text'))
-db.define_table('discussion_equipment',
-                Field('author'),
-                Field('body', 'text'))
-db.define_table('discussion_other',
-                Field('author'),
-                Field('body', 'text'))
+
+#Images for logo
+db.define_table('image',
+                Field('title', unique=True),
+                Field('file', 'upload'),
+                format = '%(title)s')
