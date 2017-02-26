@@ -57,3 +57,9 @@ db.define_table('discussion_equipment',
 db.define_table('discussion_other',
                 Field('author'),
                 Field('body', 'text'))
+
+#Images for logo
+db.define_table('image',
+                Field('title', unique=True),
+                Field('file', 'upload'),
+                format = '%(title)s')
