@@ -6,8 +6,8 @@ table {
 td {
     text-align: center;
     padding: 2px;
-    width: 70px;
-    height: 70px;
+    width: 80px;
+    height: 80px;
     border: 1px solid black;
 }
 td.inv_item_name {
@@ -22,10 +22,12 @@ td.details {
 td.equip_button {
     border: none;
 }
-
+td.loadout_cell {
+    height: 40px;
+}
 
 .btn {
-    padding: 10px 5px;
+    padding: 5px 5px;
 }
 input {
     height: 80%;

@@ -5,7 +5,7 @@
 jQuery(document).ready(function(){
   jQuery('#equip_form').hide();
   jQuery('.inv_item_name').each(function() {
-    $(this).css('font-size', (70/$(this).width())*12);
+    $(this).css('font-size', (80/$(this).width())*12);
   });
 });
 </script>
@@ -15,12 +15,16 @@ jQuery(document).ready(function(){
 uatk = 0
 udef = 0
 uspd = 0
-for item in current_user.curr_loadout.equip_list:
-  if item:
-    uatk += item.attack
-    udef += item.defense
-    uspd += item.speed
+if current_user.curr_loadout:
+  for item in current_user.curr_loadout.equip_list:
+    if item:
+      uatk += item.attack
+      udef += item.defense
+      uspd += item.speed
+    pass
   pass
+else:
+  current_user.update_record(curr_loadout=db.loadouts.insert())
 pass
 =B('Attack: ', uatk)
 =BR()
@@ -43,7 +47,7 @@ pass
     <td class="inv_item_name" id="{{=item_id}}"
 	onclick=
 	"jQuery('#display_name').text('{{=item.name}}');
-	 jQuery('#display_name').css('font-size',$(this).css('font-size'));
+	 jQuery('#display_rank').text('{{=((item.attack+item.defense+item.speed)/3)}}');
 	 jQuery('#display_type').text('{{=db.equip_types(item.category).name}}');
 	 jQuery('#display_atk').text('{{=item.attack}}');
 	 jQuery('#display_def').text('{{=item.defense}}');
@@ -66,14 +70,16 @@ pass
   {{pass}}
 </table>
 
+
+<b>"</b><b id="display_name"></b><b>"</b><br>
 <table class="item_details">
-  <td class="category"><b>Name</b></td>
+  <td class="category"><b>Rank</b></td>
   <td class="category"><b>Type</b></td>
   <td class="category"><b>Attack</b></td>
   <td class="category"><b>Defense</b></td>
   <td class="category"><b>Speed</b></td>
   <tr>
-    <td class="item_name" id="display_name"></td>
+    <td id="display_rank"></td>
     <td id="display_type"></td>
     <td id="display_atk"></td>
     <td id="display_def"></td>
@@ -86,7 +92,6 @@ pass
 	<input type="submit" value="Equip"></input></form></td>
   </tr>
 </table>
-
 </div>
 
 
@@ -99,15 +104,18 @@ pass
   {{for slot_id in range(1,7):}}
   {{  if loadout_list[slot_id]:}}
   {{    equip_item = db.equip_items(loadout_list[slot_id])}}
-  <tr>
-    <td>{{=db.equip_types(slot_id).name}}</td>
-    <td id="{{=db.equip_types(slot_id).name}}">{{=equip_item.name}}</td>
-    <td>
+  <tr class="loadout_row">
+    <td class="loadout_cell">{{=db.equip_types(slot_id).name}}</td>
+    <td class="loadout_cell" id="{{=db.equip_types(slot_id).name}}">{{=equip_item.name}}</td>
+    <td class="loadout_cell">
       {{=FORM(INPUT(_type="submit",_value="Unequip"),_action=URL("profilePage", args=["unequip",equip_item.id]))}}
     </td>
   </tr>
   {{  else:}}
-  {{    =TR(db.equip_types(slot_id).name, "None")}}
+  <tr>
+    <td class="loadout_cell">{{=db.equip_types(slot_id).name}}</td>
+    <td class="loadout_cell">None</td>
+  </tr>
   {{  pass}}
   {{pass}}
 </table>
