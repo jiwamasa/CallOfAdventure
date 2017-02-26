@@ -44,7 +44,7 @@ pass
   {{for item_id in current_user.inventory:}}
   {{  item = db.equip_items(item_id)}}
     {{if row%5 == 0:}}<tr>{{pass}}
-    <td class="inv_item_name" id="{{=item_id}}"
+    <td class="inv_item_name"
 	onclick=
 	"jQuery('#display_name').text('{{=item.name}}');
 	 jQuery('#display_rank').text('{{=((item.attack+item.defense+item.speed)/3)}}');
@@ -53,7 +53,7 @@ pass
 	 jQuery('#display_def').text('{{=item.defense}}');
 	 jQuery('#display_spd').text('{{=item.speed}}');
 	 jQuery('#display_flav').text('{{=item.details}}');
-	 var eq_url = 'profilePage/equip/' + this.id;
+	 var eq_url = 'profilePage/equip/' + '{{=item_id}}';
 	 var curr_eq = jQuery('#{{=db.equip_types(item.category).name}}').text();
 	 if (curr_eq != '{{=item.name}}') {
 	   jQuery('#equip_form').show();
