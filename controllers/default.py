@@ -105,40 +105,12 @@ def shop():
     #itemList = db(db.equip_items.id<15).select(db.equip_items.ALL, orderby=db.equip_items.cost)
     return dict(itemList=session.shop_items, update=update)
 
-#preview item to buy page
-@auth.requires_login()
-def showBuyItem():
-    buyItem = db.equip_items(request.args(0, cast=int)) or redirect(URL('index'))
-    cost = buyItem.cost or 0
-    current_gold = db.auth_user(auth.user.id).gold or 0
-    current_inv = db.auth_user(auth.user.id).inventory
-
-    buyNow = FORM('', INPUT(_name='buyNow', _type='submit', _value='Buy'))
-    goPrevious = FORM('', INPUT(_name='goPrevious', _type='submit', _value='Cancel'))
-    if buyNow.process(formname='buy_now').accepted: #if buy button pressed
-        if current_gold < cost: #insufficient funds
-            session.flash = 'Not enough gold to buy the item'
-            redirect(URL('shop'))
-        else: #sufficient funds;
-            new_gold = current_gold - cost #transact
-            db.auth_user(auth.user.id).update_record(gold=new_gold)
-            current_inv.append(int(buyItem.id)) #add bought item to inventory
-            db.auth_user(auth.user.id).update_record(inventory=current_inv)
-            session.flash = (buyItem.name) + " has been purchased!"
-            redirect(URL('shop'))
-    if goPrevious.process(formname='go_previous').accepted:
-        redirect(URL('shop'))
-
-    return dict(buyItem=buyItem, cost=cost, buyNow=buyNow, goPrevious=goPrevious)
-
-
 @auth.requires_login()
 def discussion():
     return dict()
 
 @auth.requires_login()
 def discussion_page():
-    
     db.posts.category.default=request.args(0)
     db.posts.author.default=auth.user
     form = SQLFORM(db.posts)
