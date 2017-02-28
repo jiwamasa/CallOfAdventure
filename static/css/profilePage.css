@@ -1,17 +1,43 @@
 table {
+    margin-bottom: 20px;
     border: 3px solid black;
 }
+
 td {
-    padding: 5px;
-    text-align: left;
-    width: 100px;
+    text-align: center;
+    padding: 2px;
+    width: 80px;
+    height: 80px;
+    border: 1px solid black;
+}
+td.inv_item_name {
+    cursor: pointer;
+}
+td.category {
     height: 20px;
 }
-td.button {
-    padding: 5px;
-    text-align: center;
-    height: 20px;
+td.details {
+    border-right: none;
+}
+td.equip_button {
+    border: none;
+}
+td.loadout_cell {
+    height: 40px;
+}
+
+.btn {
+    padding: 5px 5px;
 }
 input {
     height: 80%;
+}
+
+div.inv {
+    float: left;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+table.item_details {
+    float: left;
 }

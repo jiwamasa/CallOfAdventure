@@ -1,52 +1,125 @@
 {{extend 'layout.html'}}
 <head><link rel="stylesheet" href="{{=URL('static','css/profilePage.css')}}"></head>
+
+<script>
+jQuery(document).ready(function(){
+  jQuery('#equip_form').hide();
+  jQuery('.inv_item_name').each(function() {
+    $(this).css('font-size', (80/$(this).width())*12);
+  });
+});
+</script>
+
 <h1>"{{=current_user.first_name}} {{=current_user.last_name}}"</h1>
+{{
+uatk = 0
+udef = 0
+uspd = 0
+if current_user.curr_loadout:
+  for item in current_user.curr_loadout.equip_list:
+    if item:
+      uatk += item.attack
+      udef += item.defense
+      uspd += item.speed
+    pass
+  pass
+else:
+  current_user.update_record(curr_loadout=db.loadouts.insert())
+pass
+=B('Attack: ', uatk)
+=BR()
+=B('Defense: ', udef)
+=BR()
+=B('Speed: ', uspd)
+=BR()
+}}
 <h2>Gold: {{=current_user.gold}}</h2>
 {{=form}}
 <br>
+
+<div class="inv">
 <b>Inventory</b>
 <table border="1">
-  <td><b>Name</b></td>
-  <td><b>Type</b></td>
-  <td><b>Attack</b></td>
-  <td><b>Defense</b></td>
-  <td><b>Speed</b></td>
-  <td></td>
+  {{row = 0}}
   {{for item_id in current_user.inventory:}}
   {{  item = db.equip_items(item_id)}}
-  <tr>
-    {{=TD(item.name)}}
-    {{=TD(db.equip_types(item.category).name)}}
-    {{=TD(item.attack)}}
-    {{=TD(item.defense)}}
-    {{=TD(item.speed)}}
-    <td class='button'>{{=FORM(INPUT(_name='equip', _type='submit', _value='Equip'), _action=URL("profilePage", args=["equip",item_id]))}}</td>
-  </tr>
+    {{if row%5 == 0:}}<tr>{{pass}}
+    <td class="inv_item_name"
+	onclick=
+	"jQuery('#display_name').text('{{=item.name}}');
+	 jQuery('#display_rank').text('{{=((item.attack+item.defense+item.speed)/3)}}');
+	 jQuery('#display_type').text('{{=db.equip_types(item.category).name}}');
+	 jQuery('#display_atk').text('{{=item.attack}}');
+	 jQuery('#display_def').text('{{=item.defense}}');
+	 jQuery('#display_spd').text('{{=item.speed}}');
+	 jQuery('#display_flav').text('{{=item.details}}');
+	 var eq_url = 'profilePage/equip/' + '{{=item_id}}';
+	 var curr_eq = jQuery('#{{=db.equip_types(item.category).name}}').text();
+	 if (curr_eq != '{{=item.name}}') {
+	   jQuery('#equip_form').show();
+	   jQuery('#equip_form').prop('action', eq_url);
+	 } else {
+	   jQuery('#equip_form').hide();
+	 }
+	 "
+	onmouseover="this.style.backgroundColor='yellow'"
+	onmouseout="this.style.backgroundColor='white'"
+	>{{=item.name}}</td>
+    {{if row%5 == 4:}}</tr>{{pass}}
+  {{row += 1}}
   {{pass}}
 </table>
 
 
-<br>
+<b>"</b><b id="display_name"></b><b>"</b><br>
+<table class="item_details">
+  <td class="category"><b>Rank</b></td>
+  <td class="category"><b>Type</b></td>
+  <td class="category"><b>Attack</b></td>
+  <td class="category"><b>Defense</b></td>
+  <td class="category"><b>Speed</b></td>
+  <tr>
+    <td id="display_rank"></td>
+    <td id="display_type"></td>
+    <td id="display_atk"></td>
+    <td id="display_def"></td>
+    <td id="display_spd"></td>
+  </tr>
+  <tr>
+    <td class="details" colspan="4" id="display_flav"></td>
+    <td class="equip_button">
+      <form id="equip_form" action="{{=URL('profilePage')}}">
+	<input type="submit" value="Equip"></input></form></td>
+  </tr>
+</table>
+</div>
+
+
 <b>Current Loadout</b>
 {{if current_user.curr_loadout:}}
 <table border="1">
-  <td><b>Slot</b></td><td><b>Name</b></td><td></td>
+  <td class="category"><b>Slot</b></td>
+  <td class="category"><b>Name</b></td><td class="category"></td>
   {{loadout_list = db.loadouts(current_user.curr_loadout).equip_list}}
   {{for slot_id in range(1,7):}}
   {{  if loadout_list[slot_id]:}}
   {{    equip_item = db.equip_items(loadout_list[slot_id])}}
-  <tr>
-    {{=TD(db.equip_types(slot_id).name)}}
-    {{=TD(equip_item.name)}}
-    <td class='button'>
+  <tr class="loadout_row">
+    <td class="loadout_cell">{{=db.equip_types(slot_id).name}}</td>
+    <td class="loadout_cell" id="{{=db.equip_types(slot_id).name}}">{{=equip_item.name}}</td>
+    <td class="loadout_cell">
       {{=FORM(INPUT(_type="submit",_value="Unequip"),_action=URL("profilePage", args=["unequip",equip_item.id]))}}
     </td>
   </tr>
   {{  else:}}
-  {{    =TR(db.equip_types(slot_id).name, "None")}}
+  <tr>
+    <td class="loadout_cell">{{=db.equip_types(slot_id).name}}</td>
+    <td class="loadout_cell">None</td>
+  </tr>
   {{  pass}}
   {{pass}}
 </table>
 {{else:}}
   <br>Nothing Equipped
 {{pass}}
+

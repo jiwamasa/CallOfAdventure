@@ -165,6 +165,7 @@ def profilePage():
         
     if request.args(0) == 'equip': #equipping items to current loadout
         equipped = db.equip_items(request.args(1))
+        #CHECK IF ITEM IS NOT IN USER INVENTORY
         if not current_user.curr_loadout: #if first loadout, make new loadout
             new_loadout = db.loadouts.insert()
             current_user.update_record(curr_loadout=new_loadout)
