@@ -27,9 +27,15 @@ ul {
 
 div.board {
     margin-left: 25%;
-    border: 2px solid #996633;
-    background-color: #996633;
-    border-radius: 1px;
+    
+    background-image: url("../images/wooden_board.png");
+    background-position: 0% 0%;
+    background-repeat: repeat;
+    background-attachment: free;
+    
+    #border: 2px solid #996633;
+    #background-color: #996633;
+    #border-radius: 1px;
     width: 50%;
 }
 
@@ -40,6 +46,15 @@ div.post {
     background-color: #e6e6e6;
     border: 2px solid #e6e6e6;
     border-radius: 15px;
+}
+
+div.post_left {
+    margin-left: 10%;
+    width: 10%;
+}
+div.post_right {
+    margin-right: 70%;
+    width: 10%;
 }
 
 a:link {

@@ -6,6 +6,8 @@
 <h1><u>Available Quests</u></h1>
 {{for i in xrange(1,6):}}
     <div class="post" id={{=i}}>
+    <div class="post_left"></div>
+    <div class="post_right"></div>
     <u>{{=H2('Difficulty '+str(i))}}</u>
     
     {{for quest in questList:}}
