@@ -18,10 +18,10 @@ import datetime
 def index():
     if not session.last_shop_time:
         session.last_shop_time=datetime.datetime.now()
-    rows = db(db.image).select()
-    first_row = rows[0]
-    second_row = rows[1]
-    return dict(first_row = first_row, second_row = second_row)
+    #rows = db(db.image).select()
+    #first_row = rows[0]
+    #second_row = rows[1]
+    return dict()
 
 def download():
     return response.download(request, db)
