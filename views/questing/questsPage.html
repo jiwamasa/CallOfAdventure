@@ -1,9 +1,12 @@
 {{extend 'layout.html'}}
-<head><link rel="stylesheet" href="{{=URL('static','css/questsPage.css')}}"></head>
+<head>
+    <link rel="stylesheet" href="{{=URL('static','css/questsPage.css')}}">
+    <link href="https://fonts.googleapis.com/css?family=MedievalSharp" rel="stylesheet">
+</head>
 <body>
 <div class="board">
 {{if len(questList)>=1:}}
-<h1><u>Available Quests</u></h1>
+<h1>Available Quests</h1>
 {{for i in xrange(1,6):}}
     <div class="post" id={{=i}}>
     <div class="post_left"></div>
@@ -13,7 +16,7 @@
     {{for quest in questList:}}
         {{if hasattr(quest, 'title'):}}
             {{if quest.difficulty==i:}}
-                {{=A(quest.title+' Difficulty '+str(quest.difficulty), _href=URL("showQuest", args=quest.id))}}
+                {{=A(quest.title, _href=URL("showQuest", args=quest.id))}}
                 {{=BR()}}
             {{pass}}
         {{else:}}

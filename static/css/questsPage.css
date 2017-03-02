@@ -1,17 +1,18 @@
 h1 {
     text-align: center;
-    font-family: fantasy;
+    font-family: 'MedievalSharp', cursive;
     font-size: 60px;
 }
 
 h2 {
-    font-family: fantasy;
+    #font-family: fantasy;
+    font-family: 'MedievalSharp', cursive;
 }
 
 body {
-    margin-top: 80px;
+    margin-top: 40px;
     text-align: center;
-    background-color: #ccffff;
+    background-color: #ECECEA;
     
     /**
     background-image: url("../images/vine-border-left.png");
@@ -22,11 +23,13 @@ body {
 }
 
 ul {
-    font-family: "Times new Roman";
+    #font-family: "Times new Roman";
 }
 
 div.board {
+    #font-family: 'MedievalSharp', cursive;
     margin-left: 25%;
+    padding-top: 5px;
     
     background-image: url("../images/wooden_board.png");
     background-position: 0% 0%;
@@ -40,7 +43,8 @@ div.board {
 }
 
 div.post {
-    font-family: Sans-Serif;
+    #font-family: Sans-Serif;
+    font-family: 'MedievalSharp', cursive;
     width: 60%;
     margin-left: 20%;
     background-color: #e6e6e6;
