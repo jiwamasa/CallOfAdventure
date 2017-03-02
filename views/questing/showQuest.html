@@ -10,8 +10,8 @@
         <h1><u>{{=quest.title}}</u></h1>
         <h2>By: {{=quest.quest_giver.first_name}} {{=quest.quest_giver.last_name}}</h2>
     </div>
-    <div class="body">
-    <h3>Rewards:</h3>
+    <div class="quest_body">
+    <h3><u>Rewards:</u></h3>
         Gold: {{=quest.gold}}<br>
         Prestige: {{=quest.prestige}}
         {{if quest.loot_items:}}
@@ -19,9 +19,9 @@
         {{=db.equip_items(loot).name}}
         {{pass}}
         {{pass}}    
-    <h3>Difficulty: {{=quest.difficulty}}</h3>
-    Location: {{=quest.location}} <br>
-    <b>Objective:</b> {{=quest.details}} <br>
+    <h3><u>Difficulty: {{=quest.difficulty}}</u></h3>
+    Location: {{=quest.location}}
+    <p><b>Objective:</b> {{=quest.details}}</p>
     Party Members: <br>
     <ul>
         {{if session.party:}}

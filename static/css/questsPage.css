@@ -13,17 +13,6 @@ body {
     margin-top: 40px;
     text-align: center;
     background-color: #ECECEA;
-    
-    /**
-    background-image: url("../images/vine-border-left.png");
-    background-position: 0% 70px;
-    background-repeat: no-repeat;
-    background-attachment: free;
-    **/
-}
-
-ul {
-    #font-family: "Times new Roman";
 }
 
 div.board {
@@ -35,15 +24,11 @@ div.board {
     background-position: 0% 0%;
     background-repeat: repeat;
     background-attachment: free;
-    
-    #border: 2px solid #996633;
-    #background-color: #996633;
-    #border-radius: 1px;
+
     width: 50%;
 }
 
 div.post {
-    #font-family: Sans-Serif;
     font-family: 'MedievalSharp', cursive;
     width: 60%;
     margin-left: 20%;
