@@ -164,8 +164,10 @@ def profilePage():
         current_user.update_record(rare_ore=new_rare_ore)
         
     if request.args(0) == 'equip': #equipping items to current loadout
-        equipped = db.equip_items(request.args(1))
-        #CHECK IF ITEM IS NOT IN USER INVENTORY
+        equipped = db.equip_items(request.args(1, cast=int)) or redirect(URL('profilePage'))
+        #if item isn't in inventory, redirect
+        if not equipped.id in current_user.inventory:
+            redirect(URL('profilePage'))
         if not current_user.curr_loadout: #if first loadout, make new loadout
             new_loadout = db.loadouts.insert()
             current_user.update_record(curr_loadout=new_loadout)
@@ -176,13 +178,24 @@ def profilePage():
         redirect(URL("profilePage"))
 
     if request.args(0) == 'unequip': #unequipping items from current loadout
-        unequipped = db.equip_items(request.args(1))
+        unequipped = db.equip_items(request.args(1, cast=int)) or redirect(URL('profilePage'))
         new_equip_list = db.loadouts(current_user.curr_loadout).equip_list 
         new_equip_list[unequipped.category] = 0
         db.loadouts(current_user.curr_loadout).update_record(equip_list=new_equip_list)
         session.flash = 'Unequipped ' + unequipped.name
         redirect(URL("profilePage"))
 
+    if request.args(0) == 'sell': #selling items from inventory
+        sold = db.equip_items(request.args(1, cast=int)) or redirect(URL('profilePage'))
+        #if item isn't in inventory, redirect
+        if not sold.id in current_user.inventory:
+            redirect(URL('profilePage'))
+        new_inventory = current_user.inventory
+        new_inventory.pop(new_inventory.index(sold.id))
+        current_user.update_record(inventory=new_inventory)
+        session.flash = 'Sold ' + sold.name
+        redirect(URL("profilePage"))
+        
     return dict(form=form, current_user=current_user)
 
 def user():
