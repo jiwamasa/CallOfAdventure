@@ -14,6 +14,11 @@ db.define_table('equip_items',
                 Field('category', 'reference equip_types', default=0),
                 Field('details', 'text'))
 
+# Table defining all items that can be sold in shop
+db.define_table('for_sale',
+                Field('item', 'reference equip_items'),
+                Field('rarity', 'integer'))
+
 db.equip_items.name.requires=IS_LENGTH(maxsize=30, error_message="Name must be 30 characters or fewer")
 db.equip_items.name.requires=IS_MATCH('^[a-zA-Z0-9\\-\\s]+$', error_message="Name can only contain letters, numbers, and spaces")
 

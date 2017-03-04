@@ -115,3 +115,10 @@ CREATE TABLE image(
     file CHAR(512)
 );
 success!
+timestamp: 2017-03-03T22:25:16.485000
+CREATE TABLE for_sale(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    item INTEGER REFERENCES equip_items (id) ON DELETE CASCADE  ,
+    rarity INTEGER
+);
+success!

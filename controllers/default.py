@@ -85,24 +85,19 @@ def shop():
     if session.last_shop_time:
         time=datetime.datetime.now()
         delta=time-session.last_shop_time
-        #update every 30 seconds right now
-        if(delta.seconds>30 or delta.days>0):
+        #update every 60 seconds right now
+        if(delta.seconds>60 or delta.days>0):
             session.last_shop_time=datetime.datetime.now()
-            session.shop_items=[]
-            #session.flash='new items!' out of sync?
+            while len(session.shop_items) > 10: #limit shop items to 10
+                session.shop_items.pop(random.randint(0,len(session.shop_items)-1))
             update=1
-            #print('update')
-            #items=db(db.equip_items.id<15).select(db.equip_items.ALL)
-            #select based on stat total
-            items=db((db.equip_items.attack+db.equip_items.defense+db.equip_items.speed)<=ITEM_MID).select(db.equip_items.ALL)
-            #give them 3 items
-            items_needed=random.randint(4,7)
-            while items_needed>0:
-                rand_id=random.randint(0,len(items)-1)
-                session.shop_items.append(items[rand_id])
-                items_needed=items_needed-1  
-        #print(str(delta))
-    #itemList = db(db.equip_items.id<15).select(db.equip_items.ALL, orderby=db.equip_items.cost)
+            response.flash='New items!'
+            items=db().select(db.for_sale.ALL,
+                              orderby='<random>',
+                              limitby=(0,4+random.randint(0,3)))
+            for sale_item in items:
+                if not sale_item.item in session.shop_items:
+                    session.shop_items.append(sale_item.item)
     return dict(itemList=session.shop_items, update=update)
 
 @auth.requires_login()
@@ -124,7 +119,7 @@ def discussion_page():
     posts=db(db.posts.category==request.args(0)).select(db.posts.ALL, orderby=~db.posts.post_date)
     return dict(posts=posts, form=form)
 
-#adding preview item to buy page
+#preview item to buy page
 @auth.requires_login()
 def showBuyItem():
     buyItem = db.equip_items(request.args(0, cast=int)) or redirect(URL('index'))
@@ -136,7 +131,7 @@ def showBuyItem():
     goPrevious = FORM('', INPUT(_name='goPrevious', _type='submit', _value='Cancel'))
     if buyNow.process(formname='buy_now').accepted: #if buy button pressed
         if current_gold < cost: #insufficient funds
-            session.flash = 'Not enough gold to buy the item'
+            session.flash = 'You can\'t afford this! Get out!'
             redirect(URL('shop'))
         else: #sufficient funds;
             new_gold = current_gold - cost #transact
@@ -144,7 +139,8 @@ def showBuyItem():
             current_inv.append(int(buyItem.id)) #add bought item to inventory
             db.auth_user(auth.user.id).update_record(inventory=current_inv)
             session.flash = (buyItem.name) + " has been purchased!"
-            session.shop_items.remove(db.equip_items(buyItem.id))
+            session.shop_items.remove(buyItem.id)
+            db(db.for_sale.item == buyItem.id).delete()
             redirect(URL('shop'))
     if goPrevious.process(formname='go_previous').accepted:
         redirect(URL('shop'))
@@ -171,17 +167,17 @@ def profilePage():
         if not current_user.curr_loadout: #if first loadout, make new loadout
             new_loadout = db.loadouts.insert()
             current_user.update_record(curr_loadout=new_loadout)
-        new_equip_list = db.loadouts(current_user.curr_loadout).equip_list or [0]*10
+        new_equip_list = current_user.curr_loadout.equip_list or [0]*10
         new_equip_list[equipped.category] = equipped
-        db.loadouts(current_user.curr_loadout).update_record(equip_list=new_equip_list)
+        current_user.curr_loadout.update_record(equip_list=new_equip_list)
         session.flash = 'Equipped ' + equipped.name
         redirect(URL("profilePage"))
 
     if request.args(0) == 'unequip': #unequipping items from current loadout
         unequipped = db.equip_items(request.args(1, cast=int)) or redirect(URL('profilePage'))
-        new_equip_list = db.loadouts(current_user.curr_loadout).equip_list 
+        new_equip_list = current_user.curr_loadout.equip_list 
         new_equip_list[unequipped.category] = 0
-        db.loadouts(current_user.curr_loadout).update_record(equip_list=new_equip_list)
+        current_user.curr_loadout.update_record(equip_list=new_equip_list)
         session.flash = 'Unequipped ' + unequipped.name
         redirect(URL("profilePage"))
 
@@ -190,9 +186,13 @@ def profilePage():
         #if item isn't in inventory, redirect
         if not sold.id in current_user.inventory:
             redirect(URL('profilePage'))
+        #actually remove item from inventory
         new_inventory = current_user.inventory
         new_inventory.pop(new_inventory.index(sold.id))
         current_user.update_record(inventory=new_inventory)
+        new_rarity = sold.attack + sold.defense + sold.speed
+        #insert into table that stores items to be sold
+        db.for_sale.insert(item=sold.id, rarity=new_rarity)
         session.flash = 'Sold ' + sold.name
         redirect(URL("profilePage"))
         

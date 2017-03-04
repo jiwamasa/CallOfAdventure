@@ -22,10 +22,11 @@ def forge():
         new_rare_ore = current_user.rare_ore - rareore
         current_user.update_record(rare_ore=new_rare_ore)
         stats = forge_helper.calcStats(rareore,booze,form.vars.words)
+        new_cost = (stats[1]+stats[2]+stats[3])**2
         forgeItem = db.equip_items.insert(attack=stats[1],
                                           defense=stats[2],
                                           speed=stats[3],
-                                          cost=100,
+                                          cost=new_cost,
                                           category=stats[0])
         current_inv = current_user.inventory
         current_inv.append(forgeItem)
