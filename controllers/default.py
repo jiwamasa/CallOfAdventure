@@ -151,13 +151,16 @@ def showBuyItem():
 @auth.requires_login()
 def profilePage():
     current_user = db.auth_user(auth.user.id)
-    #free money button (debug)
-    form = FORM('', INPUT(_name='free', _type='submit', _value='FREE STUFF'))
-    if form.process().accepted:
-        new_gold = current_user.gold + 1000
-        new_rare_ore = current_user.rare_ore + 100
-        current_user.update_record(gold=new_gold)
-        current_user.update_record(rare_ore=new_rare_ore)
+    update_cost = FORM('Cost to Hire: ',
+                       INPUT(_name='amount', _type='number',
+                             _value=current_user.cost_to_hire,
+                             requires=IS_INT_IN_RANGE(minimum=10,maximum=100000,error_message="Invalid cost")),
+                       INPUT(_type='submit', _value='UPDATE COST'))
+    if update_cost.process().accepted:
+        new_cost = update_cost.vars.amount
+        current_user.update_record(cost_to_hire=new_cost)
+        session.flash = 'Updated cost to hire'
+        redirect(URL("profilePage"))
         
     if request.args(0) == 'equip': #equipping items to current loadout
         equipped = db.equip_items(request.args(1, cast=int)) or redirect(URL('profilePage'))
@@ -186,6 +189,9 @@ def profilePage():
         #if item isn't in inventory, redirect
         if not sold.id in current_user.inventory:
             redirect(URL('profilePage'))
+        #add gold from sale
+        new_gold = current_user.gold + int(sold.cost*.9)
+        current_user.update_record(gold=new_gold)
         #actually remove item from inventory
         new_inventory = current_user.inventory
         new_inventory.pop(new_inventory.index(sold.id))
@@ -196,7 +202,7 @@ def profilePage():
         session.flash = 'Sold ' + sold.name
         redirect(URL("profilePage"))
         
-    return dict(form=form, current_user=current_user)
+    return dict(update_cost=update_cost, current_user=current_user)
 
 def user():
     if request.args(0) == 'profile':

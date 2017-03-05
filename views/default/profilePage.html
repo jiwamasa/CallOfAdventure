@@ -35,9 +35,8 @@ pass
 =BR()
 }}
 <h2>Gold: {{=current_user.gold}}</h2>
-{{=form}}
+{{=update_cost}}
 <br>
-
 <div class="inv">
 <b>Inventory</b>
 <table border="1">
@@ -48,7 +47,7 @@ pass
     <td class="inv_item_name"
 	onclick=
 	"jQuery('#display_name').text('{{=item.name}}');
-	 jQuery('#display_rank').text('{{=((item.attack+item.defense+item.speed)/3)}}');
+	 jQuery('#display_cost').text('{{=int(item.cost*.9)}}' + 'G');
 	 jQuery('#display_type').text('{{=db.equip_types(item.category).name}}');
 	 jQuery('#display_atk').text('{{=item.attack}}');
 	 jQuery('#display_def').text('{{=item.defense}}');
@@ -78,13 +77,13 @@ pass
 
 <b>"</b><b id="display_name"></b><b>"</b><br>
 <table class="item_details">
-  <td class="category"><b>Rank</b></td>
+  <td class="category"><b>Worth</b></td>
   <td class="category"><b>Type</b></td>
   <td class="category"><b>Attack</b></td>
   <td class="category"><b>Defense</b></td>
   <td class="category"><b>Speed</b></td>
   <tr>
-    <td id="display_rank"></td>
+    <td id="display_cost"></td>
     <td id="display_type"></td>
     <td id="display_atk"></td>
     <td id="display_def"></td>
