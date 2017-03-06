@@ -81,23 +81,31 @@ def shop():
         session.shop_items=[]
     if not session.last_shop_time:
         session.last_shop_time=datetime.datetime.now()
-    
+        
     if session.last_shop_time:
         time=datetime.datetime.now()
         delta=time-session.last_shop_time
-        #update every 60 seconds right now
-        if(delta.seconds>60 or delta.days>0):
-            session.last_shop_time=datetime.datetime.now()
-            while len(session.shop_items) > 10: #limit shop items to 10
-                session.shop_items.pop(random.randint(0,len(session.shop_items)-1))
+        #update every 30 seconds right now
+        if(delta.seconds>30 or delta.days>0):
+            #inject generic items into for_sale table
+            weak_items = db(db.equip_items.id < 15).select(db.equip_items.ALL,
+                                                           orderby='<random>',
+                                                           limitby=(0,3))
+            for item in weak_items:
+                db.for_sale.insert(item=item)
+            #add items to user's shop
             update=1
-            response.flash='New items!'
+            session.last_shop_time=datetime.datetime.now()
+            if len(session.shop_items) > 10: #remove surplus
+                while len(session.shop_items) > 5:
+                    session.shop_items.pop(random.randint(0,len(session.shop_items)-1))
             items=db().select(db.for_sale.ALL,
                               orderby='<random>',
                               limitby=(0,4+random.randint(0,3)))
             for sale_item in items:
                 if not sale_item.item in session.shop_items:
                     session.shop_items.append(sale_item.item)
+            response.flash='New items!'
     return dict(itemList=session.shop_items, update=update)
 
 @auth.requires_login()
