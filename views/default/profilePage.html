@@ -1,15 +1,8 @@
 {{extend 'layout.html'}}
-<head><link rel="stylesheet" href="{{=URL('static','css/profilePage.css')}}"></head>
-
-<script>
-jQuery(document).ready(function(){
-  jQuery('#equip_form').hide();
-  jQuery('#sell_form').hide();
-  jQuery('.inv_item_name').each(function() {
-    $(this).css('font-size', (80/$(this).width())*12);
-  });
-});
-</script>
+<head>
+  <link rel="stylesheet" href="{{=URL('static','css/profilePage.css')}}">
+  <script src="{{=URL('static','js/profilePage.js')}}"></script>
+</head>
 
 <h1>"{{=current_user.first_name}} {{=current_user.last_name}}"</h1>
 {{
@@ -46,26 +39,8 @@ pass
     {{if row%5 == 0:}}<tr>{{pass}}
     <td class="inv_item_name"
 	onclick=
-	"jQuery('#display_name').text('{{=item.name}}');
-	 jQuery('#display_cost').text('{{=int(item.cost*.9)}}' + 'G');
-	 jQuery('#display_type').text('{{=db.equip_types(item.category).name}}');
-	 jQuery('#display_atk').text('{{=item.attack}}');
-	 jQuery('#display_def').text('{{=item.defense}}');
-	 jQuery('#display_spd').text('{{=item.speed}}');
-	 jQuery('#display_flav').text('{{=item.details}}');
-	 var eq_url = 'profilePage/equip/' + '{{=item_id}}';
-	 var sell_url = 'profilePage/sell/' + '{{=item_id}}';
-	 var curr_eq = jQuery('#{{=db.equip_types(item.category).name}}').text();
-	 if (curr_eq != '{{=item.name}}') {
-	   jQuery('#equip_form').show();
-	   jQuery('#equip_form').prop('action', eq_url);
-	   jQuery('#sell_form').show();
-	   jQuery('#sell_form').prop('action', sell_url);
-	 } else {
-	   jQuery('#equip_form').hide();
-	   jQuery('#sell_form').hide();
-	 }
-	 "
+	"var curr_eq = jQuery('#{{=db.equip_types(item.category).name}}').text();
+	 updateInspector({{=item_id}},curr_eq == '{{=item.name}}');"
 	onmouseover="this.style.backgroundColor='yellow'"
 	onmouseout="this.style.backgroundColor='white'"
 	>{{=item.name}}</td>

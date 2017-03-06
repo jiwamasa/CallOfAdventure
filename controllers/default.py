@@ -209,9 +209,25 @@ def profilePage():
         db.for_sale.insert(item=sold.id, rarity=new_rarity)
         session.flash = 'Sold ' + sold.name
         redirect(URL("profilePage"))
-        
+
     return dict(update_cost=update_cost, current_user=current_user)
 
+def getItem():
+    item = db.equip_items(request.args(0))
+    js_string = "jQuery('#display_name').text(%s);" % repr(item.name)
+    show_cost = str(int(item.cost*0.9)) + "G"
+    js_string += "jQuery('#display_cost').text(%s);" % repr(show_cost)
+    show_type = db.equip_types(item.category).name
+    js_string += "jQuery('#display_type').text(%s);" % repr(show_type)
+    show_atk = str(item.attack)
+    js_string += "jQuery('#display_atk').text(%s);" % repr(show_atk)
+    show_def = str(item.defense)
+    js_string += "jQuery('#display_def').text(%s);" % repr(show_def)
+    show_spd = str(item.speed)
+    js_string+= "jQuery('#display_spd').text(%s);" % repr(show_spd)
+    js_string+= "jQuery('#display_flav').text(%s);" % repr(item.details)
+    return js_string
+    
 def user():
     if request.args(0) == 'profile':
         redirect(URL('profilePage'))
