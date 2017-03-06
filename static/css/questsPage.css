@@ -1,5 +1,5 @@
 h1 {
-    text-align: center;
+    text-align: left;
     font-family: 'MedievalSharp', cursive;
     font-size: 60px;
 }
@@ -25,7 +25,7 @@ div.board {
     background-repeat: repeat;
     background-attachment: free;
 
-    width: 50%;
+    width: 600px;
 }
 
 div.post {

@@ -44,7 +44,9 @@ def questsPage():
     elif quest_count <= QUEST_MIN:
         #calculate user strength here
         min_lvl = (player_strength/20)-1
-        max_lvl = (player_strength/20)+1
+        max_lvl = max((player_strength/20)+1,1)
+        print min_lvl
+        print max_lvl
         quests = db(((db.quests.difficulty>=min_lvl) and (db.quests.difficulty<=max_lvl))).select(db.quests.ALL, orderby=db.quests.difficulty)
         rand_amount = random.randint(QUEST_ADD_MIN,QUEST_ADD_MAX)
         while rand_amount>0:
@@ -55,6 +57,7 @@ def questsPage():
                 rand_amount=rand_amount-1
             else:
                 rand_amount=-1
+    print session.quest_list
     return dict(questList=session.quest_list)
     
 #details about a certain quest

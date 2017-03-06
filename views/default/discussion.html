@@ -2,15 +2,14 @@
 <html>
     <head>
         <title> Discussion </title>
-         <link rel="stylesheet" href="{{=URL('static','css/discussion_style.css')}}">
+         <link rel="stylesheet" href="{{=URL('static','css/discussion.css')}}">
     </head>
 
     <body>
-        <h1>Topics</h1>
+        <h1>Discussion Topics</h1>
         <div class = "topics">
             <h2> <a href = {{=URL('discussion_page', args='Quests')}}> Quests </a> </h2>
             <h2> <a href = {{=URL('discussion_page', args='Equipment')}}> Equipment </a> </h2>
-            <!-- <h2>{{=A("Other", _href = URL("discussion_other"))}}</h2> -->
             <h2> <a href = {{=URL('discussion_page', args='Other')}}> Other </a> </h2>
         </div>
     </body>
