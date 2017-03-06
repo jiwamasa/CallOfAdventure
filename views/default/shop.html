@@ -16,11 +16,10 @@
     }}
 </h3>
 <ul>
-    {{for buyItem in itemList:}}
-    {{if hasattr(buyItem, 'name'):}}
-    {{=LI(A(buyItem.name, _href=URL("showBuyItem", args=buyItem.id)))}}
-    {{pass}}
-    {{pass}}
+  {{for buyItem in session.shop_items:}}
+  {{item_name = db.equip_items(id=buyItem).name}} 
+  {{=LI(A(item_name, _href=URL("showBuyItem", args=buyItem)))}}
+  {{pass}}
 </ul>
 </body>
 </html>

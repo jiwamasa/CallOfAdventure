@@ -32,6 +32,10 @@ td.loadout_cell {
 input {
     height: 80%;
 }
+input[type=number] {
+    width: 100px;
+    margin-right: 4px;
+}
 
 div.inv {
     float: left;
