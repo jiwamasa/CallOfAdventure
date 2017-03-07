@@ -2,7 +2,17 @@
 <head><link rel="stylesheet" href="{{=URL('static','css/forge.css')}}"></head>
 <script>
   jQuery(document).ready(function(){
-  jQuery("#booze_amount").text("Lot's of booze!!!");
+  jQuery("#booze_text").text("I'm thirsty!");
+  jQuery("#booze_slider").change(function() {
+  console.log(this.value);
+  var b_text = jQuery("#booze_text");
+  if (this.value == 0) b_text.text("Completely sober");
+  else if (this.value < 25) b_text.text("Just a sip");
+  else if (this.value < 50) b_text.text("A healthy amount");
+  else if (this.value < 75) b_text.text("One more round!");
+  else if (this.value < 100) b_text.text("Just *hic* one more...");
+  else b_text.text("(the blacksmith is out cold)");
+  });
   });
 </script>
 

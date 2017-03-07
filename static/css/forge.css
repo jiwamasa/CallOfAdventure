@@ -5,6 +5,9 @@ center {
     background-color: #AAAAAA;
     width: 65%;
     margin: auto;
+    border-width: 6px;
+    border-color: #BBBBBB;
+    border-style: groove;
 }
 
 input[type=text] {
@@ -25,9 +28,5 @@ input[type='submit'] {
 }
 
 p.forgep {
-    width: 50%;
-}
-
-#booze_amount {
-    display: inline;
+    width: 80%;
 }

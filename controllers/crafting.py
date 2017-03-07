@@ -12,11 +12,14 @@ import forge_helper
 #forge equip items with rare ore
 def forge():
     current_user = db.auth_user(auth.user.id)
-    form = FORM('Rare Ore: ', INPUT(_name='rareore', _type='text', requires=IS_INT_IN_RANGE(1, current_user.rare_ore+1, error_message='Enter valid amount of Rare Ore')), BR(),
-                'Booze: ', INPUT(_name='booze', _type='range'),
-                DIV(_id='booze_amount'), BR(),
-                'Words of Encouragement: ', INPUT(_name='words', _type='text', requires=IS_NOT_EMPTY(error_message='Let him know you care!')),
-                BR(), INPUT(_type='submit', _value='FORGE!'))
+    form = FORM('Rare Ore: ',
+                INPUT(_name='rareore', _type='text', requires=IS_INT_IN_RANGE(1, current_user.rare_ore+1, error_message='Enter valid amount of Rare Ore')), BR(),
+                'Booze: ',
+                INPUT(_id='booze_slider', _name='booze', _type='range'),
+                DIV(_id='booze_text'), BR(),
+                'Words of Encouragement: ',
+                INPUT(_name='words', _type='text', requires=IS_NOT_EMPTY(error_message='Let him know you care!')), BR(),
+                INPUT(_type='submit', _value='FORGE!'))
     if form.accepts(request, session):
         #CHECK NAME FOR DUPLICATE (in form?)
         booze = int(form.vars.booze)
