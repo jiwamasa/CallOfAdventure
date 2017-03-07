@@ -1,3 +1,11 @@
 {{extend 'layout.html'}}
-<h2>Add a quest</h2>
-{{=form}}
+<head>
+        <title>Discussions</title>
+        <link rel="stylesheet" href="{{=URL('static','css/addQuest.css')}}">
+    </head>
+    <body>
+        <h2>Add a quest</h2>
+        <p>Here you can add a quest. Quests cost as much gold are you are willing to reward whatever brave explorer completes it. Every time someone
+              completes your quest you get rare ore.</P>
+        {{=form}}
+</body>

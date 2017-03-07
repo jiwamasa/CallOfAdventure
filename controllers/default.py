@@ -115,9 +115,9 @@ def discussion_page():
     db.posts.author.default=auth.user
     form = SQLFORM(db.posts)
     if form.process().accepted:
-       response.flash = 'Comment posted!!'
+       response.flash = 'Comment posted'
     elif form.errors:
-       response.flash = 'form has errors'
+       response.flash = 'Form has errors'
     #else:
        #response.flash = 'please fill out the form'
        
