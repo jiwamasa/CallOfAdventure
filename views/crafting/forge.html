@@ -1,23 +1,31 @@
 {{extend 'layout.html'}}
 <head><link rel="stylesheet" href="{{=URL('static','css/forge.css')}}"></head>
-<h1>Forge an Item</h1>
-<p>
-  The local blacksmith is known across the world as one of the best --
-  Too bad he's completely insane. When we order swords he gives us
-  shields, when we ask for shields he gives us coloured marbles, and
-  when we tried to ask for coloured marbles (just for fun), he gave
-  us a delightful mug with a kitten on it. 
-</p>
-<p>
-  Over the years the Adventurer's Guild has at least partially figured out
-  how to reason with this unreasonable character. You'll need 3 things:
-  <ol>
-    <li>Rare Ore to forge with</li>
-    <li>Alcohol to 'lubricate the mind' (as he puts it)</li>
-    <li>Words of encouragement</li>
+<script>
+  jQuery(document).ready(function(){
+  jQuery("#booze_amount").text("Lot's of booze!!!");
+  });
+</script>
+
+<center>
+  <h1>Forge an Item</h1>
+  <p class="forgep">
+    The local blacksmith is known across the world as one of the best --
+    Too bad he's completely insane. When we order swords he gives us
+    shields, when we ask for shields he gives us coloured marbles, and
+    when we tried to ask for coloured marbles (just for fun), he gave
+    us a delightful mug with a kitten on it. 
+  </p>
+  <p class="forgep">
+    Over the years the Adventurer's Guild has at least partially figured out
+    how to reason with this unreasonable character. You'll need 3 things:
+    <ol>
+      <li>Rare Ore to forge with</li>
+      <li>Alcohol to 'lubricate the mind' (as he puts it)</li>
+      <li>Words of encouragement</li>
   </ol>
-  Through some combination of these three things, maybe, <i>maybe</i>,
-  you'll get what you want (but you'll probably have to experiment). 
-</p>
-<h2><b>Good Luck</b></h2>
-{{=form}}
+    Through some combination of these three things, maybe, <i>maybe</i>,
+    you'll get what you want (but you'll probably have to experiment). 
+  </p>
+  <h2><b>Good Luck</b></h2>
+  {{=form}}
+</center>
