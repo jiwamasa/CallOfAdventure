@@ -22,7 +22,6 @@ db.define_table('for_sale',
 db.equip_items.name.requires=IS_LENGTH(maxsize=30, error_message="Name must be 30 characters or fewer")
 db.equip_items.name.requires=IS_MATCH('^[a-zA-Z0-9\\-\\s]+$', error_message="Name can only contain letters, numbers, and spaces")
 db.equip_items.details.requires=IS_LENGTH(maxsize=300, error_message="Description must be 300 characters or fewer")
-db.equip_items.details.requires=IS_MATCH('^[a-zA-Z0-9\\-\\s]+$', error_message="Description can only contain letters, numbers, and spaces")
 
 # Table containing equipment loadout sets (created by users)
 db.define_table('loadouts',

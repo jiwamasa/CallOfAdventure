@@ -1,10 +1,18 @@
 {{extend 'layout.html'}}
+<head><link rel="stylesheet" href="{{=URL('static','css/forgeResults.css')}}"></head>
 {{forged = db.equip_items(forge_id)}}
-<h1>It's done!</h1>
-<ul>
-  <li>Type: {{=db.equip_types(forged.category).name}}</li>
-  <li>Attack: {{=forged.attack}}</li>
-  <li>Defense: {{=forged.defense}}</li>
-  <li>Speed: {{=forged.speed}}</li>
-</ul>
-{{=form}}
+{{rank = (forged.attack+forged.defense+forged.speed)/10}}
+<center>
+  {{if rank < 2:}}
+  <h1>It's done... I think?</h1>
+  {{elif rank < 4:}}	    
+  <h1>It's done!</h1>
+  {{else:}}
+  <h1>It's done! And it came out pretty good!</h1>
+  {{pass}}
+  <p>Type: {{=db.equip_types(forged.category).name}}</p>
+  <p>Attack: {{=forged.attack}}</p>
+  <p>Defense: {{=forged.defense}}</p>
+  <p>Speed: {{=forged.speed}}</p>
+  {{=form}}
+</center>

@@ -1,0 +1,14 @@
+body {
+    background-image: url("../images/blacksmith.jpg");
+}
+center {
+    background-color: #AAAAAA;
+    width: 65%;
+    margin: auto;
+    border-width: 6px;
+    border-color: #BBBBBB;
+    border-style: groove;
+}
+input[type='submit'] {
+    margin-bottom: 5px;
+}
