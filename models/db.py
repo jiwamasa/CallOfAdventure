@@ -45,7 +45,7 @@ db.auth_user.cost_to_hire.requires=IS_INT_IN_RANGE(minimum=10, maximum=100000,
 
 # Table containing quests to take
 db.define_table('quests',
-                Field('title'),
+                Field('title', required=True, requires=IS_NOT_EMPTY()),
                 Field('quest_giver', 'reference auth_user', readable=False, writable=False),
                 Field('gold', 'integer', readable=True, writable=True, default=0),
                 Field('prestige', 'integer', readable=False, writable=False),
