@@ -44,7 +44,7 @@ def questsPage():
     elif quest_count <= QUEST_MIN:
         #calculate user strength here
         min_lvl = (player_strength/20)-1
-        max_lvl = (player_strength/20)+1
+        max_lvl = max((player_strength/20)+1,1)
         quests = db(((db.quests.difficulty>=min_lvl) and (db.quests.difficulty<=max_lvl))).select(db.quests.ALL, orderby=db.quests.difficulty)
         rand_amount = random.randint(QUEST_ADD_MIN,QUEST_ADD_MAX)
         while rand_amount>0:
@@ -151,4 +151,5 @@ def addQuest():
         db.quests(form.vars.id).update_record(quest_giver=curr_user)
         db.quests(form.vars.id).update_record(prestige=form.vars.difficulty)
         #RANDOMIZE LOOT ITEMS BASED ON DIFFCULTY
+        #THEY ARE...............................IN questResult
     return dict(form=form)

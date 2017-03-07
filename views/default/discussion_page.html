@@ -3,16 +3,19 @@
 <html>
     <head>
         <title>Discussions</title>
+        <link rel="stylesheet" href="{{=URL('static','css/discussion_page.css')}}">
     </head>
 
     <body>
     <h1>{{=request.args(0)}}</h1>
     {{for post in posts:}}
     <div class="post">
-        <p>{{=post.author.first_name}} said: <i>{{=post.body}}</i> </p>
+        <p>{{=post.title}}: <i>{{=post.body}}</i> <b>-{{=post.author.first_name}}</b> </p>
     </div>
     {{pass}}
-    <br>
-    {{=form}}
+    <div class= "create" >
+        <h2>Add a comment:</h2>
+        {{=form}}
+    </div>
     </body>
 </html>

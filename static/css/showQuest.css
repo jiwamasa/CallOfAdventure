@@ -19,7 +19,8 @@ div.quest {
     margin-left: 25%;
     padding-top: 20px;
     padding-bottom: 20px;
-    #width: 80%;
+    width: 600px;
+    height: 600px;
     text-align: left;
     #font-family: Serif;
     #background-color: #ffffb3;
