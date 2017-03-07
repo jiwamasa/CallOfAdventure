@@ -10,7 +10,7 @@
     <h1>{{=request.args(0)}}</h1>
     {{for post in posts:}}
     <div class="post">
-        <p>{{=post.title}}: <i>{{=post.body}}</i> <b>-{{=post.author.first_name}}</b> </p>
+        <p class="body"><b>{{=post.title}}:</b> <i>{{=post.body}}</i></p> <p class="author"><b>-{{=post.author.first_name}}</b></p>
     </div>
     {{pass}}
     <div class= "create" >
