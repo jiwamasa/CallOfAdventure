@@ -1,0 +1,38 @@
+body{
+    background-color: #ECECEA;
+}
+
+img.logo{
+    margin-left: 38%;
+}
+
+h1{
+    #text-align:center;
+    margin-left: 38%;
+    width: 320px;
+    text-align: center;
+    text-transform:uppercase;
+    font-family: 'MedievalSharp', cursive;
+}
+
+div.container{
+    margin-left: 38%;
+    width:320px;
+    
+    padding: 10px 10px 10px 10px;
+    
+    #text-decoration:overline;
+    
+    border-style: inset;
+    border-color: #ffff99;
+    border-width: 5px;
+    border-radius: 5px;
+}
+a{
+    color: black;
+}
+
+a:hover{
+    color: red;
+    text-decoration: none;
+}

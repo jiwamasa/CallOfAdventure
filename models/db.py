@@ -32,12 +32,12 @@ db.define_table('loadouts',
 from gluon.tools import Auth
 auth = Auth(db)
 auth.settings.extra_fields['auth_user']= [
-    Field('gold', 'integer', default=500, readable=True, writable=True),
-    Field('rare_ore', 'integer', default=0, readable=True, writable=True),
+    Field('gold', 'integer', default=500, readable=False, writable=False),
+    Field('rare_ore', 'integer', default=0, readable=False, writable=False),
     Field('cost_to_hire', 'integer', default=10, readable=True, writable=True),
-    Field('inventory', 'list:reference equip_items', default=[], readable=True, writable=True),
-    Field('curr_loadout', 'reference loadouts', default=db.loadouts.insert()),
-    Field('saved_loadouts', 'list:reference loadouts')]
+    Field('inventory', 'list:reference equip_items', default=[], readable=False, writable=False),
+    Field('curr_loadout', 'reference loadouts', default=db.loadouts.insert(), writable=False),
+    Field('saved_loadouts', 'list:reference loadouts', writable=False)]
 auth.define_tables(username=True)
 
 db.auth_user.cost_to_hire.requires=IS_INT_IN_RANGE(minimum=10, maximum=100000,
