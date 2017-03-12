@@ -45,6 +45,15 @@ def hirePage():
         response.flash = 'Party disbanded'
     return dict(hireList=hireList, disband=disband)
 
+#disband current party
+@auth.requires_login()
+def disband():
+    if session.party:
+        session.party = []
+        session.flash = 'Party disbanded'
+    redirect(URL('index'))
+    return
+
 #details about a certain person to hire them
 @auth.requires_login()
 def showHire():

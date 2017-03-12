@@ -81,10 +81,11 @@
                 for member_id in session.party:
                 =LI(A(db.auth_user(member_id).first_name, _href=URL("showHire", args=member_id)))
                 pass
-                else:
+		=LI(A("Disband", _href=URL("default", "disband")))
+		else:
                 =LI(None)
                 pass
-                }}
+		}}
               </ul>
             </li>
             {{='auth' in globals() and auth.navbar('Welcome',mode='dropdown') or ''}}
