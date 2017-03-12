@@ -168,6 +168,8 @@ def showBuyItem():
 @auth.requires_login()
 def profilePage():
     current_user = db.auth_user(auth.user.id)
+    if request.args(0) == 'view':
+        current_user = db.auth_user(request.args(1, cast=int)) or redirect(URL('index'))
     update_cost = FORM('Cost to Hire: ',
                        INPUT(_name='amount', _type='number',
                              _value=current_user.cost_to_hire,

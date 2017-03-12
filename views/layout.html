@@ -79,7 +79,7 @@
                 {{
                 if session.party:
                 for member_id in session.party:
-                =LI(A(db.auth_user(member_id).first_name, _href=URL("showHire", args=member_id)))
+                =LI(A(db.auth_user(member_id).first_name, _href=URL("profilePage", args=["view", member_id])))
                 pass
 		=LI(A("Disband", _href=URL("default", "disband")))
 		else:
