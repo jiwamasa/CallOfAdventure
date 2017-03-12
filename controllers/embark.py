@@ -24,12 +24,11 @@ def web2unity():
         return "error: no active quest"
     quest = db.quests(session.curr_quest)
     stats = quest.location+"%"+str(quest.difficulty)+"%"
+    user_list = [session.auth.user.id] #list of people on quest
     if session.party:
-        if session.party[0] != session.auth.user.id:
-            session.party.insert(0, session.auth.user.id)
-    else:
-        session.party = [session.auth.user.id]
-    for hire_id in session.party:
+        for hire_id in session.party:
+            user_list.append(hire_list)
+    for hire_id in user_list:
         hire = db.auth_user(hire_id)
         attack = 0
         defense = 0
@@ -50,19 +49,15 @@ def web2unity():
 #page with embedded unity game
 def questEmbark():
     #check if we still have this quest
-    quest_id=request.args(0, cast=int)
+    quest_id=request.args(0, cast=int) or redirect(URL('default', 'index'))
     valid_quest=False
     if session.quest_list:
         for quest in session.quest_list:
             if hasattr(quest, 'id') and quest.id==quest_id:
                 valid_quest=True
-        if not valid_quest:
-            session.flash='Invaild Quest'
-            redirect(URL('default', 'index'))
-    else:
+    if not valid_quest:
         session.flash='Invaild Quest'
         redirect(URL('default','index'))
-    quest = db.quests(request.args(0, cast=int)) or redirect(URL('index'))
-    session.curr_quest = quest.id
-    redirect(URL('web2unity'))
+    session.curr_quest = quest_id
+    redirect(URL('web2unity')) #FOR TESTING PURPOSES ONLY
     return dict()
