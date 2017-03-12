@@ -150,6 +150,4 @@ def addQuest():
         curr_user.update_record(gold=new_gold)
         db.quests(form.vars.id).update_record(quest_giver=curr_user)
         db.quests(form.vars.id).update_record(prestige=form.vars.difficulty)
-        #RANDOMIZE LOOT ITEMS BASED ON DIFFCULTY
-        #THEY ARE...............................IN questResult
     return dict(form=form)
