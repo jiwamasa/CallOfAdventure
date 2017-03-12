@@ -61,3 +61,14 @@ def questEmbark():
     session.curr_quest = quest_id
     redirect(URL('web2unity')) #FOR TESTING PURPOSES ONLY
     return dict()
+
+#tell server whether quest was won or lost
+def questComplete():
+    session.connect(request) #get the session of the unity game
+    #if args == 1, then it's a win, otherwise, loss
+    win=request.args(0, cast=int) or 0
+    if win == 1:
+        session.questWin = 1
+    else:
+        session.questWin = 0
+    return

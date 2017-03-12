@@ -66,8 +66,8 @@ def showQuest():
 #result of quest 
 @auth.requires_login()
 def questResult():
-    #check if we still have this quest
-    quest_id=request.args(0, cast=int)
+    #get the current quest
+    quest_id=session.curr_quest or 0
     valid_quest=False
     if session.quest_list:
         for quest in session.quest_list:
@@ -79,36 +79,10 @@ def questResult():
     else:
         session.flash='Invaild Quest'
         redirect(URL('index'))
-    quest = db.quests(request.args(0, cast=int)) or redirect(URL('index'))
-    current_user = db.auth_user(auth.user.id)
-    #calculate user power
-    #hp, atk, def
-    party_strength=[25.0,5.0,5.0]
-    
-    #calculate user's item power
-    if current_user.curr_loadout>0:
-        for item in current_user.curr_loadout.equip_list:
-            if item.id>0:
-                party_strength[1]=party_strength[1]+item.attack
-                party_strength[2]=party_strength[2]+item.defense
-                
-    #calculate party power
-    if session.party:
-        for i in range(0,len(session.party)):
-            #add up stats for each member, dummy for now
-            party_strength=[sum(x) for x in zip(party_strength, [5.0,5.0,5.0])]
-            
-    #monster_strength=[10+3.0*quest.difficulty,3.0*quest.difficulty,3.0*quest.difficulty]
-    monster_strength=quest_helper.monster_strength(quest.difficulty)
-     
-    #main 'battle logic' take turns killing each other
-    #loser is who reaches 0 health first
-    while party_strength[0]>0.0 and monster_strength[0]>0.0:
-        monster_strength[0]-=party_strength[1]*(1-((1/100)*monster_strength[2]))
-        party_strength[0]-=monster_strength[1]*(1-((1/100)*party_strength[2]))
+    quest = db.quests(quest_id) or redirect(URL('index'))
 
     found_items=[]
-    if party_strength[0]>=0.0:
+    if session.questWin and session.questWin == 1:
         success = 1
         result_msg = 'was a success!'
         response.flash = 'Success!'
@@ -136,7 +110,8 @@ def questResult():
             session.quest_list.remove(quest)
     else:
         success = 0
-        result_msg = 'was a failure...'      
+        result_msg = 'was a failure...'
+    session.curr_quest = 0 #remove current quest
     return dict(quest=quest, result_msg=result_msg, success=success, party_strength=party_strength, found_items=found_items)
     
 #quest adding page
