@@ -223,6 +223,26 @@ def profilePage():
 
     return dict(update_cost=update_cost, current_user=current_user)
 
+def buyItem():
+    buyItem = db.equip_items(request.args(0, cast=int)) or redirect(URL('shop'))
+    cost = buyItem.cost or 0
+    current_gold = db.auth_user(auth.user.id).gold or 0
+    current_inv = db.auth_user(auth.user.id).inventory
+
+    if current_gold < cost: #insufficient funds
+        session.flash = 'You can\'t afford this! Get out!'
+        redirect(URL('shop'))
+    else: #sufficient funds;
+        new_gold = current_gold - cost #transact
+        db.auth_user(auth.user.id).update_record(gold=new_gold)
+        current_inv.append(int(buyItem.id)) #add bought item to inventory
+        db.auth_user(auth.user.id).update_record(inventory=current_inv)
+        session.flash = (buyItem.name) + " has been purchased!"
+        session.shop_items.remove(buyItem.id)
+        db(db.for_sale.item == buyItem.id).delete()
+        redirect(URL('shop'))
+    return 1
+    
 def getItem():
     item = db.equip_items(request.args(0))
     js_string = "jQuery('#display_name').text(%s);" % repr(item.name)
