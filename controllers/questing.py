@@ -143,7 +143,7 @@ def questResult():
 @auth.requires_login()
 def addQuest():
     curr_user = db.auth_user(auth.user.id)
-    db.quests.gold.requires=IS_INT_IN_RANGE(0,curr_user.gold,error_message='Not enough gold')
+    db.quests.gold.requires=IS_INT_IN_RANGE(0,curr_user.gold+1,error_message='Not enough gold')
     form = SQLFORM(db.quests)
     if form.process().accepted:
         new_gold = curr_user.gold - form.vars.gold

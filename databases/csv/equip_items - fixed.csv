@@ -1,0 +1,49 @@
+equip_items.id,equip_items.name,equip_items.attack,equip_items.defense,equip_items.speed,equip_items.cost,equip_items.category,equip_items.details
+1,Wooden Sword,5,1,4,100,1,An old wooden sword used by children for practice.
+2,Wooden Shield,0,9,1,100,2,"Essentially just a plank of wood with a handle.
+"
+3,Iron Sword,10,3,2,200,1,"If you just wipe off some of the rust and sharpen it a little then maybe it could work... 
+"
+4,Iron Shield,1,16,-2,250,2,"I guess it can block some blows, if you can even pick it up. 
+"
+5,Refined Sword,17,0,3,500,1,"By making the blade thinner and more flexible, a wider range of attacks are available at the cost of durability.
+"
+6,Refined Shield,0,15,5,450,2,"A standard for any soldier. Sturdy, reliable, and relatively light-weight. 
+"
+7,Cloth Cap,0,5,5,50,3,"Someone's mother knitted this for them.
+"
+8,Cloth Suit,0,7,3,70,4,"This vest and pants set is popular among non-adventurers.
+"
+9,Cloth Shoes,2,3,5,60,5,"An old potato sack and a pair of scissors later...
+"
+10,Old doll,3,3,3,10,6,"This cute knight doll gives you a strong sense of courage... And embarrassment. 
+"
+11,Leather Cap,2,10,3,200,3,Good at blocking the rain. Bad at keeping your ears warm.
+12,Leather Suit,1,13,1,300,4,"Perhaps in a different time and place, wearing a wardrobe of leather is looked down upon... Nah."
+13,Leather Shoes,4,6,5,250,5,These shoes were made for walking(?)
+14,Quest Stub,5,5,5,200,6,The stub from your first quest scroll. Ah the memories...
+15,Example,10,10,10,1000,1,"Stat totals for items should be around 30 for weapons, 20 for armor, negatives are OK. A single stat going over 20 is pushing it. "
+16,Longsword,20,7,3,1200,1,"A sword built for slashing at a distance, but hard to wield well.
+"
+17,Rapier,15,9,6,1400,1,A deuling sword build for quick stabs and parrys.
+18,Dagger,10,5,15,900,1,"Agile. Discrete. Just hope your opponent doesn't have a whole lot of armor. 
+"
+19,Claymore,25,10,-8,1800,1,"The answer to why one of your arms is stronger than the other. 
+"
+20,Buckler,8,14,8,800,2,A small shield for those who value mobility and inflicting blunt trauma.
+21,Bracer,6,11,13,750,2,"For people who think blocking attacks with their wrists is cool (I do). 
+"
+22,Tower Shield,2,25,-5,1400,2,If only someone put wheels on the bottom of this thing.
+23,Archer's Visor,2,10,7,1000,3,"Made for reconnaissance. Keeps the sun out of your eyes too.
+"
+24,Full helm,0,17,-2,1300,3,It's a wonder how anyone sees out of this.
+25,Knight's armor,3,20,-5,2100,4,"Your horse boycotted this suit of armor; you'll have to contact the union.
+"
+26,Thief's garb,0,13,8,1800,4,"Mostly bound leather, with plenty of pockets to hold your loot. 
+"
+27,Runner's shoes,2,7,11,1600,5,"I'm fairly certain the lightning bolts drawn on the side just make you feel faster.
+"
+28,Solid greaves,3,17,-5,1700,5,"With these, you'll never skip leg day ever again.
+"
+29,Cape,12,-5,12,1000,6,"Makes you feel like a super hero, but usually gets in the way."
+30,Lucky charm,7,7,7,777,6,Honestly not quite sure what makes it so lucky.
