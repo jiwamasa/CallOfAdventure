@@ -223,6 +223,22 @@ def profilePage():
 
     return dict(update_cost=update_cost, current_user=current_user)
 
+def itemInfo():
+    item = db.equip_items(request.args(0))
+    js_string = "jQuery('#display_name').text(%s);" % repr(item.name)
+    show_cost = str(int(item.cost)) + "G"
+    js_string += "jQuery('#display_cost').text(%s);" % repr('Cost: '+show_cost)
+    show_type = db.equip_types(item.category).name
+    js_string += "jQuery('#display_type').text(%s);" % repr(show_type)
+    show_atk = str(item.attack)
+    js_string += "jQuery('#display_atk').text(%s);" % repr('Attack: '+show_atk)
+    show_def = str(item.defense)
+    js_string += "jQuery('#display_def').text(%s);" % repr('Defense: '+show_def)
+    show_spd = str(item.speed)
+    js_string+= "jQuery('#display_spd').text(%s);" % repr('Speed: '+show_spd)
+    js_string+= "jQuery('#display_flav').text(%s);" % repr(item.details)
+    return js_string    
+
 def buyItem():
     buyItem = db.equip_items(request.args(0, cast=int)) or redirect(URL('shop'))
     cost = buyItem.cost or 0

@@ -1,41 +1,43 @@
 {{extend 'layout.html'}}
 <html>
-<head>
+    <head>
         <title>Shop</title>
         <link rel="stylesheet" href="{{=URL('static','css/shop_style.css')}}">
         <script src="{{=URL('static','js/shopPage.js')}}"></script>
-</head>
-<body>
-<h1>Shop</h1>
-<h2>Welcome to shop! Buy and sell items here!</h2>
-<h3>
-    {{if update:
-        ='New items available!'
-        elif len(itemList)==0:
-        ='Come back later for more items!'
-        pass
-    }}
-</h3>
-<div class="wrapper">
-    <div class="item_list">
-      {{for buyItem in session.shop_items:}}
-      {{item = db.equip_items(id=buyItem)}}
-      {{item_name = db.equip_items(id=buyItem).name}}
-      <p class="item" id={{=buyItem}} atk={{=item.attack}} def={{=item.defense}} spd={{=item.speed}} cost={{=item.cost}}>{{=item_name}}</p>
-      {{pass}}
-     </div>
-     
-      <div id="item_info">
-        <h2>Item Info</h2>
-        <p id="attack"></p>
-        <p id="defense"></p>
-        <p id="speed"></p>
-        <p id="cost"></p>
-        <p id="buy_button" class="buy_button">
-            <form id="buy_form" action="{{=URL('shop')}}">
-                <input type="submit" value="Buy"></input></form>
-        </p>
-      </div>
-</div>
-</body>
+    </head>
+    <body>
+        <h1>Shop</h1>
+        <h2>Welcome to shop! Buy and sell items here!</h2>
+        <h3>
+            {{if update:
+            ='New items available!'
+            elif len(itemList)==0:
+            ='Come back later for more items!'
+            pass}}
+        </h3>
+        <div class="wrapper">
+            <div class="item_list">
+                {{for buyItem in session.shop_items:}}
+                {{item = db.equip_items(id=buyItem)}}
+                {{item_name = db.equip_items(id=buyItem).name}}
+                <p class="item" id={{=buyItem}}>{{=item_name}}</p>
+                {{pass}}
+            </div>
+
+            <div id="item_info">
+                <h2>Item Info</h2>
+                <p id="display_name"></p>
+                <p id="display_atk"></p>
+                <p id="display_def"></p>
+                <p id="display_spd"></p>
+                <p id="display_flav"></p>
+                <p id="display_cost"></p>
+                <p id="buy_button" class="buy_button">
+                    <form id="buy_form" action="{{=URL('shop')}}">
+                        <input type="submit" value="Buy"></input>
+                    </form>
+                </p>
+            </div>
+        </div>
+    </body>
 </html>
