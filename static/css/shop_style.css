@@ -21,15 +21,15 @@ div.wrapper{
 
 div.item_list{
     padding-top:15px;
-    width:40%;
+    width:30%;
     float:left;
     border-right: 6px groove #ac7339;
     background-color:#dfbf9f;
 }
 
 p.item{
-    width:60%;
-    margin-left:30%;
+    #width:60%;
+    #margin-left:30%;
 }
 
 p.item:hover{
@@ -38,6 +38,7 @@ p.item:hover{
 
 div.item_info{
     width:20%;
+    word-wrap: break-word;
     float:left;
 }
 

@@ -32,6 +32,8 @@ div.post{
     
     background-color: #ffe6b3;
     
+    word-wrap: break-word;
+    
     #text-align: center;
 }
 
