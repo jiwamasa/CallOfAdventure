@@ -1,21 +1,21 @@
 {{extend 'layout.html'}}
-<h1>Quest {{=quest.title}} {{=result_msg}}</h1>
+<head>
+    <link rel="stylesheet" href="{{=URL('static','css/questResult.css')}}">
+    <link href="https://fonts.googleapis.com/css?family=MedievalSharp" rel="stylesheet">
+</head>
 <body>
-    {{if success:}}
-    You earned {{=quest.gold}} Gold! <br>
-    <ul>
-        {{if found_items:}}
-        {{for loot in found_items:}}
-        {{=LI('Found: ' + loot.name)}}
+    <h1>Quest {{=quest.title}} {{=result_msg}}</h1>
+    <div class="quest">
+        {{if success:}}
+        You earned {{=quest.gold}} Gold! <br>
+        <ul>
+            {{if found_items:}}
+            {{for loot in found_items:}}
+            {{=LI('Found: ' + loot.name)}}
+            {{pass}}
+            {{pass}}
+        </ul>
         {{pass}}
-        {{pass}}
-    </ul>
-    {{pass}}
-<br>
-<h1>Stats</h1>
-HP Left: {{=int((party_strength[0]+0.5))}}
-ATK: {{=party_strength[1]}}
-DEF: {{=party_strength[2]}}
+    </div>
+    {{=A('Continue', _href=URL("default","index"))}}
 </body>
-<br>
-{{=A('Continue', _href=URL("default","index"))}}

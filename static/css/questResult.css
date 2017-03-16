@@ -1,0 +1,31 @@
+body {
+    background-color: #ECECEA;
+    
+    background-image: url("../images/vine-border-left.png");
+    background-position: 0% 70px;
+    background-repeat: no-repeat;
+    background-attachment: free;
+}
+
+h1 {
+    text-align: center;
+    text-transform: uppercase;
+    font-family: 'MedievalSharp', cursive;
+}
+
+div.quest {
+    margin-top: 90px;
+    margin-left: 25%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 600px;
+    height: 600px;
+    text-align: left;
+    #font-family: Serif;
+    #background-color: #ffffb3;
+    
+    background-image: url("../images/scroll.png");
+    background-position: 0% 0%;
+    background-repeat: no-repeat;
+    background-attachment: free;
+}

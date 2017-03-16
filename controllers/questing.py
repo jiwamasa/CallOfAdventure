@@ -20,7 +20,7 @@ import quest_helper
 #quest loot is higher than this
 ITEM_MID = 20
 #base rate of 25%, +5% per difficulty level
-RARE_ITEM_RATE = 0.25
+RARE_ITEM_RATE = 0.95
 RARE_ITEM_RATE_ADD = 0.05
 #---Necessary for Quest Generation---#
 QUEST_MIN = 5
@@ -75,7 +75,7 @@ def questResult():
                 valid_quest=True
         if not valid_quest:
             session.flash='Invaild Quest'
-            redirect(URL('index'))
+            redirect(URL('default','index'))
     else:
         session.flash='Invaild Quest'
         redirect(URL('index'))
@@ -83,7 +83,7 @@ def questResult():
     current_user = db.auth_user(auth.user.id)
     #calculate user power
     #hp, atk, def
-    party_strength=[25.0,5.0,5.0]
+    party_strength=[250.0,5.0,5.0]
     
     #calculate user's item power
     if current_user.curr_loadout>0:
