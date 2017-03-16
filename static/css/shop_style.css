@@ -37,8 +37,9 @@ p.item:hover{
 }
 
 div.item_info{
-    width:20%;
+    #width:20%;
     word-wrap: break-word;
+    text-align:center;
     float:left;
 }
 
