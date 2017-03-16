@@ -4,18 +4,18 @@
     <link href="https://fonts.googleapis.com/css?family=MedievalSharp" rel="stylesheet">
 </head>
 <body>
-    <h1>Quest {{=quest.title}} {{=result_msg}}</h1>
+    <div class="title"><h1>Quest {{=quest.title}} {{=result_msg}}</h1></div>
     <div class="quest">
         {{if success:}}
-        You earned {{=quest.gold}} Gold! <br>
-        <ul>
+            <p>You earned {{=quest.gold}} Gold!</p>
             {{if found_items:}}
-            {{for loot in found_items:}}
-            {{=LI('Found: ' + loot.name)}}
+                {{for loot in found_items:}}
+                    <p>{{='Found: ' + loot.name}}</p>
+                {{pass}}
             {{pass}}
-            {{pass}}
-        </ul>
         {{pass}}
     </div>
-    {{=A('Continue', _href=URL("default","index"))}}
+    <div class="button_loc">
+        {{=A('Continue', _href=URL("default","index"), _class="button")}}
+    </div>
 </body>
