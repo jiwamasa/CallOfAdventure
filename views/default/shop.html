@@ -15,16 +15,16 @@
             ='Come back later for more items!'
             pass}}
         </h3>
-        <div class="wrapper">
-            <div class="item_list">
+        <table class="wrapper">
+            <td class="item_list">
                 {{for buyItem in session.shop_items:}}
                 {{item = db.equip_items(id=buyItem)}}
                 {{item_name = db.equip_items(id=buyItem).name}}
                 <p class="item" id={{=buyItem}}>{{=item_name}}</p>
                 {{pass}}
-            </div>
+            </td>
 
-            <div id="item_info">
+            <td id="item_info">
                 <h2>Item Info</h2>
                 <p id="display_name"></p>
                 <p id="display_atk"></p>
@@ -37,7 +37,7 @@
                         <input type="submit" value="Buy"></input>
                     </form>
                 </p>
-            </div>
-        </div>
+            </td>
+        </table>
     </body>
 </html>

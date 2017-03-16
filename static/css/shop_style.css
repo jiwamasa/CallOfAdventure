@@ -11,18 +11,17 @@ h2{
     font-size: 24px;
 }
 
-div.wrapper{
-    #width:80%;
+table.wrapper{
+    width:100%;
     border: 6px groove #ac7339;
-    border-radius: 2px;
     background-color:#dfbf9f;
     overflow: hidden;
 }
 
-div.item_list{
+td.item_list{
     padding-top:15px;
     width:30%;
-    float:left;
+    #float:left;
     border-right: 6px groove #ac7339;
     background-color:#dfbf9f;
 }
@@ -36,11 +35,11 @@ p.item:hover{
     color: red;
 }
 
-div.item_info{
+td.item_info{
     #width:20%;
     word-wrap: break-word;
     text-align:center;
-    float:left;
+    #float:left;
 }
 
 a.links{
