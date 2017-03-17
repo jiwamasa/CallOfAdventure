@@ -16,7 +16,12 @@ import datetime
 #sends data to unity game
 #should ONLY be accessible by unity game, redirect otherwise
 def web2unity():
+    print "testing"
+    return "Cave/2/Bob/99/99/99" #TESTING
     session.connect(request) #get the session of the unity game
+    if not session:
+        print "bad session"
+        return "error: bad session"
     curr_user = db.auth_user(session.auth.user.id)
     print curr_user.first_name
 
@@ -40,8 +45,9 @@ def web2unity():
                     attack += equip_item.attack
                     defense += equip_item.defense
                     speed += equip_item.speed
-            stats += hire.first_name+" "+hire.last_name+"%"
+            stats += hire.first_name+"%"
             stats += str(attack)+"%"+str(defense)+"%"+str(speed)+"%"
+    stats = stats[:-1] #remove trailing '%'
     print stats
     return stats
 
@@ -59,7 +65,7 @@ def questEmbark():
         session.flash='Invaild Quest'
         redirect(URL('default','index'))
     session.curr_quest = quest_id
-    redirect(URL('web2unity')) #FOR TESTING PURPOSES ONLY
+    session.questWin = 0 #default quest is lost
     return dict()
 
 #tell server whether quest was won or lost
@@ -69,6 +75,13 @@ def questComplete():
     win=request.args(0, cast=int) or 0
     if win == 1:
         session.questWin = 1
+        print "win!"
     else:
         session.questWin = 0
+        print "lose!"
+    return
+
+#for debugging
+def echo():
+    print request.args(0)
     return

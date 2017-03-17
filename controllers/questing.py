@@ -112,7 +112,7 @@ def questResult():
         success = 0
         result_msg = 'was a failure...'
     session.curr_quest = 0 #remove current quest
-    return dict(quest=quest, result_msg=result_msg, success=success, party_strength=party_strength, found_items=found_items)
+    return dict(quest=quest, result_msg=result_msg, success=success, found_items=found_items)
     
 #quest adding page
 @auth.requires_login()
