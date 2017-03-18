@@ -37,7 +37,7 @@ RARE_ITEM_RATE_ADD = 0.05
 #all hires page
 @auth.requires_login()
 def hirePage():
-    hireList = db().select(db.auth_user.ALL, orderby=db.auth_user.first_name)
+    hireList = db().select(db.auth_user.ALL, orderby=db.auth_user.username)
     disband = FORM('', INPUT(_name='disband', _type='submit',
                              _value='Disband Party'))
     if disband.process().accepted: #if disband button is clicked
@@ -227,7 +227,17 @@ def getItem():
     js_string+= "jQuery('#display_spd').text(%s);" % repr(show_spd)
     js_string+= "jQuery('#display_flav').text(%s);" % repr(item.details)
     return js_string
+
+def getUser(): #get user info for hirePage
+    employee = db.auth_user(request.args(0, cast=int)) or redirect(URL('index'))
+    employee = db.auth_user(request.args(0, cast=int)) or redirect(URL('index'))
+    js_string = "jQuery('#displayName').text(%s);" % repr(employee.username)
+    hireCost = str(int(employee.cost_to_hire or 0)) + "G"
+    js_string += "jQuery('#displayHireCost').text(%s);" % repr(hireCost)
+    return js_string
     
+    
+
 def user():
     if request.args(0) == 'profile':
         redirect(URL('profilePage'))
