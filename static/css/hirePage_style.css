@@ -1,11 +1,15 @@
 body{
     text-align: left;
-    
+    background-repeat: no-repeat;
+    background-color: #ECECEA;
     background-image: url("../images/scroll.png");
+    background-position: center;
+    background-size: 1100px 750px;
 }
 
 div.hire{
-    float: left;
+    padding: 40px 550px 0px 550px;
+    float: center;
     margin-right: 20px;
     margin-bottom: 20px;
     font-family: fantasy;
@@ -13,6 +17,10 @@ div.hire{
 
 h1{
     margin-top: 50px;
+}
+
+border.hire{
+    float: center;
 }
 
 h2{
@@ -41,7 +49,14 @@ table.userInfo {
     border: 3px solid black;
 }
 
+div.hireListTable {
+    display: inline-block;
+    margine: auto;
+    padding: 7%;
+}
+
 div.userTable {
+    display: inline-block;
     margin: auto;
     padding: 7%
 
@@ -53,4 +68,9 @@ td.hireButton {
 
 td.hire_list_name {
     cursor: pointer;
+    margin: auto;
+}
+
+table.main {
+    width: 100%;
 }
