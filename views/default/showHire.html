@@ -1,5 +1,7 @@
 {{extend 'layout.html'}}
+<link rel="stylesheet" href="{{=URL('static','css/showHire_style.css')}}">
 <h1>The brave adventurer "{{=hire.first_name}}"</h1>
+<body>
 <h2>Cost to hire: {{=cost}}</h2>
-
+</body>
 {{=form}}

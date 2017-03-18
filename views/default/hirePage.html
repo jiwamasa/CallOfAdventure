@@ -1,31 +1,61 @@
 {{extend 'layout.html'}}
 
 <html>
-  <head>
-    <title> Hire </title>
-    <link rel="stylesheet" href="{{=URL('static','css/hirePage_style.css')}}">
-  </head>
-  <body>
-    <div class = "hire">
-      <h1>People for Hire</h1>
-        {{for hire in hireList:}}
-          {{if hire.id != auth.user.id:}}
-          <p>{{=A(hire.first_name, _href=URL("showHire", args=hire.id))}}</p>
-          {{pass}}
-        {{pass}}
-      <h2>Current party</h2>
-        {{if session.party:}}
-          {{for party_member in session.party:}}
-          <p>{{=A(db.auth_user(party_member).first_name,
-                  _href=URL("showHire", args=party_member))}}</p>
-          {{pass}}
-        {{else:}}
-          {{=BODY('No one hired yet')}}
-        {{pass}}
-      
-        {{if session.party:}}
-          {{=disband}}
-        {{pass}}
-    </div>
-  </body>
+    <head>
+        <title> Hire </title>
+        <link rel="stylesheet" href="{{=URL('static','css/hirePage_style.css')}}">
+        <script src="{{=URL('static','js/hirePage.js')}}"></script>
+    </head>
+    <body>
+        <div class = "hire center">
+            {{idHolder = 0}}
+            <h1>People for Hire</h1>
+            <table class="main">
+                <tr>
+                    <td valign="top">
+                        <div class="hireListTable">
+                            <b>Available for Hire</b><br><br>
+                            <table>    
+                                {{for hire in hireList:}}
+                                {{if hire.id != auth.user.id:}}
+                                {{employee = db.auth_user(hire)}}
+                                <tr>
+                                    <td class="hire_list_name"
+                                        onclick=
+                                            "updateInspector({{=hire.id, hire==hire}});
+                                            {{idHolder = int(hire.id)}};"
+                                        onmouseover="this.style.color='red'"
+                                        onmouseout="this.style.color='black'"
+                                    >{{=hire.username}}</td>
+                                    <td class="hireButton">
+                                        <form id="hire_form" action="{{=URL('showHire', args=[hire.id])}}">
+                                            <input type="submit" value="Hire"></input>
+                                        </form>
+                                    </td>
+                                </tr>            
+                                {{pass}}
+                                {{pass}}
+                            </table>
+                        </div>
+                    </td>
+        
+                    <td valign="top">
+                        <div class="userTable">
+                            <table class="user_info">
+                                <tr><th><b>Info</b></th></tr>
+                                <tr>
+                                    <th>Name</th>
+                                    <td id=displayName></td>
+                                </tr>
+                                <tr>
+                                    <th>Cost to Hire</th>
+                                    <td id="displayHireCost"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
 </html>
