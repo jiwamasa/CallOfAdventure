@@ -16,8 +16,8 @@ import datetime
 #sends data to unity game
 #should ONLY be accessible by unity game, redirect otherwise
 def web2unity():
-    print "testing"
-    return "Cave/2/Bob/99/99/99" #TESTING
+    #print "testing"
+    #return "Cave%2%Bob%99%99%99" #TESTING
     session.connect(request) #get the session of the unity game
     if not session:
         print "bad session"
