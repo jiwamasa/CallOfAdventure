@@ -237,6 +237,8 @@ def itemInfo():
     show_spd = str(item.speed)
     js_string+= "jQuery('#display_spd').text(%s);" % repr('Speed: '+show_spd)
     js_string+= "jQuery('#display_flav').text(%s);" % repr(item.details)
+    buy_url = "/callofadventure/default/buyItem/" + str(item.id)
+    js_string+= "jQuery('#buy_form').prop('action',%s);" % repr(buy_url)
     return js_string    
 
 def buyItem():
