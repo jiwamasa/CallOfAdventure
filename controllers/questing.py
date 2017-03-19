@@ -66,6 +66,7 @@ def showQuest():
 #result of quest 
 @auth.requires_login()
 def questResult():
+    current_user = db.auth_user(auth.user.id)
     #get the current quest
     quest_id=session.curr_quest or 0
     valid_quest=False
