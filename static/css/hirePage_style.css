@@ -38,39 +38,47 @@ a:hover{
 
 td {
     text-align: center;
-    padding: 2px;
+    padding: 5px;
     width: 120px;
     height: 40px;
-    border: 1px solid black;  
+    border: 2px solid black;  
 }
 
 table.userInfo {
     margin-bottom: 20px;
+    margin-right: 8px;
     border: 3px solid black;
 }
 
 div.hireListTable {
     display: inline-block;
-    margine: auto;
+    margin-right: 19px;
     padding: 7%;
 }
 
 div.userTable {
     display: inline-block;
-    margin: auto;
-    padding: 7%
-
+    margin: 12px;
 }
 
 td.hireButton {
     border: none;
+    margin-right: 5px;
 }
 
 td.hire_list_name {
     cursor: pointer;
     margin: auto;
+    border: none;
 }
 
 table.main {
     width: 100%;
+}
+
+td#displayName {
+    border: none;
+}
+td#displayHireCost {
+    border: none;
 }
