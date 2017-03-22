@@ -74,8 +74,8 @@ def showHire():
             session.party.remove(hire.id) #remove hire
             session.flash = 'Not enough gold to hire'
             redirect(URL('hirePage'))
-        new_gold = current_gold - cost #deduct hiring cost 
-        db.auth_user(auth.user.id).update_record(gold=new_gold) 
+        new_gold = current_gold - cost #deduct hiring cost
+        db.auth_user(auth.user.id).update_record(gold=new_gold)
         new_gold = hire.gold + cost #add payment
         hire.update_record(gold=new_gold)
         session.flash = 'Successfully hired adventurer ' + hire.first_name
@@ -90,7 +90,7 @@ def shop():
         session.shop_items=[]
     if not session.last_shop_time:
         session.last_shop_time=datetime.datetime.now()
-        
+
     if session.last_shop_time:
         time=datetime.datetime.now()
         delta=time-session.last_shop_time
@@ -132,7 +132,7 @@ def discussion_page():
        response.flash = 'Form has errors'
     #else:
        #response.flash = 'please fill out the form'
-       
+
     posts=db(db.posts.category==request.args(0)).select(db.posts.ALL, orderby=~db.posts.post_date)
     return dict(posts=posts, form=form)
 
@@ -180,7 +180,7 @@ def profilePage():
         current_user.update_record(cost_to_hire=new_cost)
         session.flash = 'Updated cost to hire'
         redirect(URL("profilePage"))
-        
+
     if request.args(0) == 'equip': #equipping items to current loadout
         equipped = db.equip_items(request.args(1, cast=int)) or redirect(URL('profilePage'))
         #if item isn't in inventory, redirect
@@ -197,7 +197,7 @@ def profilePage():
 
     if request.args(0) == 'unequip': #unequipping items from current loadout
         unequipped = db.equip_items(request.args(1, cast=int)) or redirect(URL('profilePage'))
-        new_equip_list = current_user.curr_loadout.equip_list 
+        new_equip_list = current_user.curr_loadout.equip_list
         new_equip_list[unequipped.category] = 0
         current_user.curr_loadout.update_record(equip_list=new_equip_list)
         session.flash = 'Unequipped ' + unequipped.name
@@ -260,7 +260,7 @@ def buyItem():
         db(db.for_sale.item == buyItem.id).delete()
         redirect(URL('shop'))
     return 1
-    
+
 def getItem():
     item = db.equip_items(request.args(0))
     js_string = "jQuery('#display_name').text(%s);" % repr(item.name)
@@ -284,10 +284,33 @@ def getUser(): #get user info for hirePage
     hireCost = str(int(employee.cost_to_hire or 0)) + "G"
     js_string += "jQuery('#displayHireCost').text(%s);" % repr(hireCost)
     return js_string
-    
-    
 
 def user():
     if request.args(0) == 'profile':
         redirect(URL('profilePage'))
+    return dict(form=auth())
+
+import chats
+
+
+@auth.requires_login()
+def chat():
+    return chats.index(db)
+
+
+@auth.requires_signature()
+def message_new():
+    return chats.message_new(db)
+
+
+@auth.requires_signature()
+def message_updates():
+    # need to unlock the session when using
+    # session file, should not be need it when
+    # using session in db, or in a cookie
+    session._unlock(response)
+    return chats.message_updates(db)
+
+
+def user():
     return dict(form=auth())
