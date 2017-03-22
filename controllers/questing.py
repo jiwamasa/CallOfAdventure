@@ -80,7 +80,7 @@ def questResult():
     else:
         session.flash='Invaild Quest'
         redirect(URL('index'))
-        quest = db.quests(quest_id) or redirect(URL('index'))
+    quest = db.quests(quest_id) or redirect(URL('index'))
 
     found_items=[]
     if session.questWin and session.questWin == 1:
