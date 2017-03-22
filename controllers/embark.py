@@ -80,8 +80,3 @@ def questComplete():
         session.questWin = 0
         print "lose!"
     return
-
-#for debugging
-def echo():
-    print request.args(0)
-    return
