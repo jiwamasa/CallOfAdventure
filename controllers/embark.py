@@ -66,7 +66,7 @@ def questEmbark():
         redirect(URL('default','index'))
     session.curr_quest = quest_id
     session.questWin = 0 #default quest is lost
-    return dict()
+    return dict(quest_id=quest_id)
 
 #tell server whether quest was won or lost
 def questComplete():
