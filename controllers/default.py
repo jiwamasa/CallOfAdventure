@@ -286,6 +286,7 @@ def getUser(): #get user info for hirePage
     return js_string
 
 def user():
+    print("user");
     if request.args(0) == 'profile':
         redirect(URL('profilePage'))
     return dict(form=auth())
@@ -310,7 +311,3 @@ def message_updates():
     # using session in db, or in a cookie
     session._unlock(response)
     return chats.message_updates(db)
-
-
-def user():
-    return dict(form=auth())
