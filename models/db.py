@@ -73,3 +73,9 @@ db.define_table('image',
                 Field('title', unique=True),
                 Field('file', 'upload'),
                 format = '%(title)s')
+
+db.define_table('chat',
+        Field('me_from'),
+        Field('me_body', 'text'),
+        Field('me_html', 'text'),
+        )
